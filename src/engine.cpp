@@ -1,22 +1,26 @@
 #include "engine.h"
 #include <iostream>
+#include <string>
 using namespace std;
 
 
 
-// Engine::Engine() {
-//     cout << "creating engine" << endl;
-// }
+Engine::Engine() {
+    cout << "creating engine..." << endl;
+    _alive = true;
+}
 
 bool Engine::isAlive() {
-     cout << "creating engine" << endl;
-    return _isAlive; 
+    return _alive; 
+}
+
+string Engine::getEngineStatus() {
+    return isAlive() ? "alive" : "dead";
 }
 
 int Engine::startEngine() {
-    _isAlive=true;
-    while(_isAlive){
-        cout << "creating engine" << endl;
+    while(isAlive()){
+        cout << "engine status: " << getEngineStatus() << endl;
     }
     return 0;
 }
