@@ -1,6 +1,6 @@
 # beetchef-core
 
-### prerequisities
+### prerequisites
 
 1. `$ apt install g++`
 2. `$ apt install make`
