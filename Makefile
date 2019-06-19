@@ -14,7 +14,7 @@ all: $(BIN)/$(EXECUTABLE)
 
 run: clean all
 	clear
-	./$(BIN)/$(EXECUTABLE)ma
+	./$(BIN)/$(EXECUTABLE)
 
 $(BIN)/$(EXECUTABLE): $(SRC)/*.cpp
 	mkdir -p $(BIN)
