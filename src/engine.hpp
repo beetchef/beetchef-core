@@ -1,13 +1,18 @@
 #include <string>
-using namespace std;
+
+using std::string;
+
+#ifndef ENGINE_HPP
+#define ENGINE_HPP
 
 class Engine {
-        public:
-                Engine();
-                int startEngine(); 
-                bool isAlive();
-        private:
-                bool _alive;
-                string getEngineStatus();
-                
+    public:
+        Engine();
+        int startEngine();
+        bool isAlive();
+    private:
+        bool mAlive;
+        string getEngineStatus();
 };
+
+#endif

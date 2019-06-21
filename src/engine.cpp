@@ -1,17 +1,18 @@
 #include "engine.hpp"
 #include <iostream>
 #include <string>
-using namespace std;
 
+using std::cout;
+using std::endl;
 
 
 Engine::Engine() {
     cout << "creating engine..." << endl;
-    _alive = true;
+    mAlive = true;
 }
 
 bool Engine::isAlive() {
-    return _alive; 
+    return mAlive;
 }
 
 string Engine::getEngineStatus() {
