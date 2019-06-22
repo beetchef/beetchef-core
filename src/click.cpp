@@ -70,6 +70,6 @@ void Click::start() {
         }
     });
 
-    // detach clickLoopThread and continue in execution flow
+    // detach clickLoopThread and continue in flow execution
     clickLoopThread.detach();
 }
