@@ -18,7 +18,7 @@ const string LOG_LABEL = "[Click]: ";
 
     bar duration is then calculated as:
 
-        beatDuration * signatureNominator
+        barDuration = beatDuration * signatureNominator
 
     EXAMPLE:
     (1 beat each second)
