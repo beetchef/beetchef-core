@@ -4,12 +4,12 @@
 
 class Click {
     public:
-        Click(unsigned int tempo, unsigned int signatureNominator, unsigned int signatureDenominator);
+        Click(unsigned int tempo, unsigned int signatureNumerator, unsigned int signatureDenominator);
         void start();
     protected:
     private:
         unsigned int mTempo;
-        unsigned int mSignatureNominator;
+        unsigned int mSignatureNumerator;
         unsigned int mSignatureDenominator;
         unsigned int mCurrentBeat;
         long mBeatDuration;

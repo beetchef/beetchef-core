@@ -18,33 +18,33 @@ const string LOG_LABEL = "[Click]: ";
 
     bar duration is then calculated as:
 
-        barDuration = beatDuration * signatureNominator
+        barDuration = beatDuration * signatureNumerator
 
     EXAMPLE:
     (1 beat each second)
 
     signature = 4/4
-    signatureNominator = 4
+    signatureNumerator = 4
     signatureDenominator = 4
     tempo = 60 bpm (quarter note beats per minute)
 
     beatDuration = 60000(1min in milis) / 60(tempo) * 4(quarter note length) / 4(signatureDenominator) = 60000 / 60 = 1000 ms (= 1s)
 
-    barDuration = 1000 * 4(nominator) = 4000 ms (=4s)
+    barDuration = 1000 * 4(signatureNumerator) = 4000 ms (=4s)
 
  */
 
-Click::Click(unsigned int tempo, unsigned int signatureNominator, unsigned int signatureDenominator) {
+Click::Click(unsigned int tempo, unsigned int signatureNumerator, unsigned int signatureDenominator) {
     mIsRunning = false;
     mCurrentBeat = 1;
     mTempo = tempo;
-    mSignatureNominator = signatureNominator;
+    mSignatureNumerator = signatureNumerator;
     mSignatureDenominator = signatureDenominator;
     mBeatDuration = 60000 /* 1 minute in milis */ / tempo * 4 /* quarter note length */ / signatureDenominator;
-    mBarDuration = mBeatDuration * mSignatureNominator;
+    mBarDuration = mBeatDuration * mSignatureNumerator;
     cout << LOG_LABEL << "created..." << endl;
     cout << LOG_LABEL << "tempo: " << mTempo << endl;
-    cout << LOG_LABEL << "time signature: " << signatureNominator << "/" << signatureDenominator << endl;
+    cout << LOG_LABEL << "time signature: " << signatureNumerator << "/" << signatureDenominator << endl;
 }
 
 void Click::start() {
@@ -58,7 +58,7 @@ void Click::start() {
             
             cout << LOG_LABEL << "*click* " << mCurrentBeat << endl;
             
-            if (mCurrentBeat < mSignatureNominator) {
+            if (mCurrentBeat < mSignatureNumerator) {
                 // this was not the last beat within the bar, increment mCurrentBeat
                 mCurrentBeat++;
             } else {
