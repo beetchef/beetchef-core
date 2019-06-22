@@ -40,11 +40,11 @@ Click::Click(unsigned int tempo, unsigned int signatureNumerator, unsigned int s
     mTempo = tempo;
     mSignatureNumerator = signatureNumerator;
     mSignatureDenominator = signatureDenominator;
-    mBeatDuration = 60000 /* 1 minute in milis */ / tempo * 4 /* quarter note length */ / signatureDenominator;
+    mBeatDuration = 60000 /* 1 minute in milis */ / tempo * 4 /* quarter note length */ / mSignatureDenominator;
     mBarDuration = mBeatDuration * mSignatureNumerator;
     cout << LOG_LABEL << "created..." << endl;
     cout << LOG_LABEL << "tempo: " << mTempo << endl;
-    cout << LOG_LABEL << "time signature: " << signatureNumerator << "/" << signatureDenominator << endl;
+    cout << LOG_LABEL << "time signature: " << mSignatureNumerator << "/" << mSignatureDenominator << endl;
 }
 
 void Click::start() {
