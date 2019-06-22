@@ -1,4 +1,5 @@
 #include <string>
+#include "click.hpp"
 
 using std::string;
 
@@ -12,6 +13,7 @@ class Engine {
         bool isAlive();
     private:
         bool mAlive;
+        Click mClick;
         string getEngineStatus();
 };
 
