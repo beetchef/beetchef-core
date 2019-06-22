@@ -7,7 +7,7 @@ using std::cout;
 using std::endl;
 using std::string;
 
-const string PROCESS_LABEL = "[Click]: ";
+const string LOG_LABEL = "[Click]: ";
 
 /*
     NOTE: 
@@ -42,19 +42,19 @@ Click::Click(unsigned int tempo, unsigned int signatureNominator, unsigned int s
     mSignatureDenominator = signatureDenominator;
     mBeatDuration = 60000 /* 1 minute in milis */ / tempo * 4 /* quarter note length */ / signatureDenominator;
     mBarDuration = mBeatDuration * mSignatureNominator;
-    cout << PROCESS_LABEL << "created..." << endl;
+    cout << LOG_LABEL << "created..." << endl;
 }
 
 void Click::start() {
     mIsRunning = true;
-    cout << PROCESS_LABEL << "started..." << endl;
+    cout << LOG_LABEL << "started..." << endl;
     
     std::thread clickLoopThread([this]() {
         while (mIsRunning) {
             // nextBeatTimePoint is current time + beat duration
             auto nextBeatTimePoint = std::chrono::steady_clock::now() + std::chrono::milliseconds(mBeatDuration);
             
-            cout << PROCESS_LABEL << "*click* " << mCurrentBeat << endl;
+            cout << LOG_LABEL << "*click* " << mCurrentBeat << endl;
             
             if (mCurrentBeat < mSignatureNominator) {
                 // this was not the last beat within the bar, increment mCurrentBeat
