@@ -7,7 +7,7 @@
 using std::cout;
 using std::endl;
 
-const string LOG_LABEL = "[Engine]: ";
+#define LOG_LABEL "[Engine]: "
 
 Engine::Engine() : mClick(60, 4, 4) {
     mAlive = true;

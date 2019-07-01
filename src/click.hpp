@@ -1,6 +1,7 @@
 #ifndef CLICK_HPP
 #define CLICK_HPP
 
+#include "messaging_handler.hpp"
 
 class Click {
     public:
@@ -15,6 +16,7 @@ class Click {
         long mBeatDuration;
         long mBarDuration;
         bool mIsRunning;
+        MessagingHandler mMessagingHandler;
 };
 
 #endif

@@ -1,4 +1,5 @@
 #include "click.hpp"
+#include "messaging_handler.hpp"
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -7,7 +8,7 @@ using std::cout;
 using std::endl;
 using std::string;
 
-const string LOG_LABEL = "[Click]: ";
+#define LOG_LABEL "[Click]: "
 
 /*
     NOTE: 
@@ -34,29 +35,40 @@ const string LOG_LABEL = "[Click]: ";
 
  */
 
-Click::Click(unsigned int tempo, unsigned int signatureNumerator, unsigned int signatureDenominator) {
+Click::Click(unsigned int tempo, unsigned int signatureNumerator, unsigned int signatureDenominator) : mMessagingHandler() {
     mIsRunning = false;
     mCurrentBeat = 1;
     mTempo = tempo;
     mSignatureNumerator = signatureNumerator;
     mSignatureDenominator = signatureDenominator;
-    mBeatDuration = 60000 /* 1 minute in milis */ / tempo * 4 /* quarter note length */ / signatureDenominator;
+    mBeatDuration = 60000 /* 1 minute in milis */ / tempo * 4 /* quarter note length */ / mSignatureDenominator;
     mBarDuration = mBeatDuration * mSignatureNumerator;
     cout << LOG_LABEL << "created..." << endl;
     cout << LOG_LABEL << "tempo: " << mTempo << endl;
-    cout << LOG_LABEL << "time signature: " << signatureNumerator << "/" << signatureDenominator << endl;
+    cout << LOG_LABEL << "time signature: " << mSignatureNumerator << "/" << mSignatureDenominator << endl;
 }
 
 void Click::start() {
     mIsRunning = true;
     cout << LOG_LABEL << "started..." << endl;
     
-    std::thread clickLoopThread([this]() {
+    // TMP: testing
+    int totalBeatCount = 0;
+
+    std::thread clickLoopThread([this, &totalBeatCount]() {
         while (mIsRunning) {
             // nextBeatTimePoint is current time + beat duration
             auto nextBeatTimePoint = std::chrono::steady_clock::now() + std::chrono::milliseconds(mBeatDuration);
             
             cout << LOG_LABEL << "*click* " << mCurrentBeat << endl;
+
+            // TMP: testing
+            totalBeatCount++;
+
+            // FIXME:
+            // if (totalBeatCount == 2) {
+            //     mMessagingHandler.sendMessage("bla");
+            // }
             
             if (mCurrentBeat < mSignatureNumerator) {
                 // this was not the last beat within the bar, increment mCurrentBeat
