@@ -52,10 +52,10 @@ void Click::start() {
     mIsRunning = true;
     cout << LOG_LABEL << "started..." << endl;
     
-    // TMP: testing
-    int totalBeatCount = 0;
+    std::thread clickLoopThread([this]() {
+        // TMP: testing
+        int totalBeatCount = 0;
 
-    std::thread clickLoopThread([this, &totalBeatCount]() {
         while (mIsRunning) {
             // nextBeatTimePoint is current time + beat duration
             auto nextBeatTimePoint = std::chrono::steady_clock::now() + std::chrono::milliseconds(mBeatDuration);
@@ -63,12 +63,12 @@ void Click::start() {
             cout << LOG_LABEL << "*click* " << mCurrentBeat << endl;
 
             // TMP: testing
-            //totalBeatCount++;
+            totalBeatCount++;
 
-            // FIXME:
-            // if (totalBeatCount == 2) {
-            //     mMessagingHandler.sendMessage("bla");
-            // }
+            // TMP: testing
+            if (totalBeatCount == 5) {
+                // mMessagingHandler.sendMessage("bla");
+            }
             
             if (mCurrentBeat < mSignatureNumerator) {
                 // this was not the last beat within the bar, increment mCurrentBeat
