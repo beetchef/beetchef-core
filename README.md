@@ -9,7 +9,7 @@
 ### build
 
 1. navigate to beetchef-core root directory
-2. `$ cmake .` (this step needs to be run just once to generate Makefile, after that it's sufficient build project with just `$ make`)
+2. `$ cmake .` (this step needs to be run just once to generate Makefile, after that it's sufficient to build project with just `$ make`)
 3. `$ make` (this generates executable `beetchef` in `./build/bin/`)
 
 
