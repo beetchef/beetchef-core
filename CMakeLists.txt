@@ -18,11 +18,18 @@ add_subdirectory(lib/oscpack_1_1_0)
 # include external library sources
 target_include_directories(oscpack PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lib/oscpack_1_1_0")
 
+# add "make run" target
+add_custom_target(run
+    COMMAND build/bin/beetchef
+    WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}
+)
+
 # set beetchef sources to variable SOURCES
 file(GLOB SOURCES  "./src/*.cpp" "./src/*.hpp")
 
 # specify final executable beetchef based on sources specified in variable SOURCES
 add_executable(beetchef ${SOURCES})
+
 
 # link the executable and the library together
 target_link_libraries(beetchef oscpack)
