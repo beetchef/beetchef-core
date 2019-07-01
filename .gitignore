@@ -1,1 +1,12 @@
 .vscode/*
+
+CMakeCache.txt
+**/CMakeFiles/*
+**/cmake_install.cmake
+Makefile
+lib/oscpack_1_1_0/Makefile
+
+
+*liboscpack.a
+
+build/*
