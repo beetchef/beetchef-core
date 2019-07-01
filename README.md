@@ -20,4 +20,5 @@
 
 1. navigate to beetchef-core root directory
 2. `$ make run`  
+
     (alternatively: `$ ./build/bin/beetchef`)
