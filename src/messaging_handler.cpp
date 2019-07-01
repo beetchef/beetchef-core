@@ -6,7 +6,7 @@
 #define LOG_LABEL "[Messaging handler]: "
 
 #define ADDRESS "127.0.0.1"
-#define PORT 7000
+#define PORT 9951
 
 #define OUTPUT_BUFFER_SIZE 1024
 
@@ -16,19 +16,20 @@ using std::string;
 
 MessagingHandler::MessagingHandler() : mTransmitSocket(IpEndpointName( ADDRESS, PORT )) {
     cout << LOG_LABEL << "created..." << endl;
-    mBuffer[OUTPUT_BUFFER_SIZE];
 }
 
-void MessagingHandler::sendMessage(string message) {
+void MessagingHandler::sendMessage(string address, string command) {
     
-    osc::OutboundPacketStream p( mBuffer, OUTPUT_BUFFER_SIZE );
+    char buffer[OUTPUT_BUFFER_SIZE];
+    osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );
     
     p << osc::BeginBundleImmediate
-        << osc::BeginMessage( "/test1" ) 
-            << "/sl/0/hit s:record" << osc::EndMessage
-        
+        << osc::BeginMessage( address.c_str() )
+            << command.c_str() << osc::EndMessage
         << osc::EndBundle;
     
+    cout << LOG_LABEL << "sending OSC message to SL-engine - address: \"" << address << "\" command: \"" << command << "\"" << endl;
+
     mTransmitSocket.Send( p.Data(), p.Size() );
 
     // UdpTransmitSocket transmitSocket( IpEndpointName( ADDRESS, PORT ) );

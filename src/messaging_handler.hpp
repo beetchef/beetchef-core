@@ -9,10 +9,9 @@ using std::string;
 class MessagingHandler {
     public:
         MessagingHandler();
-        void sendMessage(string message);
+        void sendMessage(string address, string param);
     private:
         UdpTransmitSocket mTransmitSocket;
-        char* mBuffer;
 };
 
 #endif

@@ -67,7 +67,7 @@ void Click::start() {
 
             // TMP: testing
             if (totalBeatCount == 5) {
-                // mMessagingHandler.sendMessage("bla");
+                mMessagingHandler.sendMessage("/sl/0/hit", "record");
             }
             
             if (mCurrentBeat < mSignatureNumerator) {
