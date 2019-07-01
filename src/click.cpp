@@ -63,7 +63,7 @@ void Click::start() {
             cout << LOG_LABEL << "*click* " << mCurrentBeat << endl;
 
             // TMP: testing
-            totalBeatCount++;
+            //totalBeatCount++;
 
             // FIXME:
             // if (totalBeatCount == 2) {
