@@ -66,7 +66,7 @@ void Click::start() {
             totalBeatCount++;
 
             // TMP: testing
-            if (totalBeatCount == 5) {
+            if (totalBeatCount == 5 || totalBeatCount == 9) {
                 mMessagingHandler.sendMessage("/sl/0/hit", "record");
             }
             
