@@ -1,11 +1,18 @@
+# visual studio code
 .vscode/*
 
+# code blocks
+*.cbp
+Beetchef.layout
+
+# cmake / make
 CMakeCache.txt
 **/CMakeFiles/*
 **/cmake_install.cmake
 **/Makefile
 
-
+# liboscpack
 *liboscpack.a
 
+# build
 build/*
