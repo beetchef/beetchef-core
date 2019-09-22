@@ -11,8 +11,8 @@ using std::string;
 #define LOG_LABEL "[Click]: "
 
 /*
-    NOTE: 
-    
+    NOTE:
+
     beat duration is calculated as:
 
         beatDuration = 1 minute / tempo * quarter note length / signatureDenominator
@@ -48,10 +48,17 @@ Click::Click(unsigned int tempo, unsigned int signatureNumerator, unsigned int s
     cout << LOG_LABEL << "time signature: " << mSignatureNumerator << "/" << mSignatureDenominator << endl;
 }
 
+bool Click::initialize(JackClientWrapper *jackClientWrapper) {
+
+    mJackClientWrapper = jackClientWrapper;
+
+    return true;
+}
+
 void Click::start() {
     mIsRunning = true;
     cout << LOG_LABEL << "started..." << endl;
-    
+
     std::thread clickLoopThread([this]() {
         // TMP: testing
         int totalBeatCount = 0;
@@ -59,7 +66,7 @@ void Click::start() {
         while (mIsRunning) {
             // nextBeatTimePoint is current time + beat duration
             auto nextBeatTimePoint = std::chrono::steady_clock::now() + std::chrono::milliseconds(mBeatDuration);
-            
+
             cout << LOG_LABEL << "*click* " << mCurrentBeat << endl;
 
             // TMP: testing
@@ -69,7 +76,7 @@ void Click::start() {
             if (totalBeatCount == 5 || totalBeatCount == 9) {
                 mMessagingHandler.sendMessage("/sl/0/hit", "record");
             }
-            
+
             if (mCurrentBeat < mSignatureNumerator) {
                 // this was not the last beat within the bar, increment mCurrentBeat
                 mCurrentBeat++;

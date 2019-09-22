@@ -7,7 +7,7 @@ project(Beetchef VERSION 1.0.0)
 set(CMAKE_CXX_STANDARD 17)
 
 # set compiler flags
-set (CMAKE_CXX_FLAGS "-pthread")
+set (CMAKE_CXX_FLAGS "-pthread -ljack -lpthread")
 
 # set output directory for final executable to be ./build/bin
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/bin)
