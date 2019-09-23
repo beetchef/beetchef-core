@@ -2,6 +2,7 @@
 #define JACK_WRAPPER_HPP
 
 #include "jack/jack.h"
+#include "jack_connection_node.hpp"
 #include <string>
 #include <vector>
 
@@ -17,6 +18,7 @@ class JackClientWrapper {
     public:
         JackClientWrapper();
         ~JackClientWrapper();
+        void registerConnectionNode(JackConnectionNode *connectionNode);
         bool activate();
         bool deactivate();
         bool createPort(string portName, PortType portType);
@@ -26,6 +28,7 @@ class JackClientWrapper {
     private:
         vector<jack_port_t *> mInputPorts;
         vector<jack_port_t *> mOutputPorts;
+        vector<JackConnectionNode *> mConnectionNodes;
         jack_client_t *mClient = 0;
         static int processCallbackStaticWrapper(jack_nframes_t nframes, void *arg);
         int processCallback(jack_nframes_t nframes);

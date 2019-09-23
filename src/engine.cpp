@@ -22,7 +22,7 @@ bool Engine::initialize(JackClientWrapper *jackClientWrapper) {
         cerr << LOG_LABEL << "Failed to create JACK client common output port" << endl;
         return false;
     }
-
+    mClick.initialize(jackClientWrapper);
     return true;
 }
 

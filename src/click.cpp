@@ -51,6 +51,7 @@ Click::Click(unsigned int tempo, unsigned int signatureNumerator, unsigned int s
 bool Click::initialize(JackClientWrapper *jackClientWrapper) {
 
     mJackClientWrapper = jackClientWrapper;
+    mJackClientWrapper->registerConnectionNode(this);
 
     return true;
 }
@@ -92,3 +93,7 @@ void Click::start() {
     // detach clickLoopThread and continue in flow execution
     clickLoopThread.detach();
 }
+
+void Click::processCallback(jack_nframes_t nframes) {
+    cout << "daco" << nframes << endl;
+};

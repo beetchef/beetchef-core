@@ -70,6 +70,10 @@ JackClientWrapper::~JackClientWrapper() {
     }
 }
 
+void JackClientWrapper::registerConnectionNode(JackConnectionNode *connectionNode) {
+    mConnectionNodes.push_back(connectionNode);
+}
+
 bool JackClientWrapper::activate() {
 
     //cout << mClient << endl;
@@ -172,7 +176,9 @@ int JackClientWrapper::processCallback(jack_nframes_t nframes) {
 	//in = (jack_default_audio_sample_t *) jack_port_get_buffer (mInputPorts[0], nframes);
 	//out =(jack_default_audio_sample_t *) jack_port_get_buffer (mOutputPorts[0], nframes);
 	//memcpy (out, in, sizeof (jack_default_audio_sample_t) * nframes);
-
+    for (vector<JackConnectionNode *>::iterator i = mConnectionNodes.begin(); i != mConnectionNodes.end(); ++i) {
+        (*i)->processCallback(nframes);
+    }
 	return 0;
 }
 
