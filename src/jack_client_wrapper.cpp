@@ -10,11 +10,10 @@ using std::cerr;
 using std::cout;
 using std::endl;
 
-#define LOG_LABEL "[Jack client wrapper]: "
+#define LOG_LABEL "[JACK client wrapper]: "
 
 
 JackClientWrapper::JackClientWrapper() {
-    cout << LOG_LABEL << "Jack client wrapper here" << endl;
 
     const char **ports;
 	const char *client_name = "beetchef";
@@ -59,7 +58,8 @@ JackClientWrapper::JackClientWrapper() {
 	/* display the current sample rate.
 	 */
 
-	printf ("engine sample rate: %" PRIu32 "\n", jack_get_sample_rate (mClient));
+    cout << LOG_LABEL << "created..." << endl;
+    cout << LOG_LABEL << "sample rate: " << jack_get_sample_rate(mClient) << "Hz" << endl;
 
 }
 
@@ -176,8 +176,8 @@ int JackClientWrapper::processCallback(jack_nframes_t nframes) {
 	//in = (jack_default_audio_sample_t *) jack_port_get_buffer (mInputPorts[0], nframes);
 	//out =(jack_default_audio_sample_t *) jack_port_get_buffer (mOutputPorts[0], nframes);
 	//memcpy (out, in, sizeof (jack_default_audio_sample_t) * nframes);
-    for (vector<JackConnectionNode *>::iterator i = mConnectionNodes.begin(); i != mConnectionNodes.end(); ++i) {
-        (*i)->processCallback(nframes);
+    for (vector<JackConnectionNode *>::iterator connectionNode = mConnectionNodes.begin(); connectionNode != mConnectionNodes.end(); ++connectionNode) {
+        (*connectionNode)->jackProcessCallback(nframes);
     }
 	return 0;
 }

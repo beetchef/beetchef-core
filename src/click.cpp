@@ -94,6 +94,6 @@ void Click::start() {
     clickLoopThread.detach();
 }
 
-void Click::processCallback(jack_nframes_t nframes) {
-    cout << "daco" << nframes << endl;
+void Click::jackProcessCallback(jack_nframes_t nframes) {
+    cout << LOG_LABEL << "JACK process callback - TODO: process " << nframes << " frames here..." << endl;
 };

@@ -10,7 +10,7 @@ class Click: public JackConnectionNode {
         Click(unsigned int tempo, unsigned int signatureNumerator, unsigned int signatureDenominator);
         bool initialize(JackClientWrapper *jackClientWrapper);
         void start();
-        void processCallback(jack_nframes_t nframes);
+        void jackProcessCallback(jack_nframes_t nframes);
     protected:
     private:
         JackClientWrapper *mJackClientWrapper;

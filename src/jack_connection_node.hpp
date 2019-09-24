@@ -10,7 +10,7 @@ class JackConnectionNode {
     public:
         JackConnectionNode();
         ~JackConnectionNode();
-        virtual void processCallback(jack_nframes_t nframes) = 0;
+        virtual void jackProcessCallback(jack_nframes_t nframes) = 0;
     protected:
         vector<jack_port_t *> mInputPorts;
         vector<jack_port_t *> mOutputPorts;
