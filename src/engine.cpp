@@ -18,10 +18,16 @@ Engine::Engine() : mClick(60, 4, 4) {
 bool Engine::initialize(JackClientWrapper *jackClientWrapper) {
     mJackClientWrapper = jackClientWrapper;
 
-    if (!mJackClientWrapper->createPort("common_out_1", outputPort)) {
-        cerr << LOG_LABEL << "Failed to create JACK client common output port" << endl;
+    if (!mJackClientWrapper->createPort("master_out_1", outputPort)) {
+        cerr << LOG_LABEL << "Failed to create JACK client master output 1 port" << endl;
         return false;
     }
+
+    if (!mJackClientWrapper->createPort("master_out_2", outputPort)) {
+        cerr << LOG_LABEL << "Failed to create JACK client master output 2 port" << endl;
+        return false;
+    }
+
     mClick.initialize(jackClientWrapper);
     return true;
 }
