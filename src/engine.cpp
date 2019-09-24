@@ -4,6 +4,7 @@
 #include <string>
 #include <unistd.h>
 
+using std::cerr;
 using std::cout;
 using std::endl;
 
@@ -14,6 +15,23 @@ Engine::Engine() : mClick(60, 4, 4) {
     cout << LOG_LABEL << "created..." << endl;
 }
 
+bool Engine::initialize(JackClientWrapper *jackClientWrapper) {
+    mJackClientWrapper = jackClientWrapper;
+
+    if (!mJackClientWrapper->createPort("master_out_1", outputPort)) {
+        cerr << LOG_LABEL << "Failed to create JACK client master output 1 port" << endl;
+        return false;
+    }
+
+    if (!mJackClientWrapper->createPort("master_out_2", outputPort)) {
+        cerr << LOG_LABEL << "Failed to create JACK client master output 2 port" << endl;
+        return false;
+    }
+
+    mClick.initialize(jackClientWrapper);
+    return true;
+}
+
 bool Engine::isAlive() {
     return mAlive;
 }
@@ -22,7 +40,7 @@ string Engine::getEngineStatus() {
     return isAlive() ? "alive" : "dead";
 }
 
-int Engine::startEngine() {
+int Engine::start() {
     cout << LOG_LABEL << " started..." << endl;
 
     mClick.start();
@@ -34,5 +52,6 @@ int Engine::startEngine() {
         // sleep for 5 seconds
         usleep(5000000);
     }
+
     return 0;
 }

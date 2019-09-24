@@ -1,5 +1,6 @@
 #include <string>
 #include "click.hpp"
+#include "jack_client_wrapper.hpp"
 
 using std::string;
 
@@ -9,10 +10,12 @@ using std::string;
 class Engine {
     public:
         Engine();
-        int startEngine();
+        bool initialize(JackClientWrapper *jackClientWrapper);
+        int start();
         bool isAlive();
     private:
         bool mAlive;
+        JackClientWrapper *mJackClientWrapper;
         Click mClick;
         string getEngineStatus();
 };
