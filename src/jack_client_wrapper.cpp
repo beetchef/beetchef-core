@@ -190,3 +190,12 @@ void JackClientWrapper::shutdownCallback(void *arg) {
 	cerr << LOG_LABEL << "Client was shut down by Jack." << endl;
 	return;
 }
+
+void JackClientWrapper::testConnect() {
+    if (jack_connect(mClient, "beetchef:master_out_1", "sooperlooper:common_in_1")) {
+        cerr << LOG_LABEL << "cannot connect port" << endl;
+    }
+    if (jack_connect(mClient, "sooperlooper:common_out_2", "system:playback_1")) {
+        cerr << LOG_LABEL << "cannot connect port" << endl;
+    }
+}

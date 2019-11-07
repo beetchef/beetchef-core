@@ -24,6 +24,7 @@ class JackClientWrapper {
         bool createPort(string portName, PortType portType);
         bool createInputPort(string portName);
         bool createOutputPort(string portName);
+        void testConnect();
     protected:
     private:
         vector<jack_port_t *> mInputPorts;
