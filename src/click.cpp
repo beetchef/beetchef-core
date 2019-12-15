@@ -62,20 +62,20 @@ void Click::start() {
 
     std::thread click_loop_thread([this]() {
         // TMP: testing
-        int totalBeatCount = 0;
+        int total_beat_count = 0;
 
         while (_is_running) {
-            // nextBeatTimePoint is current time + beat duration
-            auto nextBeatTimePoint = std::chrono::steady_clock::now() + std::chrono::milliseconds(_beat_duration);
+            // next_beat_timepoint is current time + beat duration
+            auto next_beat_timepoint = std::chrono::steady_clock::now() + std::chrono::milliseconds(_beat_duration);
 
             cout << LOG_LABEL << "*click* " << _current_beat << endl;
 
             // TMP: testing
-            totalBeatCount++;
+            total_beat_count++;
 
             // TMP: testing
-            if (totalBeatCount == 5 || totalBeatCount == 9) {
-                _messaging_handler.sendMessage("/sl/0/hit", "record");
+            if (total_beat_count == 5 || total_beat_count == 9) {
+                _messaging_handler.send_message("/sl/0/hit", "record");
             }
 
             if (_current_beat < _signature_numerator) {
@@ -86,7 +86,7 @@ void Click::start() {
                 _current_beat = 1;
                 cout << endl;
             }
-            std::this_thread::sleep_until(nextBeatTimePoint);
+            std::this_thread::sleep_until(next_beat_timepoint);
         }
     });
 

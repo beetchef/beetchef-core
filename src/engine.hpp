@@ -10,14 +10,14 @@ using std::string;
 class Engine {
     public:
         Engine();
-        bool initialize(JackClientWrapper *jackClientWrapper);
+        bool initialize(JackClientWrapper *jack_client_wrapper);
         int start();
-        bool isAlive();
+        bool is_alive();
     private:
-        bool mAlive;
-        JackClientWrapper *mJackClientWrapper;
-        Click mClick;
-        string getEngineStatus();
+        bool _is_alive;
+        JackClientWrapper *_jack_client_wrapper;
+        Click _click;
+        string get_engine_status();
 };
 
 #endif
