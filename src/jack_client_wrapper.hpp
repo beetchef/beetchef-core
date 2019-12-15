@@ -18,7 +18,7 @@ class JackClientWrapper {
     public:
         JackClientWrapper();
         ~JackClientWrapper();
-        void registerConnectionNode(JackConnectionNode *connectionNode);
+        void register_connection_node(JackConnectionNode *connectionNode);
         bool activate();
         bool deactivate();
         bool createPort(string portName, PortType portType);

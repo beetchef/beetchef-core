@@ -70,7 +70,7 @@ JackClientWrapper::~JackClientWrapper() {
     }
 }
 
-void JackClientWrapper::registerConnectionNode(JackConnectionNode *connectionNode) {
+void JackClientWrapper::register_connection_node(JackConnectionNode *connectionNode) {
     mConnectionNodes.push_back(connectionNode);
 }
 

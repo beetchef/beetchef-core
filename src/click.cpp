@@ -15,75 +15,75 @@ using std::string;
 
     beat duration is calculated as:
 
-        beatDuration = 1 minute / tempo * quarter note length / signatureDenominator
+        beatDuration = 1 minute / tempo * quarter note length / signature_denominator
 
     bar duration is then calculated as:
 
-        barDuration = beatDuration * signatureNumerator
+        barDuration = beatDuration * signature_numerator
 
     EXAMPLE:
     (1 beat each second)
 
     signature = 4/4
-    signatureNumerator = 4
-    signatureDenominator = 4
+    signature_numerator = 4
+    signature_denominator = 4
     tempo = 60 bpm (quarter note beats per minute)
 
-    beatDuration = 60000(1min in milis) / 60(tempo) * 4(quarter note length) / 4(signatureDenominator) = 60000 / 60 = 1000 ms (= 1s)
+    beatDuration = 60000(1min in milis) / 60(tempo) * 4(quarter note length) / 4(signature_denominator) = 60000 / 60 = 1000 ms (= 1s)
 
-    barDuration = 1000 * 4(signatureNumerator) = 4000 ms (=4s)
+    barDuration = 1000 * 4(signature_numerator) = 4000 ms (=4s)
 
  */
 
-Click::Click(unsigned int tempo, unsigned int signatureNumerator, unsigned int signatureDenominator) : mMessagingHandler() {
-    mIsRunning = false;
-    mCurrentBeat = 1;
-    mTempo = tempo;
-    mSignatureNumerator = signatureNumerator;
-    mSignatureDenominator = signatureDenominator;
-    mBeatDuration = 60000 /* 1 minute in milis */ / tempo * 4 /* quarter note length */ / mSignatureDenominator;
-    mBarDuration = mBeatDuration * mSignatureNumerator;
+Click::Click(unsigned int tempo, unsigned int signature_numerator, unsigned int signature_denominator) : _messaging_handler() {
+    _is_running = false;
+    _current_beat = 1;
+    _tempo = tempo;
+    _signature_numerator = signature_numerator;
+    _signature_denominator = signature_denominator;
+    _beat_duration = 60000 /* 1 minute in milis */ / tempo * 4 /* quarter note length */ / signature_denominator;
+    _bar_duration = _beat_duration * _signature_numerator;
     cout << LOG_LABEL << "created..." << endl;
-    cout << LOG_LABEL << "tempo: " << mTempo << endl;
-    cout << LOG_LABEL << "time signature: " << mSignatureNumerator << "/" << mSignatureDenominator << endl;
+    cout << LOG_LABEL << "tempo: " << _tempo << endl;
+    cout << LOG_LABEL << "time signature: " << _signature_numerator << "/" << _signature_denominator << endl;
 }
 
-bool Click::initialize(JackClientWrapper *jackClientWrapper) {
+bool Click::initialize(JackClientWrapper *jack_client_wrapper) {
 
-    mJackClientWrapper = jackClientWrapper;
-    mJackClientWrapper->registerConnectionNode(this);
+    _jack_client_wrapper = jack_client_wrapper;
+    _jack_client_wrapper->register_connection_node(this);
 
     return true;
 }
 
 void Click::start() {
-    mIsRunning = true;
+    _is_running = true;
     cout << LOG_LABEL << "started..." << endl;
 
-    std::thread clickLoopThread([this]() {
+    std::thread click_loop_thread([this]() {
         // TMP: testing
         int totalBeatCount = 0;
 
-        while (mIsRunning) {
+        while (_is_running) {
             // nextBeatTimePoint is current time + beat duration
-            auto nextBeatTimePoint = std::chrono::steady_clock::now() + std::chrono::milliseconds(mBeatDuration);
+            auto nextBeatTimePoint = std::chrono::steady_clock::now() + std::chrono::milliseconds(_beat_duration);
 
-            cout << LOG_LABEL << "*click* " << mCurrentBeat << endl;
+            cout << LOG_LABEL << "*click* " << _current_beat << endl;
 
             // TMP: testing
             totalBeatCount++;
 
             // TMP: testing
             if (totalBeatCount == 5 || totalBeatCount == 9) {
-                mMessagingHandler.sendMessage("/sl/0/hit", "record");
+                _messaging_handler.sendMessage("/sl/0/hit", "record");
             }
 
-            if (mCurrentBeat < mSignatureNumerator) {
+            if (_current_beat < _signature_numerator) {
                 // this was not the last beat within the bar, increment mCurrentBeat
-                mCurrentBeat++;
+                _current_beat++;
             } else {
                 // this was the last beat within the bar, reset mCurrentBeat to 1
-                mCurrentBeat = 1;
+                _current_beat = 1;
                 cout << endl;
             }
             std::this_thread::sleep_until(nextBeatTimePoint);
@@ -91,9 +91,9 @@ void Click::start() {
     });
 
     // detach clickLoopThread and continue in flow execution
-    clickLoopThread.detach();
+    click_loop_thread.detach();
 }
 
-void Click::jackProcessCallback(jack_nframes_t nframes) {
+void Click::jack_process_callback(jack_nframes_t nframes) {
     cout << LOG_LABEL << "JACK process callback - TODO: process " << nframes << " frames here..." << endl;
 };
