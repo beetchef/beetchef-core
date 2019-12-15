@@ -7,21 +7,21 @@
 
 class Click: public JackConnectionNode {
     public:
-        Click(unsigned int tempo, unsigned int signatureNumerator, unsigned int signatureDenominator);
-        bool initialize(JackClientWrapper *jackClientWrapper);
+        Click(unsigned int tempo, unsigned int signature_numerator, unsigned int signature_denominator);
+        bool initialize(JackClientWrapper *jack_client_wrapper);
         void start();
-        void jackProcessCallback(jack_nframes_t nframes);
+        void jack_process_callback(jack_nframes_t nframes);
     protected:
     private:
-        JackClientWrapper *mJackClientWrapper;
-        unsigned int mTempo;
-        unsigned int mSignatureNumerator;
-        unsigned int mSignatureDenominator;
-        unsigned int mCurrentBeat;
-        long mBeatDuration;
-        long mBarDuration;
-        bool mIsRunning;
-        MessagingHandler mMessagingHandler;
+        JackClientWrapper *_jack_client_wrapper;
+        unsigned int _tempo;
+        unsigned int _signature_numerator;
+        unsigned int _signature_denominator;
+        unsigned int _current_beat;
+        long _beat_duration;
+        long _bar_duration;
+        bool _is_running;
+        MessagingHandler _messaging_handler;
 };
 
 #endif

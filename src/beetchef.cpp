@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    jackClientWrapper->testConnect();
+    jackClientWrapper->test_connect();
 
     engine->start();
 
