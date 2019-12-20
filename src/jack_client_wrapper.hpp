@@ -14,11 +14,11 @@ enum PortType {
     OUTPUT_PORT
 };
 
-class JackClientWrapper {
+class Jack_client_wrapper {
     public:
-        JackClientWrapper();
-        ~JackClientWrapper();
-        void register_connection_node(JackConnectionNode *connection_node);
+        Jack_client_wrapper();
+        ~Jack_client_wrapper();
+        void register_connection_node(Jack_connection_node *connection_node);
         bool activate();
         bool deactivate();
         bool create_port(string port_name, PortType port_type);
@@ -29,7 +29,7 @@ class JackClientWrapper {
     private:
         vector<jack_port_t *> _input_ports;
         vector<jack_port_t *> _output_ports;
-        vector<JackConnectionNode *> _connection_nodes;
+        vector<Jack_connection_node *> _connection_nodes;
         jack_client_t *_client = 0;
         static int process_callback_static_wrapper(jack_nframes_t nframes, void *arg);
         int process_callback(jack_nframes_t nframes);

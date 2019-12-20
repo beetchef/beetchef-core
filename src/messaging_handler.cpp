@@ -14,11 +14,11 @@ using std::cout;
 using std::endl;
 using std::string;
 
-MessagingHandler::MessagingHandler() : _transmit_socket(IpEndpointName( ADDRESS, PORT )) {
+Messaging_handler::Messaging_handler() : _transmit_socket(IpEndpointName( ADDRESS, PORT )) {
     cout << LOG_LABEL << "created..." << endl;
 }
 
-void MessagingHandler::send_message(string address, string command) {
+void Messaging_handler::send_message(string address, string command) {
 
     char buffer[OUTPUT_BUFFER_SIZE];
     osc::OutboundPacketStream p( buffer, OUTPUT_BUFFER_SIZE );

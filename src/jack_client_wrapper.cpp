@@ -13,7 +13,7 @@ using std::endl;
 #define LOG_LABEL "[JACK client wrapper]: "
 
 
-JackClientWrapper::JackClientWrapper() {
+Jack_client_wrapper::Jack_client_wrapper() {
 
     const char **ports;
 	const char *client_name = "beetchef";
@@ -64,18 +64,18 @@ JackClientWrapper::JackClientWrapper() {
 
 }
 
-JackClientWrapper::~JackClientWrapper() {
+Jack_client_wrapper::~Jack_client_wrapper() {
     if (_client) {
         jack_deactivate(_client);
         jack_client_close(_client);
     }
 }
 
-void JackClientWrapper::register_connection_node(JackConnectionNode *connection_node) {
+void Jack_client_wrapper::register_connection_node(Jack_connection_node *connection_node) {
     _connection_nodes.push_back(connection_node);
 }
 
-bool JackClientWrapper::activate() {
+bool Jack_client_wrapper::activate() {
 
     //cout << mClient << endl;
 
@@ -94,7 +94,7 @@ bool JackClientWrapper::activate() {
     return true;
 }
 
-bool JackClientWrapper::deactivate() {
+bool Jack_client_wrapper::deactivate() {
     if (!_client) {
         cerr << LOG_LABEL << "Cannot deactivate JACK client, it's not open." << endl;
         return false;
@@ -109,7 +109,7 @@ bool JackClientWrapper::deactivate() {
     return true;
 }
 
-bool JackClientWrapper::create_port(string port_name, PortType port_type) {
+bool Jack_client_wrapper::create_port(string port_name, PortType port_type) {
 
     jack_port_t *port = jack_port_register (_client, port_name.c_str(),
 					 JACK_DEFAULT_AUDIO_TYPE,
@@ -123,7 +123,7 @@ bool JackClientWrapper::create_port(string port_name, PortType port_type) {
     return true;
 }
 
-bool JackClientWrapper::create_input_port(string port_name) {
+bool Jack_client_wrapper::create_input_port(string port_name) {
 
     jack_port_t *input_port = jack_port_register (_client, port_name.c_str(),
 					 JACK_DEFAULT_AUDIO_TYPE,
@@ -137,7 +137,7 @@ bool JackClientWrapper::create_input_port(string port_name) {
     return true;
 }
 
-bool JackClientWrapper::create_output_port(string port_name) {
+bool Jack_client_wrapper::create_output_port(string port_name) {
 
     jack_port_t *input_port = jack_port_register (_client, port_name.c_str(),
 					 JACK_DEFAULT_AUDIO_TYPE,
@@ -159,7 +159,7 @@ bool JackClientWrapper::create_output_port(string port_name) {
  * port to its output port. It will exit when stopped by
  * the user (e.g. using Ctrl-C on a unix-ish operating system)
  */
-int JackClientWrapper::process_callback_static_wrapper(jack_nframes_t nframes, void *arg) {
+int Jack_client_wrapper::process_callback_static_wrapper(jack_nframes_t nframes, void *arg) {
 	/*jack_default_audio_sample_t *in, *out;
 
 	in = jack_port_get_buffer (_nput_ports[0], nframes);
@@ -168,16 +168,16 @@ int JackClientWrapper::process_callback_static_wrapper(jack_nframes_t nframes, v
 		sizeof (jack_default_audio_sample_t) * nframes);
 
 	return 0;*/
-	return static_cast<JackClientWrapper*> (arg)->process_callback(nframes);
+	return static_cast<Jack_client_wrapper*> (arg)->process_callback(nframes);
 }
 
-int JackClientWrapper::process_callback(jack_nframes_t nframes) {
+int Jack_client_wrapper::process_callback(jack_nframes_t nframes) {
 	//jack_default_audio_sample_t *in, *out;
 
 	//in = (jack_default_audio_sample_t *) jack_port_get_buffer (mInputPorts[0], nframes);
 	//out =(jack_default_audio_sample_t *) jack_port_get_buffer (mOutputPorts[0], nframes);
 	//memcpy (out, in, sizeof (jack_default_audio_sample_t) * nframes);
-    for (vector<JackConnectionNode *>::iterator connection_node = _connection_nodes.begin(); connection_node != _connection_nodes.end(); ++connection_node) {
+    for (vector<Jack_connection_node *>::iterator connection_node = _connection_nodes.begin(); connection_node != _connection_nodes.end(); ++connection_node) {
         (*connection_node)->jack_process_callback(nframes);
     }
 	return 0;
@@ -187,12 +187,12 @@ int JackClientWrapper::process_callback(jack_nframes_t nframes) {
  * JACK calls this shutdown_callback if the server ever shuts down or
  * decides to disconnect the client.
  */
-void JackClientWrapper::shutdown_callback(void *arg) {
+void Jack_client_wrapper::shutdown_callback(void *arg) {
 	cerr << LOG_LABEL << "Client was shut down by Jack." << endl;
 	return;
 }
 
-void JackClientWrapper::test_connect() {
+void Jack_client_wrapper::test_connect() {
     if (jack_connect(_client, "beetchef:master_out_1", "sooperlooper:common_in_1")) {
         cerr << LOG_LABEL << "cannot connect port" << endl;
     }

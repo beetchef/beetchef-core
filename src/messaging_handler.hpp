@@ -6,9 +6,9 @@
 
 using std::string;
 
-class MessagingHandler {
+class Messaging_handler {
     public:
-        MessagingHandler();
+        Messaging_handler();
         void send_message(string address, string param);
     private:
         UdpTransmitSocket _transmit_socket;

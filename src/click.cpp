@@ -15,11 +15,11 @@ using std::string;
 
     beat duration is calculated as:
 
-        beatDuration = 1 minute / tempo * quarter note length / signature_denominator
+        beat_duration = 1 minute / tempo * quarter note length / signature_denominator
 
     bar duration is then calculated as:
 
-        barDuration = beatDuration * signature_numerator
+        bar_duration = beat_duration * signature_numerator
 
     EXAMPLE:
     (1 beat each second)
@@ -29,9 +29,9 @@ using std::string;
     signature_denominator = 4
     tempo = 60 bpm (quarter note beats per minute)
 
-    beatDuration = 60000(1min in milis) / 60(tempo) * 4(quarter note length) / 4(signature_denominator) = 60000 / 60 = 1000 ms (= 1s)
+    beat_duration = 60000(1min in milis) / 60(tempo) * 4(quarter note length) / 4(signature_denominator) = 60000 / 60 = 1000 ms (= 1s)
 
-    barDuration = 1000 * 4(signature_numerator) = 4000 ms (=4s)
+    bar_duration = 1000 * 4(signature_numerator) = 4000 ms (=4s)
 
  */
 
@@ -48,7 +48,7 @@ Click::Click(unsigned int tempo, unsigned int signature_numerator, unsigned int 
     cout << LOG_LABEL << "time signature: " << _signature_numerator << "/" << _signature_denominator << endl;
 }
 
-bool Click::initialize(JackClientWrapper *jack_client_wrapper) {
+bool Click::initialize(Jack_client_wrapper *jack_client_wrapper) {
 
     _jack_client_wrapper = jack_client_wrapper;
     _jack_client_wrapper->register_connection_node(this);
