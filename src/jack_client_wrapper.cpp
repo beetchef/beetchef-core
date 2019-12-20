@@ -6,12 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-using std::cerr;
-using std::cout;
-using std::endl;
-
 #define LOG_LABEL "[JACK client wrapper]: "
-
 
 Jack_client_wrapper::Jack_client_wrapper() {
 
@@ -59,8 +54,8 @@ Jack_client_wrapper::Jack_client_wrapper() {
 	/* display the current sample rate.
 	 */
 
-    cout << LOG_LABEL << "created..." << endl;
-    cout << LOG_LABEL << "sample rate: " << jack_get_sample_rate(_client) << "Hz" << endl;
+    std::cout << LOG_LABEL << "created..." << std::endl;
+    std::cout << LOG_LABEL << "sample rate: " << jack_get_sample_rate(_client) << "Hz" << std::endl;
 
 }
 
@@ -80,14 +75,14 @@ bool Jack_client_wrapper::activate() {
     //cout << mClient << endl;
 
     if (!_client) {
-        cerr << LOG_LABEL << "Cannot activate JACK client, it's not open." << endl;
+        std::cerr << LOG_LABEL << "Cannot activate JACK client, it's not open." << std::endl;
         return false;
     }
     jack_activate(_client);
 
     // jack_activate returns zero on success, non-zero otherwise
     if (jack_activate(_client)) {
-        cerr << LOG_LABEL << "Failed to activate JACK client." << endl;
+        std::cerr << LOG_LABEL << "Failed to activate JACK client." << std::endl;
         return false;
     }
 
@@ -96,55 +91,55 @@ bool Jack_client_wrapper::activate() {
 
 bool Jack_client_wrapper::deactivate() {
     if (!_client) {
-        cerr << LOG_LABEL << "Cannot deactivate JACK client, it's not open." << endl;
+        std::cerr << LOG_LABEL << "Cannot deactivate JACK client, it's not open." << std::endl;
         return false;
     }
 
     // jack_deactivate returns zero on success, non-zero otherwise
     if (jack_deactivate(_client)) {
-        cerr << LOG_LABEL << "Failed to deactivate JACK client." << endl;
+        std::cerr << LOG_LABEL << "Failed to deactivate JACK client." << std::endl;
         return false;
     }
 
     return true;
 }
 
-bool Jack_client_wrapper::create_port(string port_name, PortType port_type) {
+bool Jack_client_wrapper::create_port(std::string port_name, PortType port_type) {
 
     jack_port_t *port = jack_port_register (_client, port_name.c_str(),
 					 JACK_DEFAULT_AUDIO_TYPE,
 					 port_type == INPUT_PORT ? JackPortIsInput : JackPortIsOutput, 0);
 
     if ((port == NULL)) {
-		cerr << LOG_LABEL << "Failed to create " << (port_type == INPUT_PORT ? "input" : "output") << " port. No more JACK ports available." << endl;
+		std::cerr << LOG_LABEL << "Failed to create " << (port_type == INPUT_PORT ? "input" : "output") << " port. No more JACK ports available." << std::endl;
 		return false;
 	}
 
     return true;
 }
 
-bool Jack_client_wrapper::create_input_port(string port_name) {
+bool Jack_client_wrapper::create_input_port(std::string port_name) {
 
     jack_port_t *input_port = jack_port_register (_client, port_name.c_str(),
 					 JACK_DEFAULT_AUDIO_TYPE,
 					 JackPortIsInput, 0);
 
     if ((input_port == NULL)) {
-		cerr << LOG_LABEL << "Failed to create input port. No more JACK ports available." << endl;
+		std::cerr << LOG_LABEL << "Failed to create input port. No more JACK ports available." << std::endl;
 		return false;
 	}
 
     return true;
 }
 
-bool Jack_client_wrapper::create_output_port(string port_name) {
+bool Jack_client_wrapper::create_output_port(std::string port_name) {
 
     jack_port_t *input_port = jack_port_register (_client, port_name.c_str(),
 					 JACK_DEFAULT_AUDIO_TYPE,
 					 JackPortIsInput, 0);
 
     if ((input_port == NULL)) {
-		cerr << LOG_LABEL << "Failed to create output port. No more JACK ports available." << endl;
+		std::cerr << LOG_LABEL << "Failed to create output port. No more JACK ports available." << std::endl;
 		return false;
 	}
 
@@ -177,7 +172,7 @@ int Jack_client_wrapper::process_callback(jack_nframes_t nframes) {
 	//in = (jack_default_audio_sample_t *) jack_port_get_buffer (mInputPorts[0], nframes);
 	//out =(jack_default_audio_sample_t *) jack_port_get_buffer (mOutputPorts[0], nframes);
 	//memcpy (out, in, sizeof (jack_default_audio_sample_t) * nframes);
-    for (vector<Jack_connection_node *>::iterator connection_node = _connection_nodes.begin(); connection_node != _connection_nodes.end(); ++connection_node) {
+    for (std::vector<Jack_connection_node *>::iterator connection_node = _connection_nodes.begin(); connection_node != _connection_nodes.end(); ++connection_node) {
         (*connection_node)->jack_process_callback(nframes);
     }
 	return 0;
@@ -188,15 +183,15 @@ int Jack_client_wrapper::process_callback(jack_nframes_t nframes) {
  * decides to disconnect the client.
  */
 void Jack_client_wrapper::shutdown_callback(void *arg) {
-	cerr << LOG_LABEL << "Client was shut down by Jack." << endl;
+	std::cerr << LOG_LABEL << "Client was shut down by Jack." << std::endl;
 	return;
 }
 
 void Jack_client_wrapper::test_connect() {
     if (jack_connect(_client, "beetchef:master_out_1", "sooperlooper:common_in_1")) {
-        cerr << LOG_LABEL << "cannot connect port" << endl;
+        std::cerr << LOG_LABEL << "cannot connect port" << std::endl;
     }
     if (jack_connect(_client, "sooperlooper:common_out_2", "system:playback_1")) {
-        cerr << LOG_LABEL << "cannot connect port" << endl;
+        std::cerr << LOG_LABEL << "cannot connect port" << std::endl;
     }
 }

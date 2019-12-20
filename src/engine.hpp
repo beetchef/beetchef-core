@@ -2,8 +2,6 @@
 #include "click.hpp"
 #include "jack_client_wrapper.hpp"
 
-using std::string;
-
 #ifndef ENGINE_HPP
 #define ENGINE_HPP
 
@@ -17,7 +15,7 @@ class Engine {
         bool _is_alive;
         Jack_client_wrapper *_jack_client_wrapper;
         Click _click;
-        string get_engine_status();
+        std::string get_engine_status();
 };
 
 #endif

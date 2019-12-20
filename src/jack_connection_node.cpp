@@ -3,10 +3,6 @@
 #include <vector>
 #include <iostream>
 
-using std::vector;
-using std::cout;
-using std::endl;
-
 Jack_connection_node::Jack_connection_node() {
 
 }

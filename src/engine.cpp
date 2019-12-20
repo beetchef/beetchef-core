@@ -4,27 +4,23 @@
 #include <string>
 #include <unistd.h>
 
-using std::cerr;
-using std::cout;
-using std::endl;
-
 #define LOG_LABEL "[Engine]: "
 
 Engine::Engine() : _click(60, 4, 4) {
     _is_alive = true;
-    cout << LOG_LABEL << "created..." << endl;
+    std::cout << LOG_LABEL << "created..." << std::endl;
 }
 
 bool Engine::initialize(Jack_client_wrapper *jack_client_wrapper) {
     _jack_client_wrapper = jack_client_wrapper;
 
     if (!_jack_client_wrapper->create_port("master_out_1", OUTPUT_PORT)) {
-        cerr << LOG_LABEL << "Failed to create JACK client master output 1 port" << endl;
+        std::cerr << LOG_LABEL << "Failed to create JACK client master output 1 port" << std::endl;
         return false;
     }
 
     if (!_jack_client_wrapper->create_port("master_out_2", OUTPUT_PORT)) {
-        cerr << LOG_LABEL << "Failed to create JACK client master output 2 port" << endl;
+        std::cerr << LOG_LABEL << "Failed to create JACK client master output 2 port" << std::endl;
         return false;
     }
 
@@ -36,19 +32,19 @@ bool Engine::is_alive() {
     return _is_alive;
 }
 
-string Engine::get_engine_status() {
+std::string Engine::get_engine_status() {
     return is_alive() ? "alive" : "dead";
 }
 
 int Engine::start() {
-    cout << LOG_LABEL << " started..." << endl;
+    std::cout << LOG_LABEL << " started..." << std::endl;
 
     _click.start();
 
     while(is_alive()){
         // do main loop stuff here
 
-        cout << LOG_LABEL << "main loop - doing nothing..." << endl;
+        std::cout << LOG_LABEL << "main loop - doing nothing..." << std::endl;
         // sleep for 5 seconds
         usleep(5000000);
     }

@@ -4,10 +4,6 @@
 #include <chrono>
 #include <thread>
 
-using std::cout;
-using std::endl;
-using std::string;
-
 #define LOG_LABEL "[Click]: "
 
 /*
@@ -43,9 +39,9 @@ Click::Click(unsigned int tempo, unsigned int signature_numerator, unsigned int 
     _signature_denominator = signature_denominator;
     _beat_duration = 60000 /* 1 minute in milis */ / tempo * 4 /* quarter note length */ / signature_denominator;
     _bar_duration = _beat_duration * _signature_numerator;
-    cout << LOG_LABEL << "created..." << endl;
-    cout << LOG_LABEL << "tempo: " << _tempo << endl;
-    cout << LOG_LABEL << "time signature: " << _signature_numerator << "/" << _signature_denominator << endl;
+    std::cout << LOG_LABEL << "created..." << std::endl;
+    std::cout << LOG_LABEL << "tempo: " << _tempo << std::endl;
+    std::cout << LOG_LABEL << "time signature: " << _signature_numerator << "/" << _signature_denominator << std::endl;
 }
 
 bool Click::initialize(Jack_client_wrapper *jack_client_wrapper) {
@@ -58,7 +54,7 @@ bool Click::initialize(Jack_client_wrapper *jack_client_wrapper) {
 
 void Click::start() {
     _is_running = true;
-    cout << LOG_LABEL << "started..." << endl;
+    std::cout << LOG_LABEL << "started..." << std::endl;
 
     std::thread click_loop_thread([this]() {
         // TMP: testing
@@ -68,7 +64,7 @@ void Click::start() {
             // next_beat_timepoint is current time + beat duration
             auto next_beat_timepoint = std::chrono::steady_clock::now() + std::chrono::milliseconds(_beat_duration);
 
-            cout << LOG_LABEL << "*click* " << _current_beat << endl;
+            std::cout << LOG_LABEL << "*click* " << _current_beat << std::endl;
 
             // TMP: testing
             total_beat_count++;
@@ -84,7 +80,7 @@ void Click::start() {
             } else {
                 // this was the last beat within the bar, reset mCurrentBeat to 1
                 _current_beat = 1;
-                cout << endl;
+                std::cout << std::endl;
             }
             std::this_thread::sleep_until(next_beat_timepoint);
         }
@@ -95,5 +91,5 @@ void Click::start() {
 }
 
 void Click::jack_process_callback(jack_nframes_t nframes) {
-    cout << LOG_LABEL << "JACK process callback - TODO: process " << nframes << " frames here..." << endl;
+    std::cout << LOG_LABEL << "JACK process callback - TODO: process " << nframes << " frames here..." << std::endl;
 };
