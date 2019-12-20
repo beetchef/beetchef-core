@@ -1,9 +1,9 @@
 #ifndef CLICK_HPP
 #define CLICK_HPP
 
+#include "jack_client_wrapper.hpp"
 #include "jack_connection_node.hpp"
 #include "messaging_handler.hpp"
-#include "jack_client_wrapper.hpp"
 
 class Click: public Jack_connection_node {
     public:

@@ -2,7 +2,7 @@
 #define JACK_CONNECTION_NODE_HPP
 
 #include <vector>
-#include "jack/jack.h"
+#include <jack/jack.h>
 
 class Jack_connection_node {
     public:

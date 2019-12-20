@@ -1,10 +1,11 @@
 #include "jack_client_wrapper.hpp"
-#include <jack/jack.h>
+
+#include <cstdlib>
+#include <cstdio>
 #include <iostream>
-#include <stdlib.h>
+#include <string>
 #include <unistd.h>
-#include <stdio.h>
-#include <string.h>
+#include <jack/jack.h>
 
 #define LOG_LABEL "[JACK client wrapper]: "
 

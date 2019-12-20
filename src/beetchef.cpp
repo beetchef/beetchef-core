@@ -1,6 +1,7 @@
-#include <iostream>
 #include "engine.hpp"
 #include "jack_client_wrapper.hpp"
+
+#include <iostream>
 
 #define LOG_LABEL "[beetchef]: "
 

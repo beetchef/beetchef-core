@@ -1,6 +1,7 @@
 #include "messaging_handler.hpp"
-#include "osc/OscOutboundPacketStream.h"
 #include "ip/UdpSocket.h"
+#include "osc/OscOutboundPacketStream.h"
+
 #include <iostream>
 
 #define LOG_LABEL "[Messaging handler]: "

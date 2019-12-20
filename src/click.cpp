@@ -1,7 +1,8 @@
 #include "click.hpp"
 #include "messaging_handler.hpp"
-#include <iostream>
+
 #include <chrono>
+#include <iostream>
 #include <thread>
 
 #define LOG_LABEL "[Click]: "

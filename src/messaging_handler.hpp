@@ -1,8 +1,9 @@
 #ifndef MESSAGING_HANDLER_HPP
 #define MESSAGING_HANDLER_HPP
 
-#include <iostream>
 #include "ip/UdpSocket.h"
+
+#include <iostream>
 
 class Messaging_handler {
     public:

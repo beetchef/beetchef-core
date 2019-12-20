@@ -1,9 +1,10 @@
-#include <string>
+#ifndef ENGINE_HPP
+#define ENGINE_HPP
+
 #include "click.hpp"
 #include "jack_client_wrapper.hpp"
 
-#ifndef ENGINE_HPP
-#define ENGINE_HPP
+#include <string>
 
 class Engine {
     public:

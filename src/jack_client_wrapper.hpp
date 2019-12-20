@@ -1,10 +1,11 @@
 #ifndef JACK_WRAPPER_HPP
 #define JACK_WRAPPER_HPP
 
-#include "jack/jack.h"
 #include "jack_connection_node.hpp"
+
 #include <string>
 #include <vector>
+#include <jack/jack.h>
 
 enum PortType {
     INPUT_PORT,
