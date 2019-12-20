@@ -45,7 +45,7 @@ Click::Click(unsigned int tempo, unsigned int signature_numerator, unsigned int 
     std::cout << LOG_LABEL << "time signature: " << _signature_numerator << "/" << _signature_denominator << std::endl;
 }
 
-bool Click::initialize(Jack_client_wrapper *jack_client_wrapper) {
+bool Click::initialize(Jack_client_wrapper* jack_client_wrapper) {
 
     _jack_client_wrapper = jack_client_wrapper;
     _jack_client_wrapper->register_connection_node(this);

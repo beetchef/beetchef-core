@@ -121,7 +121,7 @@ bool Jack_client_wrapper::create_port(std::string port_name, PortType port_type)
 
 bool Jack_client_wrapper::create_input_port(std::string port_name) {
 
-    jack_port_t *input_port = jack_port_register (_client, port_name.c_str(),
+    jack_port_t* input_port = jack_port_register (_client, port_name.c_str(),
 					 JACK_DEFAULT_AUDIO_TYPE,
 					 JackPortIsInput, 0);
 
@@ -135,7 +135,7 @@ bool Jack_client_wrapper::create_input_port(std::string port_name) {
 
 bool Jack_client_wrapper::create_output_port(std::string port_name) {
 
-    jack_port_t *input_port = jack_port_register (_client, port_name.c_str(),
+    jack_port_t* input_port = jack_port_register (_client, port_name.c_str(),
 					 JACK_DEFAULT_AUDIO_TYPE,
 					 JackPortIsInput, 0);
 
@@ -173,7 +173,7 @@ int Jack_client_wrapper::process_callback(jack_nframes_t nframes) {
 	//in = (jack_default_audio_sample_t *) jack_port_get_buffer (mInputPorts[0], nframes);
 	//out =(jack_default_audio_sample_t *) jack_port_get_buffer (mOutputPorts[0], nframes);
 	//memcpy (out, in, sizeof (jack_default_audio_sample_t) * nframes);
-    for (std::vector<Jack_connection_node *>::iterator connection_node = _connection_nodes.begin(); connection_node != _connection_nodes.end(); ++connection_node) {
+    for (std::vector<Jack_connection_node*>::iterator connection_node = _connection_nodes.begin(); connection_node != _connection_nodes.end(); ++connection_node) {
         (*connection_node)->jack_process_callback(nframes);
     }
 	return 0;
@@ -183,7 +183,7 @@ int Jack_client_wrapper::process_callback(jack_nframes_t nframes) {
  * JACK calls this shutdown_callback if the server ever shuts down or
  * decides to disconnect the client.
  */
-void Jack_client_wrapper::shutdown_callback(void *arg) {
+void Jack_client_wrapper::shutdown_callback(void* arg) {
 	std::cerr << LOG_LABEL << "Client was shut down by Jack." << std::endl;
 	return;
 }

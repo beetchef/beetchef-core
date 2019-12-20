@@ -12,7 +12,7 @@ Engine::Engine() : _click(60, 4, 4) {
     std::cout << LOG_LABEL << "created..." << std::endl;
 }
 
-bool Engine::initialize(Jack_client_wrapper *jack_client_wrapper) {
+bool Engine::initialize(Jack_client_wrapper* jack_client_wrapper) {
     _jack_client_wrapper = jack_client_wrapper;
 
     if (!_jack_client_wrapper->create_port("master_out_1", OUTPUT_PORT)) {

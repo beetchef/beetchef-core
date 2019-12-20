@@ -10,9 +10,9 @@ int main(int argc, char** argv) {
     (void) argc; // suppress unused parameter warnings
     (void) argv; // suppress unused parameter warnings
 
-    Jack_client_wrapper *jack_client_wrapper = new Jack_client_wrapper();
+    Jack_client_wrapper* jack_client_wrapper = new Jack_client_wrapper();
 
-    Engine *engine = new Engine();
+    Engine* engine = new Engine();
 
     if (!engine->initialize(jack_client_wrapper)) {
         std::cerr << LOG_LABEL << "Failed to initialize engine." << std::endl;

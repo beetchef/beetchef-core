@@ -8,12 +8,12 @@
 class Click: public Jack_connection_node {
     public:
         Click(unsigned int tempo, unsigned int signature_numerator, unsigned int signature_denominator);
-        bool initialize(Jack_client_wrapper *jack_client_wrapper);
+        bool initialize(Jack_client_wrapper* jack_client_wrapper);
         void start();
         void jack_process_callback(jack_nframes_t nframes);
     protected:
     private:
-        Jack_client_wrapper *_jack_client_wrapper;
+        Jack_client_wrapper* _jack_client_wrapper;
         unsigned int _tempo;
         unsigned int _signature_numerator;
         unsigned int _signature_denominator;

@@ -9,12 +9,12 @@
 class Engine {
     public:
         Engine();
-        bool initialize(Jack_client_wrapper *jack_client_wrapper);
+        bool initialize(Jack_client_wrapper* jack_client_wrapper);
         int start();
         bool is_alive();
     private:
         bool _is_alive;
-        Jack_client_wrapper *_jack_client_wrapper;
+        Jack_client_wrapper* _jack_client_wrapper;
         Click _click;
         std::string get_engine_status();
 };
