@@ -11,7 +11,7 @@ Engine::Engine()
     _click{*_jack_client.get()},
     _is_alive{true}
 {
-    std::cout << log_label << "created..." << std::endl;
+    std::cout << log_label << "Created..." << std::endl;
 }
 
 bool Engine::init()
@@ -47,14 +47,14 @@ std::string Engine::get_engine_status()
 
 int Engine::start()
 {
-    std::cout << log_label << " started..." << std::endl;
+    std::cout << log_label << "Started..." << std::endl;
 
     _click.start();
 
     while(is_alive()) {
         // do main loop stuff here
 
-        std::cout << log_label << "main loop - doing nothing..." << std::endl;
+        std::cout << log_label << "Main loop - doing nothing..." << std::endl;
         // sleep for 5 seconds
         usleep(5000000);
     }

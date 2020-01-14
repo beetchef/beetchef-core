@@ -35,9 +35,9 @@ Click::Click(Jack_client_wrapper& jack_client)
 {
     _beat_duration = 60000 /* 1 minute in milis */ / _tempo * 4 /* quarter note length */ / _signature_denominator;
     _bar_duration = _beat_duration * _signature_numerator;
-    std::cout << log_label << "created..." << std::endl;
-    std::cout << log_label << "tempo: " << _tempo << std::endl;
-    std::cout << log_label << "time signature: " << _signature_numerator << "/" << _signature_denominator << std::endl;
+    std::cout << log_label << "Created..." << std::endl;
+    std::cout << log_label << "Tempo: " << _tempo << std::endl;
+    std::cout << log_label << "Time signature: " << _signature_numerator << "/" << _signature_denominator << std::endl;
 }
 
 bool Click::init()
@@ -50,7 +50,7 @@ bool Click::init()
 void Click::start()
 {
     _is_running = true;
-    std::cout << log_label << "started..." << std::endl;
+    std::cout << log_label << "Started..." << std::endl;
 
     std::thread click_loop_thread([this]()
     {
@@ -89,5 +89,5 @@ void Click::start()
 
 void Click::jack_process_callback(jack_nframes_t nframes)
 {
-    std::cout << log_label << "JACK process callback - TODO: process " << nframes << " frames here..." << std::endl;
+//    std::cout << log_label << "JACK process callback - TODO: process " << nframes << " frames here..." << std::endl;
 };

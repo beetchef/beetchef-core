@@ -7,47 +7,45 @@
 #include <unistd.h>
 #include <jack/jack.h>
 
+void Jack_client_deleter::operator()(jack_client_t* client_ptr) const
+{
+    jack_deactivate(client_ptr);
+    jack_client_close(client_ptr);
+}
+
 Jack_client_wrapper::Jack_client_wrapper()
+    : _client{
+        jack_client_open(_client_name.c_str(), JackNullOption, &_client_status),
+        Jack_client_deleter{}}
 {
     const char **ports;
-	jack_options_t options = JackNullOption;
-	jack_status_t status;
-
-	// open a client connection to the JACK server
-    _client = jack_client_open(_client_name.c_str(), options, &status);
 
     if (_client == NULL) {
-		fprintf (stderr, "jack_client_open() failed, "
-			 "status = 0x%2.0x\n", status);
-		if (status & JackServerFailed) {
-			fprintf(stderr, "Unable to connect to JACK server\n");
-		}
+        std::cerr
+            << log_label
+            << "Failed to create, status = "
+            << _client_status
+            << (_client_status & JackServerFailed)
+                ? ", unable to connect to JACK server."
+                : ".";
+
 		exit (1);
 	}
 
-	if (status & JackServerStarted) {
-		fprintf(stderr, "JACK server started\n");
+	if (_client_status & JackServerStarted) {
+        std::cout << log_label << "JACK server started." << std::endl;
 	}
 
-	if (status & JackNameNotUnique) {
-		auto client_name = jack_get_client_name(_client);
-		fprintf(stderr, "unique name `%s' assigned\n", client_name);
+	if (_client_status & JackNameNotUnique) {
+		std::cerr << log_label << "Unique name " << jack_get_client_name(_client.get()) << " assigned." << std::endl;
     }
 
-    jack_set_process_callback(_client, process_callback, this);
+    jack_set_process_callback(_client.get(), process_callback, this);
 
-	jack_on_shutdown(_client, shutdown_callback, 0);
+	jack_on_shutdown(_client.get(), shutdown_callback, 0);
 
-    std::cout << log_label << "created..." << std::endl;
-    std::cout << log_label << "sample rate: " << jack_get_sample_rate(_client) << "Hz" << std::endl;
-}
-
-Jack_client_wrapper::~Jack_client_wrapper()
-{
-    if (_client) {
-        jack_deactivate(_client);
-        jack_client_close(_client);
-    }
+    std::cout << log_label << "Created..." << std::endl;
+    std::cout << log_label << "Sample rate: " << jack_get_sample_rate(_client.get()) << "Hz" << std::endl;
 }
 
 void Jack_client_wrapper::register_connection_node(Jack_connection_node *connection_node)
@@ -63,27 +61,11 @@ bool Jack_client_wrapper::activate()
         std::cerr << log_label << "Cannot activate JACK client, it's not open." << std::endl;
         return false;
     }
-    jack_activate(_client);
+    jack_activate(_client.get());
 
     // jack_activate returns zero on success, non-zero otherwise
-    if (jack_activate(_client)) {
+    if (jack_activate(_client.get())) {
         std::cerr << log_label << "Failed to activate JACK client." << std::endl;
-        return false;
-    }
-
-    return true;
-}
-
-bool Jack_client_wrapper::deactivate()
-{
-    if (!_client) {
-        std::cerr << log_label << "Cannot deactivate JACK client, it's not open." << std::endl;
-        return false;
-    }
-
-    // jack_deactivate returns zero on success, non-zero otherwise
-    if (jack_deactivate(_client)) {
-        std::cerr << log_label << "Failed to deactivate JACK client." << std::endl;
         return false;
     }
 
@@ -92,9 +74,10 @@ bool Jack_client_wrapper::deactivate()
 
 bool Jack_client_wrapper::create_port(std::string port_name, PortType port_type)
 {
-    jack_port_t *port = jack_port_register (_client, port_name.c_str(),
-					 JACK_DEFAULT_AUDIO_TYPE,
-					 port_type == PortType::input ? JackPortIsInput : JackPortIsOutput, 0);
+    jack_port_t *port = jack_port_register(
+        _client.get(), port_name.c_str(),
+        JACK_DEFAULT_AUDIO_TYPE,
+        port_type == PortType::input ? JackPortIsInput : JackPortIsOutput, 0);
 
     if ((port == NULL)) {
 		std::cerr << log_label << "Failed to create " << (port_type == PortType::input ? "input" : "output") << " port. No more JACK ports available." << std::endl;
@@ -106,7 +89,7 @@ bool Jack_client_wrapper::create_port(std::string port_name, PortType port_type)
 
 bool Jack_client_wrapper::create_input_port(std::string port_name)
 {
-    jack_port_t* input_port = jack_port_register (_client, port_name.c_str(),
+    jack_port_t* input_port = jack_port_register (_client.get(), port_name.c_str(),
 					 JACK_DEFAULT_AUDIO_TYPE,
 					 JackPortIsInput, 0);
 
@@ -120,7 +103,7 @@ bool Jack_client_wrapper::create_input_port(std::string port_name)
 
 bool Jack_client_wrapper::create_output_port(std::string port_name)
 {
-    jack_port_t* input_port = jack_port_register (_client, port_name.c_str(),
+    jack_port_t* input_port = jack_port_register (_client.get(), port_name.c_str(),
 					 JACK_DEFAULT_AUDIO_TYPE,
 					 JackPortIsInput, 0);
 
@@ -143,13 +126,7 @@ int Jack_client_wrapper::process_callback(jack_nframes_t nframes, void *arg)
 
 int Jack_client_wrapper::process_nodes(jack_nframes_t nframes)
 {
-	//jack_default_audio_sample_t *in, *out;
-
-	//in = (jack_default_audio_sample_t *) jack_port_get_buffer (mInputPorts[0], nframes);
-	//out =(jack_default_audio_sample_t *) jack_port_get_buffer (mOutputPorts[0], nframes);
-	//memcpy (out, in, sizeof (jack_default_audio_sample_t) * nframes);
-
-    for (auto node : _connection_nodes) {
+	for (auto node : _connection_nodes) {
         node->jack_process_callback(nframes);
     }
 	return 0;
@@ -167,10 +144,10 @@ void Jack_client_wrapper::shutdown_callback(void* arg)
 
 void Jack_client_wrapper::test_connect()
 {
-    if (jack_connect(_client, "beetchef:master_out_1", "sooperlooper:common_in_1")) {
-        std::cerr << log_label << "cannot connect port" << std::endl;
+    if (jack_connect(_client.get(), "beetchef:master_out_1", "sooperlooper:common_in_1")) {
+        std::cerr << log_label << "Cannot connect port." << std::endl;
     }
-    if (jack_connect(_client, "sooperlooper:common_out_2", "system:playback_1")) {
-        std::cerr << log_label << "cannot connect port" << std::endl;
+    if (jack_connect(_client.get(), "sooperlooper:common_out_2", "system:playback_1")) {
+        std::cerr << log_label << "Cannot connect port." << std::endl;
     }
 }
