@@ -33,8 +33,8 @@ class Jack_client_wrapper {
         std::vector<jack_port_t*> _input_ports;
         std::vector<jack_port_t*> _output_ports;
         std::vector<Jack_connection_node*> _connection_nodes;
-        jack_status_t _client_status;
         std::unique_ptr<jack_client_t, Jack_client_deleter> _client;
+        Jack_client_wrapper(jack_status_t client_status);
         static int process_callback(jack_nframes_t nframes, void* arg);
         int process_nodes(jack_nframes_t nframes);
         static void shutdown_callback(void* arg);

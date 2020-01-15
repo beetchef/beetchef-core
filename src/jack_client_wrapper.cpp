@@ -7,15 +7,39 @@
 #include <unistd.h>
 #include <jack/jack.h>
 
+/**
+ * Custom deleter for unique_ptr owning jack_client_t pointer
+ */
 void Jack_client_deleter::operator()(jack_client_t* client_ptr) const
 {
     jack_deactivate(client_ptr);
+    // within jack_client_close() a "delete" keyword is used to free the memory
+    // used by jack client object on the heap
     jack_client_close(client_ptr);
 }
 
+/**
+ * Public delegating constructor only calls private parametrized constructor
+ * with some value of jack_status_t enum. It doesn't matter which value - this
+ * is only done so the other constructor has an initialized variable to write
+ * jack status to when calling jack_client_open() within member initializer list.
+ */
 Jack_client_wrapper::Jack_client_wrapper()
+    : Jack_client_wrapper{JackInitFailure}
+{
+}
+
+/**
+ * Private constructor is called with client_status parameter which is in turn
+ * used to write jack status to when calling jack_client_open() within member
+ * initializer list - therefore the value of the parameter doesn't matter.
+ */
+Jack_client_wrapper::Jack_client_wrapper(jack_status_t client_status)
     : _client{
-        jack_client_open(_client_name.c_str(), JackNullOption, &_client_status),
+        // within jack_client_open() a "new" keyword is used to allocate jack client object
+        // on the heap thus jack_client_t* returned from the function is an owning pointer
+        jack_client_open(_client_name.c_str(), JackNullOption, &client_status),
+        // this custom deleter calls jack_client_close() to delete the owning pointer
         Jack_client_deleter{}}
 {
     const char **ports;
@@ -24,19 +48,19 @@ Jack_client_wrapper::Jack_client_wrapper()
         std::cerr
             << log_label
             << "Failed to create, status = "
-            << _client_status
-            << (_client_status & JackServerFailed)
+            << client_status
+            << (client_status & JackServerFailed)
                 ? ", unable to connect to JACK server."
                 : ".";
 
 		exit (1);
 	}
 
-	if (_client_status & JackServerStarted) {
+	if (client_status & JackServerStarted) {
         std::cout << log_label << "JACK server started." << std::endl;
 	}
 
-	if (_client_status & JackNameNotUnique) {
+	if (client_status & JackNameNotUnique) {
 		std::cerr << log_label << "Unique name " << jack_get_client_name(_client.get()) << " assigned." << std::endl;
     }
 
