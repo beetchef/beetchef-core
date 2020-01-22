@@ -1,8 +1,11 @@
 #include "jack_client_wrapper.hpp"
+#include "beetchef_error.hpp"
 
 #include <cstdlib>
 #include <cstdio>
 #include <iostream>
+#include <stdexcept>
+#include <sstream>
 #include <string>
 #include <unistd.h>
 #include <jack/jack.h>
@@ -12,6 +15,7 @@
  */
 void Jack_client_deleter::operator()(jack_client_t* client_ptr) const
 {
+    // deactivate jack client, unregister all ports
     jack_deactivate(client_ptr);
     // within jack_client_close() a "delete" keyword is used to free the memory
     // used by jack client object on the heap
@@ -42,27 +46,22 @@ Jack_client_wrapper::Jack_client_wrapper(jack_status_t client_status)
         // this custom deleter calls jack_client_close() to delete the owning pointer
         Jack_client_deleter{}}
 {
-    const char **ports;
-
     if (_client == NULL) {
-        std::cerr
-            << log_label
-            << "Failed to create, status = "
+        std::stringstream msg_buf;
+        msg_buf << "Failed to create JACK client, status = "
             << client_status
-            << (client_status & JackServerFailed)
+            << ((client_status & JackServerFailed)
                 ? ", unable to connect to JACK server."
-                : ".";
+                : ".");
 
-		exit (1);
+		throw Beetchef_error{msg_buf.str()};
 	}
 
-	if (client_status & JackServerStarted) {
+	if (client_status & JackServerStarted)
         std::cout << log_label << "JACK server started." << std::endl;
-	}
 
-	if (client_status & JackNameNotUnique) {
+	if (client_status & JackNameNotUnique)
 		std::cerr << log_label << "Unique name " << jack_get_client_name(_client.get()) << " assigned." << std::endl;
-    }
 
     jack_set_process_callback(_client.get(), process_callback, this);
 
@@ -70,6 +69,24 @@ Jack_client_wrapper::Jack_client_wrapper(jack_status_t client_status)
 
     std::cout << log_label << "Created..." << std::endl;
     std::cout << log_label << "Sample rate: " << jack_get_sample_rate(_client.get()) << "Hz" << std::endl;
+
+    int err_code = jack_activate(_client.get());
+
+    if (err_code)
+        throw Beetchef_error{"Failed to activate JACK client, error code = " + std::to_string(err_code) + "."};
+
+    std::cout << log_label << "Activated..." << std::endl;
+
+    if (!register_port("master_out_1", PortType::output)) {
+        std::cerr << log_label << "Failed to register JACK client master output 1 port" << std::endl;
+        //return false;
+    }
+
+    if (!register_port("master_out_2", PortType::output)) {
+        std::cerr << log_label << "Failed to register JACK client master output 2 port" << std::endl;
+      //  return false;
+    }
+
 }
 
 void Jack_client_wrapper::register_connection_node(Jack_connection_node *connection_node)
@@ -77,66 +94,34 @@ void Jack_client_wrapper::register_connection_node(Jack_connection_node *connect
     _connection_nodes.push_back(connection_node);
 }
 
-bool Jack_client_wrapper::activate()
-{
-    //cout << mClient << endl;
-
-    if (!_client) {
-        std::cerr << log_label << "Cannot activate JACK client, it's not open." << std::endl;
-        return false;
-    }
-    jack_activate(_client.get());
-
-    // jack_activate returns zero on success, non-zero otherwise
-    if (jack_activate(_client.get())) {
-        std::cerr << log_label << "Failed to activate JACK client." << std::endl;
-        return false;
-    }
-
-    return true;
-}
-
-bool Jack_client_wrapper::create_port(std::string port_name, PortType port_type)
+bool Jack_client_wrapper::register_port(std::string port_name, PortType port_type)
 {
     jack_port_t *port = jack_port_register(
-        _client.get(), port_name.c_str(),
+        _client.get(),
+        port_name.c_str(),
         JACK_DEFAULT_AUDIO_TYPE,
-        port_type == PortType::input ? JackPortIsInput : JackPortIsOutput, 0);
+        port_type == PortType::input
+            ? JackPortIsInput
+            : JackPortIsOutput, 0);
 
-    if ((port == NULL)) {
-		std::cerr << log_label << "Failed to create " << (port_type == PortType::input ? "input" : "output") << " port. No more JACK ports available." << std::endl;
+    if (port == NULL) {
+		std::cerr << log_label << "Failed to register " << (port_type == PortType::input ? "input" : "output") << " port. No more JACK ports available." << std::endl;
 		return false;
 	}
+
+	std::cout << log_label << "JACK " << (port_type == PortType::input ? "input " : "output ") << "port " << port_name << " registered..." << std::endl;
 
     return true;
 }
 
-bool Jack_client_wrapper::create_input_port(std::string port_name)
+bool Jack_client_wrapper::register_input_port(std::string port_name)
 {
-    jack_port_t* input_port = jack_port_register (_client.get(), port_name.c_str(),
-					 JACK_DEFAULT_AUDIO_TYPE,
-					 JackPortIsInput, 0);
-
-    if ((input_port == NULL)) {
-		std::cerr << log_label << "Failed to create input port. No more JACK ports available." << std::endl;
-		return false;
-	}
-
-    return true;
+    return register_port(port_name, PortType::input);
 }
 
-bool Jack_client_wrapper::create_output_port(std::string port_name)
+bool Jack_client_wrapper::register_output_port(std::string port_name)
 {
-    jack_port_t* input_port = jack_port_register (_client.get(), port_name.c_str(),
-					 JACK_DEFAULT_AUDIO_TYPE,
-					 JackPortIsInput, 0);
-
-    if ((input_port == NULL)) {
-		std::cerr << log_label << "Failed to create output port. No more JACK ports available." << std::endl;
-		return false;
-	}
-
-    return true;
+    return register_port(port_name, PortType::output);
 }
 
 /**

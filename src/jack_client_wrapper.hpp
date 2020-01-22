@@ -21,10 +21,9 @@ class Jack_client_wrapper {
     public:
         Jack_client_wrapper();
         void register_connection_node(Jack_connection_node* connection_node);
-        bool activate();
-        bool create_port(std::string port_name, PortType port_type);
-        bool create_input_port(std::string port_name);
-        bool create_output_port(std::string port_name);
+        bool register_port(std::string port_name, PortType port_type);
+        bool register_input_port(std::string port_name);
+        bool register_output_port(std::string port_name);
         void test_connect();
     protected:
     private:
