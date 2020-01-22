@@ -1,17 +1,21 @@
 #ifndef MESSAGING_HANDLER_HPP
 #define MESSAGING_HANDLER_HPP
 
-#include <iostream>
 #include "ip/UdpSocket.h"
 
-using std::string;
+#include <iostream>
+#include <string>
 
-class MessagingHandler {
+class Messaging_handler {
     public:
-        MessagingHandler();
-        void send_message(string address, string param);
+        Messaging_handler();
+        void send_message(std::string address, std::string param);
     private:
+        static constexpr std::string_view log_label{"[messaging handler]: "};
+        inline static const std::string address{"127.0.0.1"};
+        static constexpr int port = 9951;
+        static constexpr int output_buffer_size = 1024;
         UdpTransmitSocket _transmit_socket;
 };
 
-#endif
+#endif // MESSAGING_HANDLER_HPP

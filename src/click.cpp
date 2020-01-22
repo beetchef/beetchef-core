@@ -1,25 +1,20 @@
 #include "click.hpp"
 #include "messaging_handler.hpp"
-#include <iostream>
+
 #include <chrono>
+#include <iostream>
 #include <thread>
-
-using std::cout;
-using std::endl;
-using std::string;
-
-#define LOG_LABEL "[Click]: "
 
 /*
     NOTE:
 
     beat duration is calculated as:
 
-        beatDuration = 1 minute / tempo * quarter note length / signature_denominator
+        beat_duration = 1 minute / tempo * quarter note length / signature_denominator
 
     bar duration is then calculated as:
 
-        barDuration = beatDuration * signature_numerator
+        bar_duration = beat_duration * signature_numerator
 
     EXAMPLE:
     (1 beat each second)
@@ -29,38 +24,36 @@ using std::string;
     signature_denominator = 4
     tempo = 60 bpm (quarter note beats per minute)
 
-    beatDuration = 60000(1min in milis) / 60(tempo) * 4(quarter note length) / 4(signature_denominator) = 60000 / 60 = 1000 ms (= 1s)
+    beat_duration = 60000(1min in milis) / 60(tempo) * 4(quarter note length) / 4(signature_denominator) = 60000 / 60 = 1000 ms (= 1s)
 
-    barDuration = 1000 * 4(signature_numerator) = 4000 ms (=4s)
+    bar_duration = 1000 * 4(signature_numerator) = 4000 ms (=4s)
 
- */
+*/
 
-Click::Click(unsigned int tempo, unsigned int signature_numerator, unsigned int signature_denominator) : _messaging_handler() {
-    _is_running = false;
-    _current_beat = 1;
-    _tempo = tempo;
-    _signature_numerator = signature_numerator;
-    _signature_denominator = signature_denominator;
-    _beat_duration = 60000 /* 1 minute in milis */ / tempo * 4 /* quarter note length */ / signature_denominator;
+Click::Click(Jack_client_wrapper& jack_client)
+    : _jack_client{jack_client}
+{
+    _beat_duration = 60000 /* 1 minute in milis */ / _tempo * 4 /* quarter note length */ / _signature_denominator;
     _bar_duration = _beat_duration * _signature_numerator;
-    cout << LOG_LABEL << "created..." << endl;
-    cout << LOG_LABEL << "tempo: " << _tempo << endl;
-    cout << LOG_LABEL << "time signature: " << _signature_numerator << "/" << _signature_denominator << endl;
+    std::cout << log_label << "Created..." << std::endl;
+    std::cout << log_label << "Tempo: " << _tempo << std::endl;
+    std::cout << log_label << "Time signature: " << _signature_numerator << "/" << _signature_denominator << std::endl;
 }
 
-bool Click::initialize(JackClientWrapper *jack_client_wrapper) {
-
-    _jack_client_wrapper = jack_client_wrapper;
-    _jack_client_wrapper->register_connection_node(this);
+bool Click::init()
+{
+    _jack_client.register_connection_node(this);
 
     return true;
 }
 
-void Click::start() {
+void Click::start()
+{
     _is_running = true;
-    cout << LOG_LABEL << "started..." << endl;
+    std::cout << log_label << "Started..." << std::endl;
 
-    std::thread click_loop_thread([this]() {
+    std::thread click_loop_thread([this]()
+    {
         // TMP: testing
         int total_beat_count = 0;
 
@@ -68,7 +61,7 @@ void Click::start() {
             // next_beat_timepoint is current time + beat duration
             auto next_beat_timepoint = std::chrono::steady_clock::now() + std::chrono::milliseconds(_beat_duration);
 
-            cout << LOG_LABEL << "*click* " << _current_beat << endl;
+            std::cout << log_label << "*click* " << _current_beat << std::endl;
 
             // TMP: testing
             total_beat_count++;
@@ -84,7 +77,7 @@ void Click::start() {
             } else {
                 // this was the last beat within the bar, reset mCurrentBeat to 1
                 _current_beat = 1;
-                cout << endl;
+                std::cout << std::endl;
             }
             std::this_thread::sleep_until(next_beat_timepoint);
         }
@@ -94,6 +87,7 @@ void Click::start() {
     click_loop_thread.detach();
 }
 
-void Click::jack_process_callback(jack_nframes_t nframes) {
-    cout << LOG_LABEL << "JACK process callback - TODO: process " << nframes << " frames here..." << endl;
+void Click::jack_process_callback(jack_nframes_t nframes)
+{
+//    std::cout << log_label << "JACK process callback - TODO: process " << nframes << " frames here..." << std::endl;
 };

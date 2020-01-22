@@ -1,16 +1,15 @@
 #include "jack_connection_node.hpp"
-#include "jack/jack.h"
-#include <vector>
+
 #include <iostream>
+#include <vector>
+#include <jack/jack.h>
 
-using std::vector;
-using std::cout;
-using std::endl;
-
-JackConnectionNode::JackConnectionNode() {
+Jack_connection_node::Jack_connection_node()
+{
 
 }
 
-JackConnectionNode::~JackConnectionNode() {
+Jack_connection_node::~Jack_connection_node()
+{
 
 }
