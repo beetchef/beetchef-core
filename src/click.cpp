@@ -1,4 +1,5 @@
 #include "click.hpp"
+
 #include "messaging_handler.hpp"
 
 #include <chrono>
@@ -30,21 +31,13 @@
 
 */
 
-Click::Click(Jack_client_wrapper& jack_client)
-    : _jack_client{jack_client}
+Click::Click()
 {
     _beat_duration = 60000 /* 1 minute in milis */ / _tempo * 4 /* quarter note length */ / _signature_denominator;
     _bar_duration = _beat_duration * _signature_numerator;
     std::cout << log_label << "Created..." << std::endl;
     std::cout << log_label << "Tempo: " << _tempo << std::endl;
     std::cout << log_label << "Time signature: " << _signature_numerator << "/" << _signature_denominator << std::endl;
-}
-
-bool Click::init()
-{
-    _jack_client.register_connection_node(this);
-
-    return true;
 }
 
 void Click::start()
@@ -86,8 +79,3 @@ void Click::start()
     // detach clickLoopThread and continue in flow execution
     click_loop_thread.detach();
 }
-
-void Click::jack_process_callback(jack_nframes_t nframes)
-{
-//    std::cout << log_label << "JACK process callback - TODO: process " << nframes << " frames here..." << std::endl;
-};

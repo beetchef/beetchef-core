@@ -1,4 +1,8 @@
 #include "engine.hpp"
+
+#include "audio/audio_interface.hpp"
+#include "audio/jack/jack_audio_interface.hpp"
+#include "audio/jack/jack_client_wrapper.hpp"
 #include "beetchef_error.hpp"
 #include "click.hpp"
 
@@ -8,33 +12,17 @@
 #include <string>
 #include <unistd.h>
 
-Engine::Engine()
+Engine::Engine(std::unique_ptr<Audio_provider> audio_provider)
 try
-    :_jack_client{std::make_unique<Jack_client_wrapper>()},
-    _click{*_jack_client.get()},
-    _is_alive{true}
+    : _audio_provider{std::move(audio_provider)}
+    , _click{} // TODO: _click will be removed from here
+    , _is_alive{true}
 {
     std::cout << log_label << "Created..." << std::endl;
 }
 catch (...) {
     Beetchef_error err{"Failed to initialize engine."};
     std::throw_with_nested(err);
-}
-
-bool Engine::init()
-{
-    /*if (!_jack_client->register_port("master_out_1", PortType::output)) {
-        std::cerr << log_label << "Failed to register JACK client master output 1 port" << std::endl;
-        return false;
-    }
-
-    if (!_jack_client->register_port("master_out_2", PortType::output)) {
-        std::cerr << log_label << "Failed to register JACK client master output 2 port" << std::endl;
-        return false;
-    }
-*/
-    _click.init();
-    return true;
 }
 
 bool Engine::is_alive()
