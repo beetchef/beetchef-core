@@ -1,10 +1,16 @@
 #include "engine.hpp"
 
+#include "audio/audio_provider.hpp"
+#include "audio/jack/jack_audio_provider.hpp"
+#include "audio/jack/jack_client_wrapper.hpp"
+
 #include <exception>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <string>
+
+
 
 namespace Beetchef {
     static constexpr std::string_view log_label{"[beetchef]: "};
@@ -57,12 +63,7 @@ try {
     (void) argc; // suppress unused parameter warnings
     (void) argv; // suppress unused parameter warnings
 
-    Engine engine;
-
-    if (!engine.init()) {
-        std::cerr << Beetchef::log_label << "Failed to initialize engine." << std::endl;
-        exit(1);
-    }
+    Engine engine(std::make_unique<Jack_audio_provider>(std::move(std::make_unique<Jack_client_wrapper>())));
 
     engine.start();
 
