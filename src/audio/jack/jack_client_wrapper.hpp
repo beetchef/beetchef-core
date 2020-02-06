@@ -1,8 +1,8 @@
 #ifndef JACK_WRAPPER_HPP
 #define JACK_WRAPPER_HPP
 
-#include "jack_port_handle.hpp"
 #include "audio/audio_types.hpp"
+#include "jack_port_handle.hpp"
 
 #include <memory>
 #include <string>
@@ -17,6 +17,11 @@ struct Jack_client_deleter {
 class Jack_client_wrapper {
     public:
         Jack_client_wrapper();
+        Jack_client_wrapper(const Jack_client_wrapper&) = delete;
+        Jack_client_wrapper(Jack_client_wrapper&&) = default;
+        Jack_client_wrapper& operator=(const Jack_client_wrapper&) = delete;
+        Jack_client_wrapper& operator=(Jack_client_wrapper&&) = default;
+        ~Jack_client_wrapper() = default;
         Jack_port_handle register_input_port(std::string port_name);
         Jack_port_handle register_output_port(std::string port_name);
         void set_process_callback(/* TBD */);

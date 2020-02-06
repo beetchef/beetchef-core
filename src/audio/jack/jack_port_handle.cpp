@@ -3,10 +3,10 @@
 #include <string>
 #include <jack/jack.h>
 
-Jack_port_handle::Jack_port_handle(jack_client_t& client, std::string port_name, Port_type port_type)
+Jack_port_handle::Jack_port_handle(jack_client_t* client, std::string port_name, Port_type port_type)
     : _client{client}
     , _port{jack_port_register(
-                &_client,
+                _client,
                 port_name.c_str(),
                 JACK_DEFAULT_AUDIO_TYPE,
                 port_type == Port_type::input
@@ -26,15 +26,14 @@ Jack_port_handle::Jack_port_handle(Jack_port_handle&& other)
 // move assignment
 Jack_port_handle& Jack_port_handle::operator=(Jack_port_handle&& other)
 {
-    if (this == &other) return *this;
-//    _client = other._client;
+    _client = other._client;
     _port = other._port;
     return *this;
 }
 
 Jack_port_handle::~Jack_port_handle()
 {
-    jack_port_unregister(&_client, _port);
+    jack_port_unregister(_client, _port);
 }
 
 jack_port_t* Jack_port_handle::get()

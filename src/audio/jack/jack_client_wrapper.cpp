@@ -1,7 +1,6 @@
-#include "jack_client_wrapper.hpp"
-
 #include "audio/audio_types.hpp"
 #include "beetchef_error.hpp"
+#include "jack_client_wrapper.hpp"
 #include "jack_port_handle.hpp"
 
 #include <cstdlib>
@@ -86,12 +85,12 @@ Jack_client_wrapper::Jack_client_wrapper(jack_status_t client_status)
 
 Jack_port_handle Jack_client_wrapper::register_input_port(std::string port_name)
 {
-    return Jack_port_handle{*_client.get(), port_name, Port_type::input};
+    return Jack_port_handle{_client.get(), port_name, Port_type::input};
 }
 
 Jack_port_handle Jack_client_wrapper::register_output_port(std::string port_name)
 {
-    return Jack_port_handle{*_client.get(), port_name, Port_type::output};
+    return Jack_port_handle{_client.get(), port_name, Port_type::output};
 }
 
 /**
