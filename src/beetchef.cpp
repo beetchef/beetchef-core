@@ -1,8 +1,7 @@
 #include "engine.hpp"
 
-#include "audio/audio_provider.hpp"
-#include "audio/jack/jack_audio_provider.hpp"
 #include "audio/jack/jack_client_wrapper.hpp"
+#include "audio/jack/jack_impl_provider.hpp"
 
 #include <exception>
 #include <iostream>
@@ -63,7 +62,12 @@ try {
     (void) argc; // suppress unused parameter warnings
     (void) argv; // suppress unused parameter warnings
 
-    Engine engine(std::make_unique<Jack_audio_provider>(std::move(std::make_unique<Jack_client_wrapper>())));
+    Jack_client_wrapper jcw;
+    Jack_impl_provider jap(std::move(jcw));
+    Audio_base ab(std::move(jap));
+    Engine engine(std::move(ab));
+
+    //Engine engine{Audio_base(Jack_impl_provider(Jack_client_wrapper()))};
 
     engine.start();
 

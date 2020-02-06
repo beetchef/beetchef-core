@@ -1,5 +1,6 @@
 #include "engine.hpp"
 
+#include "audio/audio_base.hpp"
 #include "audio/audio_interface.hpp"
 #include "audio/jack/jack_audio_interface.hpp"
 #include "audio/jack/jack_client_wrapper.hpp"
@@ -12,9 +13,9 @@
 #include <string>
 #include <unistd.h>
 
-Engine::Engine(std::unique_ptr<Audio_provider> audio_provider)
+Engine::Engine(Audio_base audio_base)
 try
-    : _audio_provider{std::move(audio_provider)}
+    : _audio_base{std::move(audio_base)}
     , _click{} // TODO: _click will be removed from here
     , _is_alive{true}
 {
