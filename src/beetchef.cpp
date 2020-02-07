@@ -62,10 +62,10 @@ try {
     (void) argc; // suppress unused parameter warnings
     (void) argv; // suppress unused parameter warnings
 
-    Jack_client jcw;
-    Jack_impl_provider jap(std::move(jcw));
-    Audio_base ab(std::move(jap));
-    Engine engine(std::move(ab));
+    Jack_client jack_client;
+    Jack_impl_provider jap(std::move(jack_client));
+    Audio_base audio_base(std::move(jap));
+    Engine engine(std::move(audio_base));
 
     //Engine engine{Audio_base(Jack_impl_provider(Jack_client()))};
 
