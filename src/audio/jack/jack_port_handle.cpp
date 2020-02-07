@@ -33,7 +33,7 @@ Jack_port_handle& Jack_port_handle::operator=(Jack_port_handle&& other)
 
 Jack_port_handle::~Jack_port_handle()
 {
-    jack_port_unregister(_client, _port);
+    if(_client && _port) jack_port_unregister(_client, _port);
 }
 
 jack_port_t* Jack_port_handle::get()
