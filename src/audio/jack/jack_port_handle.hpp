@@ -1,5 +1,5 @@
-#ifndef JACK_PORT_HANDLE_HPP
-#define JACK_PORT_HANDLE_HPP
+#ifndef BEETCHEF_JACK_PORT_HANDLE_HPP
+#define BEETCHEF_JACK_PORT_HANDLE_HPP
 
 #include "audio/audio_types.hpp"
 
@@ -26,4 +26,4 @@ class Jack_port_handle {
         jack_port_t* _port;
 };
 
-#endif // JACK_PORT_HANDLE_HPP
+#endif // BEETCHEF_JACK_PORT_HANDLE_HPP

@@ -1,5 +1,5 @@
-#ifndef ENGINE_HPP
-#define ENGINE_HPP
+#ifndef BEETCHEF_ENGINE_HPP
+#define BEETCHEF_ENGINE_HPP
 
 #include "audio/audio_base.hpp"
 #include "click.hpp"
@@ -23,4 +23,4 @@ class Engine {
         Timeline _timeline{60, 4, 4, 44100, 1};
 };
 
-#endif // ENGINE_HPP
+#endif // BEETCHEF_ENGINE_HPP

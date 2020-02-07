@@ -1,6 +1,6 @@
 #include "engine.hpp"
 
-#include "audio/jack/jack_client_wrapper.hpp"
+#include "audio/jack/jack_client.hpp"
 #include "audio/jack/jack_impl_provider.hpp"
 
 #include <exception>
@@ -62,12 +62,12 @@ try {
     (void) argc; // suppress unused parameter warnings
     (void) argv; // suppress unused parameter warnings
 
-    Jack_client_wrapper jcw;
+    Jack_client jcw;
     Jack_impl_provider jap(std::move(jcw));
     Audio_base ab(std::move(jap));
     Engine engine(std::move(ab));
 
-    //Engine engine{Audio_base(Jack_impl_provider(Jack_client_wrapper()))};
+    //Engine engine{Audio_base(Jack_impl_provider(Jack_client()))};
 
     engine.start();
 

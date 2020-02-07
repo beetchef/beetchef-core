@@ -1,5 +1,5 @@
-#ifndef AUDIO_INTERFACE_HPP
-#define AUDIO_INTERFACE_HPP
+#ifndef BEETCHEF_AUDIO_INTERFACE_HPP
+#define BEETCHEF_AUDIO_INTERFACE_HPP
 
 #include "audio_types.hpp"
 
@@ -69,4 +69,4 @@ class Audio_interface {
         std::unique_ptr<Impl_concept> _pimpl;
 };
 
-#endif // AUDIO_INTERFACE_HPP
+#endif // BEETCHEF_AUDIO_INTERFACE_HPP

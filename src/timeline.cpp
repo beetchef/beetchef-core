@@ -3,11 +3,12 @@
 #include <iostream>
 
 Timeline::Timeline(
-    unsigned short int tempo,
-    unsigned short int signature_numerator,
-    unsigned short int signature_denominator,
+    int tempo,
+    int signature_numerator,
+    int signature_denominator,
     nframes_t sample_rate,
-    unsigned short int timeslots_per_beat)
+    int timeslots_per_beat
+)
     : _click_info{tempo, signature_numerator, signature_denominator, sample_rate}
     , _timeslots_per_beat{timeslots_per_beat}
 {
@@ -40,10 +41,11 @@ Timeline::Timeline(
     beat_duration = 60(1min in seconds) / 120(tempo) * 4(quarter note length) / 4(signature_denominator) * sample_rate = 60 / 120 * 44100 = 22050 frames
 */
 Timeline::Click_info::Click_info(
-    unsigned short int tempo,
-    unsigned short int signature_numerator,
-    unsigned short int signature_denominator,
-    nframes_t sample_rate)
+    int tempo,
+    int signature_numerator,
+    int signature_denominator,
+    nframes_t sample_rate
+)
     : _tempo{tempo}
     , _signature_numerator{signature_numerator}
     , _signature_denominator{signature_denominator}

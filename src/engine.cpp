@@ -1,11 +1,10 @@
-#include "engine.hpp"
-
 #include "audio/audio_base.hpp"
 #include "audio/audio_interface.hpp"
 #include "audio/jack/jack_audio_interface.hpp"
-#include "audio/jack/jack_client_wrapper.hpp"
+#include "audio/jack/jack_client.hpp"
 #include "beetchef_error.hpp"
 #include "click.hpp"
+#include "engine.hpp"
 
 #include <exception>
 #include <iostream>

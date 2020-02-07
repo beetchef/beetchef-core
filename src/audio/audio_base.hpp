@@ -1,5 +1,5 @@
-#ifndef AUDIO_BASE_HPP
-#define AUDIO_BASE_HPP
+#ifndef BEETCHEF_AUDIO_BASE_HPP
+#define BEETCHEF_AUDIO_BASE_HPP
 
 #include "audio_interface.hpp"
 
@@ -45,4 +45,4 @@ class Audio_base {
         Audio_interface _audio_interface;
 };
 
-#endif // AUDIO_BASE_HPP
+#endif // BEETCHEF_AUDIO_BASE_HPP

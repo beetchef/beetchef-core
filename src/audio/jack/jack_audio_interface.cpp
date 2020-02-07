@@ -1,11 +1,18 @@
+#include "audio/audio_types.hpp"
 #include "jack_audio_interface.hpp"
-#include "jack_client_wrapper.hpp"
+#include "jack_client.hpp"
 
 #include <memory>
 
-Jack_audio_interface::Jack_audio_interface(Jack_client_wrapper* jack_client)
+Jack_audio_interface::Jack_audio_interface(Jack_client* jack_client, int in_chan_count, int out_chan_count)
     : _jack_client{jack_client}
 {
+
+}
+
+nframes_t Jack_audio_interface::get_sample_rate()
+{
+    return _jack_client->get_sample_rate();
 }
 
 sample_t* Jack_audio_interface::get_in_buf(int chan_idx, nframes_t nframes) /*const*/

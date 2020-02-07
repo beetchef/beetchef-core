@@ -1,5 +1,5 @@
-#ifndef CLICK_HPP
-#define CLICK_HPP
+#ifndef BEETCHEF_CLICK_HPP
+#define BEETCHEF_CLICK_HPP
 
 #include "messaging_handler.hpp"
 
@@ -22,4 +22,4 @@ class Click {
         Messaging_handler _messaging_handler;
 };
 
-#endif // CLICK_HPP
+#endif // BEETCHEF_CLICK_HPP
