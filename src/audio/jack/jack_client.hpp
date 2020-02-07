@@ -25,8 +25,8 @@ class Jack_client {
         nframes_t get_sample_rate();
         Jack_port_handle register_input_port(std::string port_name);
         Jack_port_handle register_output_port(std::string port_name);
+        int connect_ports(std::string src_client_name, std::string src_port_name, std::string dest_client_name, std::string dest_port_name);
         void set_process_callback(/* TBD */);
-        void test_connect();
         void test(Jack_port_handle bla) {};
     protected:
     private:

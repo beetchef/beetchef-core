@@ -98,6 +98,19 @@ Jack_port_handle Jack_client::register_output_port(std::string port_name)
     return Jack_port_handle{_client_handle.get(), port_name, Port_type::output};
 }
 
+int Jack_client::connect_ports(std::string src_client_name, std::string src_port_name, std::string dest_client_name, std::string dest_port_name)
+{
+    std::string src_full_name = src_client_name + ":" + src_port_name;
+    std::string dest_full_name = dest_client_name + ":" + dest_port_name;
+    int res = jack_connect(_client_handle.get(), src_full_name.c_str(), dest_full_name.c_str());
+
+    if(res) {
+        std::cerr << log_label << "Failed to connect port " << src_full_name << " with port " << dest_full_name << "." << std::endl;
+    }
+
+    return res;
+}
+
 /**
  * The process callback is called in a
  * special realtime thread once for each audio cycle.
@@ -122,14 +135,4 @@ void Jack_client::shutdown_callback(void* arg)
 {
 	std::cerr << log_label << "Client was shut down by Jack." << std::endl;
 	return;
-}
-
-void Jack_client::test_connect()
-{
-    if (jack_connect(_client_handle.get(), "beetchef:master_out_1", "sooperlooper:common_in_1")) {
-        std::cerr << log_label << "Cannot connect port." << std::endl;
-    }
-    if (jack_connect(_client_handle.get(), "sooperlooper:common_out_2", "system:playback_1")) {
-        std::cerr << log_label << "Cannot connect port." << std::endl;
-    }
 }

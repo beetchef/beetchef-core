@@ -16,6 +16,7 @@ class Jack_audio_interface {
         sample_t* get_out_buf(int chan_idx, nframes_t nframes);
         void set_process_callback(/* TBD */);
     private:
+        static constexpr std::string_view log_label{"[JACK audio interface]: "};
         Jack_client* _jack_client;
         std::vector<Jack_port_handle> _in_ports;
         std::vector<Jack_port_handle> _out_ports;
