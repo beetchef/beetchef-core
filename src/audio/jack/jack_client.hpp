@@ -16,7 +16,7 @@ struct Client_handle_deleter {
 
 class Jack_client {
     public:
-        Jack_client(std::string client_name = "beetchef");
+        explicit Jack_client(std::string client_name = "beetchef");
         Jack_client(const Jack_client&) = delete;
         Jack_client(Jack_client&&) = default;
         Jack_client& operator=(const Jack_client&) = delete;

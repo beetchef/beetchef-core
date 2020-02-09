@@ -9,7 +9,7 @@ class Audio_interface {
     public:
 
         template<typename T>
-        Audio_interface(T impl)
+        explicit Audio_interface(T impl)
             : _pimpl{std::make_unique<Impl_model<T>>(std::move(impl))}
         { }
 
@@ -45,7 +45,7 @@ class Audio_interface {
 
         template<typename T>
         struct Impl_model final : public Impl_concept {
-            Impl_model(T self) : _self{std::move(self)}
+            explicit Impl_model(T self) : _self{std::move(self)}
             { }
 
             sample_t* get_in_buf(int chan_idx, nframes_t nframes) /*const ? */ override

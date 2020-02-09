@@ -8,7 +8,7 @@
 class Audio_base {
     public:
         template<typename T>
-        Audio_base(T impl_provider)
+        explicit Audio_base(T impl_provider)
             : _impl_provider{std::make_unique<Impl_provider_model<T>>(std::move(impl_provider))}
             , _audio_interface(get_impl_provider<T>().create_audio_interface())
         { }

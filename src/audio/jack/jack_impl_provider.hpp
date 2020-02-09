@@ -8,7 +8,7 @@
 
 class Jack_impl_provider {
     public:
-        Jack_impl_provider(Jack_client);
+        explicit Jack_impl_provider(Jack_client);
         Jack_impl_provider(const Jack_impl_provider&) = delete;
         Jack_impl_provider(Jack_impl_provider&&) = default;
         Jack_impl_provider& operator=(const Jack_impl_provider) = delete;

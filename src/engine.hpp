@@ -10,7 +10,7 @@
 
 class Engine {
     public:
-        Engine(Audio_base);
+        explicit Engine(Audio_base);
         int start();
         bool is_alive();
     private:

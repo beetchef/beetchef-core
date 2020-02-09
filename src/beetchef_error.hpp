@@ -6,7 +6,7 @@
 
 class Beetchef_error : public std::exception {
     public:
-        Beetchef_error(std::string const& msg) : _msg{msg} { };
+        explicit Beetchef_error(std::string const& msg) : _msg{msg} { };
         char const* what() const noexcept override { return _msg.c_str(); };
     private:
         std::string _msg;
