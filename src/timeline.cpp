@@ -7,19 +7,23 @@ Timeline::Timeline(
     int signature_numerator,
     int signature_denominator,
     nframes_t sample_rate,
-    int timeslots_per_beat
-)
-    : _click_info{tempo, signature_numerator, signature_denominator, sample_rate}
-    , _timeslots_per_beat{timeslots_per_beat}
+    int timeslots_per_beat)
+        : _click_info{tempo, signature_numerator, signature_denominator, sample_rate}
+        , _timeslots_per_beat{timeslots_per_beat}
 {
-    _timeslot_length = _click_info._beat_length / _timeslots_per_beat;
+    _timeslot_length = _click_info.get_beat_length() / _timeslots_per_beat;
 
     std::cout << log_label << "Created..." << std::endl;
-    std::cout << log_label << "Tempo: " << _click_info._tempo << std::endl;
+    std::cout << log_label << "Tempo: " << _click_info.tempo << std::endl;
     std::cout << log_label << "Time signature: "
-        << _click_info._signature_numerator << "/" << _click_info._signature_denominator << std::endl;
-    std::cout << log_label << "Beat length: " << _click_info._beat_length << std::endl;
+        << _click_info.signature_numerator << "/" << _click_info.signature_denominator << std::endl;
+    std::cout << log_label << "Beat length: " << _click_info.get_beat_length() << std::endl;
     std::cout << log_label << "Timeslot length: " << _timeslot_length << std::endl;
+}
+
+void Timeline::process(nframes_t nframes)
+{
+    std::cout << log_label << "Processing " << std::to_string(nframes) << " frames..." << std::endl;
 }
 
 /*
@@ -40,16 +44,7 @@ Timeline::Timeline(
 
     beat_duration = 60(1min in seconds) / 120(tempo) * 4(quarter note length) / 4(signature_denominator) * sample_rate = 60 / 120 * 44100 = 22050 frames
 */
-Timeline::Click_info::Click_info(
-    int tempo,
-    int signature_numerator,
-    int signature_denominator,
-    nframes_t sample_rate
-)
-    : _tempo{tempo}
-    , _signature_numerator{signature_numerator}
-    , _signature_denominator{signature_denominator}
-    , _sample_rate{sample_rate}
+nframes_t Timeline::Click_info::get_beat_length()
 {
-    _beat_length = 60 /* 1 minute in seconds */ / _tempo * 4 /* quarter note length */ / _signature_denominator * _sample_rate;
+    return 60 /* 1 minute in seconds */ / tempo * 4 /* quarter note length */ / signature_denominator * sample_rate;
 }

@@ -13,21 +13,17 @@ class Timeline {
             int signature_denominator,
             nframes_t sample_rate,
             int timeslots_per_beat);
+            void process(nframes_t);
 
     private:
         static constexpr std::string_view log_label{"[timeline]: "};
-        struct Click_info {
-            Click_info(
-                int tempo = 60,
-                int signature_numerator = 4,
-                int signature_denominator = 4,
-                nframes_t sample_rate = 44100);
 
-            int _tempo;
-            int _signature_numerator;
-            int _signature_denominator;
-            nframes_t _sample_rate;
-            nframes_t _beat_length;
+        struct Click_info {
+            int tempo{60};
+            int signature_numerator{4};
+            int signature_denominator{4};
+            nframes_t sample_rate{44100};
+            nframes_t get_beat_length();
         };
 
         Click_info _click_info;
