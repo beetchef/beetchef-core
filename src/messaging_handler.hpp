@@ -1,5 +1,5 @@
-#ifndef MESSAGING_HANDLER_HPP
-#define MESSAGING_HANDLER_HPP
+#ifndef BEETCHEF_MESSAGING_HANDLER_HPP
+#define BEETCHEF_MESSAGING_HANDLER_HPP
 
 #include "ip/UdpSocket.h"
 
@@ -18,4 +18,4 @@ class Messaging_handler {
         UdpTransmitSocket _transmit_socket;
 };
 
-#endif // MESSAGING_HANDLER_HPP
+#endif // BEETCHEF_MESSAGING_HANDLER_HPP

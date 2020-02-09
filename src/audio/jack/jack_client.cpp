@@ -1,6 +1,6 @@
 #include "audio/audio_types.hpp"
 #include "beetchef_error.hpp"
-#include "jack_client_wrapper.hpp"
+#include "jack_client.hpp"
 #include "jack_port_handle.hpp"
 
 #include <cstdlib>
@@ -17,7 +17,7 @@
 /**
  * Custom deleter for unique_ptr owning jack_client_t pointer
  */
-void Jack_client_deleter::operator()(jack_client_t* client_ptr) const
+void Client_handle_deleter::operator()(jack_client_t* client_ptr) const
 {
     // deactivate jack client, unregister all ports
     jack_deactivate(client_ptr);
@@ -32,8 +32,8 @@ void Jack_client_deleter::operator()(jack_client_t* client_ptr) const
  * is only done so the other constructor has an initialized variable to write
  * jack status to when calling jack_client_open() within member initializer list.
  */
-Jack_client_wrapper::Jack_client_wrapper()
-    : Jack_client_wrapper{JackInitFailure}
+Jack_client::Jack_client()
+    : Jack_client{JackInitFailure}
 {
 }
 
@@ -42,16 +42,16 @@ Jack_client_wrapper::Jack_client_wrapper()
  * used to write jack status to when calling jack_client_open() within member
  * initializer list - therefore the value of the parameter doesn't matter.
  */
-Jack_client_wrapper::Jack_client_wrapper(jack_status_t client_status)
-    : _client{
+Jack_client::Jack_client(jack_status_t client_status)
+    : _client_handle{
         // within jack_client_open() a "new" keyword is used to allocate jack client object
         // on the heap thus jack_client_t* returned from the function is an owning pointer
         jack_client_open(_client_name.c_str(), JackNullOption, &client_status),
         // this custom deleter calls jack_client_close() to delete the owning pointer
-        Jack_client_deleter{}}
+        Client_handle_deleter{}}
 {
 
-    if (_client == NULL) {
+    if (_client_handle == NULL) {
         std::stringstream msg_buf;
         msg_buf << "Failed to create JACK client, status = "
             << client_status
@@ -66,16 +66,16 @@ Jack_client_wrapper::Jack_client_wrapper(jack_status_t client_status)
         std::cout << log_label << "JACK server started." << std::endl;
 
 	if (client_status & JackNameNotUnique)
-		std::cerr << log_label << "Unique name " << jack_get_client_name(_client.get()) << " assigned." << std::endl;
+		std::cerr << log_label << "Unique name " << jack_get_client_name(_client_handle.get()) << " assigned." << std::endl;
 
-    jack_set_process_callback(_client.get(), process_callback, this);
+    jack_set_process_callback(_client_handle.get(), process_callback, this);
 
-	jack_on_shutdown(_client.get(), shutdown_callback, 0);
+	jack_on_shutdown(_client_handle.get(), shutdown_callback, 0);
 
     std::cout << log_label << "Created..." << std::endl;
-    std::cout << log_label << "Sample rate: " << jack_get_sample_rate(_client.get()) << "Hz" << std::endl;
+    std::cout << log_label << "Sample rate: " << get_sample_rate() << "Hz" << std::endl;
 
-    int err_code = jack_activate(_client.get());
+    int err_code = jack_activate(_client_handle.get());
 
     if (err_code)
         throw Beetchef_error{"Failed to activate JACK client, error code = " + std::to_string(err_code) + "."};
@@ -83,28 +83,46 @@ Jack_client_wrapper::Jack_client_wrapper(jack_status_t client_status)
     std::cout << log_label << "Activated..." << std::endl;
 }
 
-Jack_port_handle Jack_client_wrapper::register_input_port(std::string port_name)
+nframes_t Jack_client::get_sample_rate()
 {
-    return Jack_port_handle{_client.get(), port_name, Port_type::input};
+    return jack_get_sample_rate(_client_handle.get());
 }
 
-Jack_port_handle Jack_client_wrapper::register_output_port(std::string port_name)
+Jack_port_handle Jack_client::register_input_port(std::string port_name)
 {
-    return Jack_port_handle{_client.get(), port_name, Port_type::output};
+    return Jack_port_handle{_client_handle.get(), port_name, Port_type::input};
+}
+
+Jack_port_handle Jack_client::register_output_port(std::string port_name)
+{
+    return Jack_port_handle{_client_handle.get(), port_name, Port_type::output};
+}
+
+int Jack_client::connect_ports(std::string src_client_name, std::string src_port_name, std::string dest_client_name, std::string dest_port_name)
+{
+    std::string src_full_name = src_client_name + ":" + src_port_name;
+    std::string dest_full_name = dest_client_name + ":" + dest_port_name;
+    int res = jack_connect(_client_handle.get(), src_full_name.c_str(), dest_full_name.c_str());
+
+    if(res) {
+        std::cerr << log_label << "Failed to connect port " << src_full_name << " with port " << dest_full_name << "." << std::endl;
+    }
+
+    return res;
 }
 
 /**
  * The process callback is called in a
  * special realtime thread once for each audio cycle.
  */
-int Jack_client_wrapper::process_callback(jack_nframes_t nframes, void *arg)
+int Jack_client::process_callback(jack_nframes_t nframes, void *arg)
 {
     // TODO: call registered _process_callback
-	//return static_cast<Jack_client_wrapper*>(arg)->_process_callback(nframes);
+	//return static_cast<Jack_client*>(arg)->_process_callback(nframes);
 	return 0;
 }
 
-void Jack_client_wrapper::set_process_callback(/* TBD */)
+void Jack_client::set_process_callback(/* TBD */)
 {
     // TODO: _process_callback = TBD;
 }
@@ -113,18 +131,8 @@ void Jack_client_wrapper::set_process_callback(/* TBD */)
  * JACK calls this shutdown_callback if the server ever shuts down or
  * decides to disconnect the client.
  */
-void Jack_client_wrapper::shutdown_callback(void* arg)
+void Jack_client::shutdown_callback(void* arg)
 {
 	std::cerr << log_label << "Client was shut down by Jack." << std::endl;
 	return;
-}
-
-void Jack_client_wrapper::test_connect()
-{
-    if (jack_connect(_client.get(), "beetchef:master_out_1", "sooperlooper:common_in_1")) {
-        std::cerr << log_label << "Cannot connect port." << std::endl;
-    }
-    if (jack_connect(_client.get(), "sooperlooper:common_out_2", "system:playback_1")) {
-        std::cerr << log_label << "Cannot connect port." << std::endl;
-    }
 }

@@ -6,12 +6,12 @@
 Jack_port_handle::Jack_port_handle(jack_client_t* client, std::string port_name, Port_type port_type)
     : _client{client}
     , _port{jack_port_register(
-                _client,
-                port_name.c_str(),
-                JACK_DEFAULT_AUDIO_TYPE,
-                port_type == Port_type::input
-                    ? JackPortIsInput
-                    : JackPortIsOutput, 0)}
+            _client,
+            port_name.c_str(),
+            JACK_DEFAULT_AUDIO_TYPE,
+            port_type == Port_type::input
+                ? JackPortIsInput
+                : JackPortIsOutput, 0)}
 {
 }
 
@@ -33,7 +33,7 @@ Jack_port_handle& Jack_port_handle::operator=(Jack_port_handle&& other)
 
 Jack_port_handle::~Jack_port_handle()
 {
-    jack_port_unregister(_client, _port);
+    if(_client && _port) jack_port_unregister(_client, _port);
 }
 
 jack_port_t* Jack_port_handle::get()
