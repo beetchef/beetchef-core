@@ -3,7 +3,7 @@
 
 #include "audio/audio_types.hpp"
 #include "jack_client.hpp"
-#include "jack_port_handle.hpp"
+#include "jack_port.hpp"
 
 #include <memory>
 #include <vector>
@@ -16,10 +16,11 @@ class Jack_audio_interface {
         sample_t* get_out_buf(int chan_idx, nframes_t nframes);
         void set_process_callback(/* TBD */);
     private:
-        static constexpr std::string_view log_label{"[JACK audio interface]: "};
         Jack_client* _jack_client;
-        std::vector<Jack_port_handle> _in_ports;
-        std::vector<Jack_port_handle> _out_ports;
+        std::vector<Jack_port> _in_ports;
+        std::vector<Jack_port> _out_ports;
+
+        void connect_io_ports() const;
 };
 
 #endif // BEETCHEF_JACK_AUDIO_INTERFACE
