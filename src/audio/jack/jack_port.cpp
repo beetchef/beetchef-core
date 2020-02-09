@@ -1,9 +1,9 @@
-#include "jack_port_handle.hpp"
+#include "jack_port.hpp"
 
 #include <string>
 #include <jack/jack.h>
 
-Jack_port_handle::Jack_port_handle(jack_client_t* client, std::string port_name, Port_type port_type)
+Jack_port::Jack_port(jack_client_t* client, std::string port_name, Port_type port_type)
     : _client{client}
     , _port{jack_port_register(
             _client,
@@ -16,7 +16,7 @@ Jack_port_handle::Jack_port_handle(jack_client_t* client, std::string port_name,
 }
 
 // move constructor
-Jack_port_handle::Jack_port_handle(Jack_port_handle&& other)
+Jack_port::Jack_port(Jack_port&& other)
     : _client{other._client}
     , _port{other._port}
 {
@@ -24,24 +24,24 @@ Jack_port_handle::Jack_port_handle(Jack_port_handle&& other)
 }
 
 // move assignment
-Jack_port_handle& Jack_port_handle::operator=(Jack_port_handle&& other)
+Jack_port& Jack_port::operator=(Jack_port&& other)
 {
     _client = other._client;
     _port = other._port;
     return *this;
 }
 
-Jack_port_handle::~Jack_port_handle()
+Jack_port::~Jack_port()
 {
     if(_client && _port) jack_port_unregister(_client, _port);
 }
 
-jack_port_t* Jack_port_handle::get()
+jack_port_t* Jack_port::get()
 {
     return _port;
 }
 
-sample_t* Jack_port_handle::get_buffer(nframes_t nframes)
+sample_t* Jack_port::get_buffer(nframes_t nframes)
 {
     return static_cast<sample_t *>(jack_port_get_buffer(_port, nframes));
 }

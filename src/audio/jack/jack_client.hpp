@@ -2,7 +2,7 @@
 #define BEETCHEF_JACK_CLIENT_HPP
 
 #include "audio/audio_types.hpp"
-#include "jack_port_handle.hpp"
+#include "jack_port.hpp"
 
 #include <memory>
 #include <string>
@@ -16,27 +16,34 @@ struct Client_handle_deleter {
 
 class Jack_client {
     public:
-        Jack_client();
+        Jack_client(std::string client_name = "beetchef");
         Jack_client(const Jack_client&) = delete;
         Jack_client(Jack_client&&) = default;
         Jack_client& operator=(const Jack_client&) = delete;
         Jack_client& operator=(Jack_client&&) = default;
         ~Jack_client() = default;
+
+        void activate();
+        void deactivate();
+        bool is_active();
+
         nframes_t get_sample_rate();
-        Jack_port_handle register_input_port(std::string port_name);
-        Jack_port_handle register_output_port(std::string port_name);
+
+        Jack_port register_input_port(std::string port_name);
+        Jack_port register_output_port(std::string port_name);
         int connect_ports(std::string src_client_name, std::string src_port_name, std::string dest_client_name, std::string dest_port_name);
+
         void set_process_callback(/* TBD */);
-        void test(Jack_port_handle bla) {};
     protected:
     private:
         static constexpr std::string_view log_label{"[JACK client]: "};
-        inline static const std::string _client_name{"beetchef"};
-        std::vector<jack_port_t*> _input_ports;
-        std::vector<jack_port_t*> _output_ports;
-        std::unique_ptr<jack_client_t, Client_handle_deleter> _client_handle;
+
+        std::string _client_name;
+        std::unique_ptr<jack_client_t, Client_handle_deleter> _client;
+        bool _active{false};
         /* TBD _process_callback; */
-        Jack_client(jack_status_t client_status);
+
+        Jack_client(std::string client_name, jack_status_t client_status);
         static int process_callback(jack_nframes_t nframes, void* arg);
         int process_nodes(jack_nframes_t nframes);
         static void shutdown_callback(void* arg);
