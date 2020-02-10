@@ -1,6 +1,7 @@
-#include "audio/audio_types.hpp"
 #include "jack_audio_interface.hpp"
 #include "jack_client.hpp"
+
+#include "audio/audio_types.hpp"
 
 #include <memory>
 #include <string>
@@ -31,14 +32,6 @@ sample_t* Jack_audio_interface::get_in_buf(int chan_idx, nframes_t nframes) /*co
 sample_t* Jack_audio_interface::get_out_buf(int chan_idx, nframes_t nframes)
 {
     return static_cast<sample_t*>(jack_port_get_buffer(_out_ports[chan_idx].get(), nframes));
-}
-
-void Jack_audio_interface::register_process_callback(Callback_function callback)
-{
-    _callback = std::move(callback);
-    _jack_client->set_process_callback(_callback);
-    _jack_client->activate();
-    connect_io_ports();
 }
 
 void Jack_audio_interface::connect_io_ports() const

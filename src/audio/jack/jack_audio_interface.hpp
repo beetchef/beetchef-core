@@ -5,7 +5,6 @@
 #include "jack_port.hpp"
 
 #include "audio/audio_types.hpp"
-#include "audio/callback_function.hpp"
 
 #include <memory>
 #include <vector>
@@ -16,12 +15,19 @@ class Jack_audio_interface {
         nframes_t get_sample_rate();
         sample_t* get_in_buf(int chan_idx, nframes_t nframes) /*const*/;
         sample_t* get_out_buf(int chan_idx, nframes_t nframes);
-        void register_process_callback(Callback_function);
+
+        template<typename T>
+        void set_process_callback(T& callback)
+        {
+            _jack_client->set_process_callback(callback);
+            _jack_client->activate();
+            connect_io_ports();
+        }
+
     private:
         Jack_client* _jack_client;
         std::vector<Jack_port> _in_ports;
         std::vector<Jack_port> _out_ports;
-        Callback_function _callback;
 
         void connect_io_ports() const;
 };
