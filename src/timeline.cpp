@@ -21,9 +21,10 @@ Timeline::Timeline(
     std::cout << log_label << "Timeslot length: " << _timeslot_length << std::endl;
 }
 
-void Timeline::process(nframes_t nframes)
+int Timeline::process(nframes_t nframes)
 {
     std::cout << log_label << "Processing " << std::to_string(nframes) << " frames..." << std::endl;
+    return 0;
 }
 
 /*
