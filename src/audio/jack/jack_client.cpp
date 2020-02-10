@@ -69,19 +69,9 @@ Jack_client::Jack_client(std::string client_name, jack_status_t client_status)
 	if (client_status & JackNameNotUnique)
 		std::cerr << log_label << "Unique name " << jack_get_client_name(_client.get()) << " assigned." << std::endl;
 
-    //jack_set_process_callback(_client.get(), process_callback, this);
-
 	jack_on_shutdown(_client.get(), shutdown_callback, 0);
 
     std::cout << log_label << "Created..." << std::endl;
-/*
-    int err_code = jack_activate(_client.get());
-
-    if (err_code)
-        throw Beetchef_error{"Failed to activate JACK client, error code = " + std::to_string(err_code) + "."};
-
-    std::cout << log_label << "Activated..." << std::endl;
-*/
 }
 
 void Jack_client::activate()
@@ -134,22 +124,6 @@ int Jack_client::connect_ports(std::string src_client_name, std::string src_port
     }
 
     return res;
-}
-
-/**
- * The process callback is called in a
- * special realtime thread once for each audio cycle.
- */
-int Jack_client::process_callback(jack_nframes_t nframes, void *arg)
-{
-    // TODO: call registered _process_callback
-	//return static_cast<Jack_client*>(arg)->_process_callback(nframes);
-	return 0;
-}
-
-void Jack_client::set_process_callback(/* TBD */)
-{
-    // TODO: _process_callback = TBD;
 }
 
 /**

@@ -19,6 +19,9 @@ try
     , _is_alive{true}
 {
     std::cout << log_label << "Created..." << std::endl;
+
+    _audio_base.get_audio_interface()->register_process_callback([&](nframes_t nframes)->int{ return _timeline.process(nframes); });
+    std::cout << log_label << "Timeline registered for processing..." << std::endl;
 }
 catch (...) {
     Beetchef_error err{"Failed to initialize engine."};

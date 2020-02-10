@@ -33,9 +33,10 @@ sample_t* Jack_audio_interface::get_out_buf(int chan_idx, nframes_t nframes)
     return static_cast<sample_t*>(jack_port_get_buffer(_out_ports[chan_idx].get(), nframes));
 }
 
-void Jack_audio_interface::set_process_callback(/* TBD */)
+void Jack_audio_interface::register_process_callback(Callback_function callback)
 {
-    _jack_client->set_process_callback(/* TBD */);
+    _callback = std::move(callback);
+    _jack_client->set_process_callback(_callback);
     _jack_client->activate();
     connect_io_ports();
 }
