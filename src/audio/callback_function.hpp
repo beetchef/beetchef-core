@@ -20,7 +20,7 @@ class Callback_function {
         Callback_function& operator=(Callback_function&&) = default;
         ~Callback_function() = default;
 
-        int operator()(nframes_t nframes);
+        int operator()(const nframes_t nframes) const;
 
         operator bool() const;
 
@@ -28,7 +28,7 @@ class Callback_function {
 
         struct Cb_concept {
             virtual ~Cb_concept() = default;
-            virtual int operator()(nframes_t) = 0;
+            virtual int operator()(const nframes_t) const = 0;
             virtual std::unique_ptr<Cb_concept> clone() const = 0;
         };
 
@@ -37,7 +37,7 @@ class Callback_function {
             explicit Cb_model(T self) : _self{std::move(self)}
             { }
 
-            int operator()(nframes_t nframes) override
+            int operator()(const nframes_t nframes) const override
             {
                 return _self(nframes);
             };

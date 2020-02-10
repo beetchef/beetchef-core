@@ -56,11 +56,8 @@ namespace Beetchef {
     }
 }
 
-int main(int argc, char** argv)
+int main()
 try {
-
-    (void) argc; // suppress unused parameter warnings
-    (void) argv; // suppress unused parameter warnings
 
     Jack_client jack_client;
     Jack_impl_provider jap(std::move(jack_client));
