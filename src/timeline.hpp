@@ -13,8 +13,8 @@ class Timeline {
             int signature_denominator,
             nframes_t sample_rate,
             int timeslots_per_beat);
-            int process(nframes_t);
 
+            int process(nframes_t);
     private:
         static constexpr std::string_view log_label{"[timeline]: "};
 

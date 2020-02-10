@@ -98,7 +98,7 @@ bool Jack_client::is_active()
     return _active;
 }
 
-nframes_t Jack_client::get_sample_rate()
+nframes_t Jack_client::get_sample_rate() const
 {
     return jack_get_sample_rate(_client.get());
 }

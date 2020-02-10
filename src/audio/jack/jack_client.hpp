@@ -30,7 +30,7 @@ class Jack_client {
         void deactivate();
         bool is_active();
 
-        nframes_t get_sample_rate();
+        nframes_t get_sample_rate() const;
 
         Jack_port register_input_port(std::string port_name);
         Jack_port register_output_port(std::string port_name);

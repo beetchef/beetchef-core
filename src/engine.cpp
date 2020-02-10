@@ -15,6 +15,7 @@
 Engine::Engine(Audio_base audio_base)
 try
     : _audio_base{std::move(audio_base)}
+    , _timeline{60, 4, 4, _audio_base.get_audio_interface()->get_sample_rate(), 1}
     , _click{} // TODO: _click will be removed from here
     , _is_alive{true}
 {

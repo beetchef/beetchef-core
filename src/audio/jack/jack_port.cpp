@@ -36,12 +36,7 @@ Jack_port::~Jack_port()
     if(_client && _port) jack_port_unregister(_client, _port);
 }
 
-jack_port_t* Jack_port::get()
-{
-    return _port;
-}
-
-sample_t* Jack_port::get_buffer(nframes_t nframes)
+sample_t* Jack_port::get_buffer(nframes_t nframes) const
 {
     return static_cast<sample_t *>(jack_port_get_buffer(_port, nframes));
 }
