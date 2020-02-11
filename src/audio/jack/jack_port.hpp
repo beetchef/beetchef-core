@@ -20,8 +20,7 @@ class Jack_port {
         Jack_port& operator=(Jack_port&&);
         ~Jack_port();
 
-        /* inline ? */jack_port_t* get();
-        sample_t* get_buffer(nframes_t nframes);
+        sample_t* get_buffer(nframes_t nframes) const;
     private:
         jack_client_t* _client;
         jack_port_t* _port;

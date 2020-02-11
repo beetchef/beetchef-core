@@ -27,12 +27,17 @@ class Audio_interface {
             _pimpl->set_process_callback(_callback);
         }
 
+        nframes_t get_sample_rate() const;
+        sample_t* get_in_buf(int chan_idx, nframes_t nframes_t) const;
+        sample_t* get_out_buf(int chan_idx, nframes_t nframes_t) const;
+
     private:
 
         struct Impl_concept {
             virtual ~Impl_concept() = default;
-            virtual sample_t* get_in_buf(int chan_idx, nframes_t nframes) /*const ? */ = 0;
-            virtual sample_t* get_out_buf(int chan_idx, nframes_t nframes) = 0;
+            virtual nframes_t get_sample_rate() const = 0;
+            virtual sample_t* get_in_buf(int chan_idx, nframes_t nframes) const = 0;
+            virtual sample_t* get_out_buf(int chan_idx, nframes_t nframes) const = 0;
             virtual void set_process_callback(Callback_function& callback) = 0;
         };
 
@@ -41,12 +46,17 @@ class Audio_interface {
             explicit Impl_model(T self) : _self{std::move(self)}
             { }
 
-            sample_t* get_in_buf(int chan_idx, nframes_t nframes) /*const ? */ override
+            nframes_t get_sample_rate() const
+            {
+                return _self.get_sample_rate();
+            }
+
+            sample_t* get_in_buf(int chan_idx, nframes_t nframes) const override
             {
                 return _self.get_in_buf(chan_idx, nframes);
             }
 
-            sample_t* get_out_buf(int chan_idx, nframes_t nframes) /*const ? */ override
+            sample_t* get_out_buf(int chan_idx, nframes_t nframes) const override
             {
                 return _self.get_out_buf(chan_idx, nframes);
             }

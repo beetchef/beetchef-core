@@ -54,14 +54,14 @@ void Click::start()
             // next_beat_timepoint is current time + beat duration
             auto next_beat_timepoint = std::chrono::steady_clock::now() + std::chrono::milliseconds(_beat_duration);
 
-            std::cout << log_label << "*click* " << _current_beat << std::endl;
+            std::cout << log_label << "*click* " << _current_beat - 1 << std::endl;
 
             // TMP: testing
             total_beat_count++;
 
             // TMP: testing
             if (total_beat_count == 5 || total_beat_count == 9) {
-                _messaging_handler.send_message("/sl/0/hit", "record");
+                //_messaging_handler.send_message("/sl/0/hit", "record");
             }
 
             if (_current_beat < _signature_numerator) {
@@ -70,7 +70,7 @@ void Click::start()
             } else {
                 // this was the last beat within the bar, reset mCurrentBeat to 1
                 _current_beat = 1;
-                std::cout << std::endl;
+                //std::cout << std::endl;
             }
             std::this_thread::sleep_until(next_beat_timepoint);
         }

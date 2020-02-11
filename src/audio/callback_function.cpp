@@ -17,7 +17,7 @@ Callback_function& Callback_function::operator=(const Callback_function& other)
     return *this;
 }
 
-int Callback_function::operator()(nframes_t nframes)
+int Callback_function::operator()(const nframes_t nframes) const
 {
     return _pimpl->operator()(nframes);
 }
