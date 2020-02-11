@@ -14,6 +14,12 @@ class Timeline {
             int repeats{-1};
         };
 
+        struct Process_frame {
+            int begin_timeslot{0};
+            nframes_t offset{0};
+            nframes_t nframes{0};
+        };
+
         Timeline(
             int tempo,
             int signature_numerator,
@@ -22,9 +28,10 @@ class Timeline {
             int timeslots_per_beat);
 
             int get_current_timeslot() const;
-            std::vector<Timeline::Loop> get_loops() const;
-            int process(nframes_t);
+            const std::vector<Timeline::Loop>& get_loops() const;
+            const std::vector<Process_frame>& get_process_queue() const;
 
+            void update(nframes_t);
     private:
         static constexpr std::string_view log_label{"[timeline]: "};
 
@@ -35,12 +42,6 @@ class Timeline {
             nframes_t sample_rate{44100};
 
             nframes_t get_beat_length() const;
-        };
-
-        struct Process_frame {
-            int begin_timeslot{0};
-            nframes_t offset{0};
-            nframes_t nframes{0};
         };
 
         Click_info _click_info;
@@ -54,8 +55,6 @@ class Timeline {
         nframes_t _current_offset{0};
 
         std::vector<Process_frame> _process_queue;
-
-        void prepare_process_queue(const nframes_t);
 };
 
 #endif // BEETCHEF_TIMELINE_HPP

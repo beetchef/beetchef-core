@@ -25,9 +25,10 @@ try
 
     // TMP
     _audio_base.get_audio_interface()->register_process_callback([&](nframes_t nframes)->int{
-        int res = _timeline.process(nframes);
+        _timeline.update(nframes);
         _console_ui.update(_timeline.get_current_timeslot(), _timeline.get_loops());
-        return res;
+
+        return 0;
     });
 
     std::cout << log_label << "Timeline registered for processing..." << std::endl;

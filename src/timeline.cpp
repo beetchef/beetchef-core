@@ -33,26 +33,23 @@ Timeline::get_current_timeslot() const
     return _current_timeslot;
 }
 
-std::vector<Timeline::Loop>
+const std::vector<Timeline::Loop>&
 Timeline::get_loops() const
 {
     return _loops;
 }
 
-int
-Timeline::process(const nframes_t nframes)
+const std::vector<Timeline::Process_frame>&
+Timeline::get_process_queue() const
 {
-    prepare_process_queue(nframes);
-    // TODO: process the queue here...
-    //std::cout << log_label << "Processing frame " << std::to_string(_process_queue.back().begin_timeslot) << std::endl;
-    _process_queue.clear();
-
-    return 0;
+    return _process_queue;
 }
 
 void
-Timeline::prepare_process_queue(const nframes_t nframes)
+Timeline::update(const nframes_t nframes)
 {
+    _process_queue.clear();
+
     int target_position = _current_offset + nframes;
     int exceeding_timeslots = target_position / _timeslot_length;
 
@@ -83,7 +80,7 @@ Timeline::prepare_process_queue(const nframes_t nframes)
         else if (_loops.back().repeats != -1)
             _loops.back().repeats--;
 
-        prepare_process_queue(nframes - loop_frames_left);
+        update(nframes - loop_frames_left);
     }
 }
 

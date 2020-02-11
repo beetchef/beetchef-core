@@ -5,13 +5,13 @@
 #include <iostream>
 
 void
-Console_ui::update(int current_timeslot, std::vector<Timeline::Loop> loops)
+Console_ui::update(const int current_timeslot, const std::vector<Timeline::Loop>& loops)
 {
     print_timeline(current_timeslot, loops);
 }
 
 void
-Console_ui::print_timeline(int current_timeslot, std::vector<Timeline::Loop> loops)
+Console_ui::print_timeline(const int current_timeslot, const std::vector<Timeline::Loop>& loops)
 {
     if (current_timeslot != _last_timeslot_printed) {
         system("clear");
