@@ -6,12 +6,13 @@
 Jack_port::Jack_port(jack_client_t* client, std::string port_name, Port_type port_type)
     : _client{client}
     , _port{jack_port_register(
-            _client,
-            port_name.c_str(),
-            JACK_DEFAULT_AUDIO_TYPE,
-            port_type == Port_type::input
-                ? JackPortIsInput
-                : JackPortIsOutput, 0)}
+                _client,
+                port_name.c_str(),
+                JACK_DEFAULT_AUDIO_TYPE,
+                port_type == Port_type::input
+                    ? JackPortIsInput
+                    : JackPortIsOutput,
+                0)}
 {
 }
 
@@ -33,7 +34,7 @@ Jack_port& Jack_port::operator=(Jack_port&& other)
 
 Jack_port::~Jack_port()
 {
-    if(_client && _port) jack_port_unregister(_client, _port);
+    if (_client && _port) jack_port_unregister(_client, _port);
 }
 
 sample_t* Jack_port::get_buffer(nframes_t nframes) const

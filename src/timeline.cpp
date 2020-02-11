@@ -14,6 +14,7 @@ Timeline::Timeline(
 {
     _timeslot_length = _click_info.get_beat_length() / _timeslots_per_beat;
 
+    _process_queue.reserve(2);
     // TMP
     _loops.emplace_back(Loop{0, 3, 2});
 
@@ -28,20 +29,9 @@ Timeline::Timeline(
 int
 Timeline::process(const nframes_t nframes)
 {
-    int last_timeslot = _current_timeslot;
     prepare_process_queue(nframes);
-
-    //if (last_timeslot != _current_timeslot)
-        std::cout << log_label << "Timeslot " + std::to_string(_process_queue.back().begin_timeslot) << std::endl;
-
-/*
-    if (last_timeslot != _current_timeslot) {
-        for(auto timespan : _process_queue) {
-            std::cout << log_label << "Processing timeslot " + std::to_string(timespan.begin_timeslot) << std::endl;
-        }
-        std::cout << std::endl;
-    }
-*/
+    // TODO: process the queue here...
+    std::cout << log_label << "Processing frame " << std::to_string(_process_queue.back().begin_timeslot) << std::endl;
     _process_queue.clear();
 
     return 0;
@@ -50,19 +40,19 @@ Timeline::process(const nframes_t nframes)
 void
 Timeline::prepare_process_queue(const nframes_t nframes)
 {
-    int target_offset = _current_offset + nframes;
-    int exceeding_timeslots = target_offset / _timeslot_length;
+    int target_position = _current_offset + nframes;
+    int exceeding_timeslots = target_position / _timeslot_length;
 
     if(exceeding_timeslots == 0) {
         // staying within current timeslot - the most frequent case
         _process_queue.emplace_back(Process_frame{_current_timeslot, _current_offset, nframes});
-        _current_offset = target_offset;
+        _current_offset = target_position;
     }
     else if(_loops.empty() || _current_timeslot + exceeding_timeslots <= _loops.back().end_timeslot) {
         // exceeding current timeslot but staying within current loop - less frequent case
         _process_queue.emplace_back(Process_frame{_current_timeslot, _current_offset, nframes});
         _current_timeslot += exceeding_timeslots;
-        _current_offset = target_offset % _timeslot_length;
+        _current_offset = target_position % _timeslot_length;
     }
     else {
         // exceeding current timeslot and current loop - the least frequent case
