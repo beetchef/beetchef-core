@@ -1,9 +1,12 @@
 #ifndef BEETCHEF_ENGINE_HPP
 #define BEETCHEF_ENGINE_HPP
 
-#include "audio/audio_base.hpp"
 #include "click.hpp"
 #include "timeline.hpp"
+
+#include "audio/audio_base.hpp"
+
+#include "ui/console/console_ui.hpp"
 
 #include <memory>
 #include <string>
@@ -21,6 +24,7 @@ class Engine {
         Click _click;
         bool _is_alive;
         Timeline _timeline{60, 4, 4, 44100, 1};
+        Console_ui _console_ui;
 };
 
 #endif // BEETCHEF_ENGINE_HPP

@@ -15,8 +15,9 @@ Timeline::Timeline(
     _timeslot_length = _click_info.get_beat_length() / _timeslots_per_beat;
 
     _process_queue.reserve(2);
+
     // TMP
-    _loops.emplace_back(Loop{0, 3, 2});
+    _loops.emplace_back(Loop{4, 7, 4});
 
     std::cout << log_label << "Created..." << std::endl;
     std::cout << log_label << "Tempo: " << _click_info.tempo << std::endl;
@@ -27,11 +28,23 @@ Timeline::Timeline(
 }
 
 int
+Timeline::get_current_timeslot() const
+{
+    return _current_timeslot;
+}
+
+std::vector<Timeline::Loop>
+Timeline::get_loops() const
+{
+    return _loops;
+}
+
+int
 Timeline::process(const nframes_t nframes)
 {
     prepare_process_queue(nframes);
     // TODO: process the queue here...
-    std::cout << log_label << "Processing frame " << std::to_string(_process_queue.back().begin_timeslot) << std::endl;
+    //std::cout << log_label << "Processing frame " << std::to_string(_process_queue.back().begin_timeslot) << std::endl;
     _process_queue.clear();
 
     return 0;
@@ -65,6 +78,11 @@ Timeline::prepare_process_queue(const nframes_t nframes)
         _current_timeslot = _loops.back().begin_timeslot;
         _current_offset = 0;
 
+        if (_loops.back().repeats == 2)
+            _loops.pop_back();
+        else if (_loops.back().repeats != -1)
+            _loops.back().repeats--;
+
         prepare_process_queue(nframes - loop_frames_left);
     }
 }
@@ -88,7 +106,7 @@ Timeline::prepare_process_queue(const nframes_t nframes)
     beat_duration = 60(1min in seconds) / 120(tempo) * 4(quarter note length) / 4(signature_denominator) * sample_rate = 60 / 120 * 44100 = 22050 frames
 */
 nframes_t
-Timeline::Click_info::get_beat_length()
+Timeline::Click_info::get_beat_length() const
 {
     return 60 /* 1 minute in seconds */ / tempo * 4 /* quarter note length */ / signature_denominator * sample_rate;
 }

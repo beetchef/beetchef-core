@@ -4,8 +4,6 @@
 #include "jack_audio_interface.hpp"
 #include "jack_client.hpp"
 
-#include <memory>
-
 class Jack_impl_provider {
     public:
         explicit Jack_impl_provider(Jack_client);
