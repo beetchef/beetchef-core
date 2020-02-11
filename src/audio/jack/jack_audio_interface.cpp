@@ -19,22 +19,38 @@ Jack_audio_interface::Jack_audio_interface(Jack_client* jack_client, int in_chan
     }
 }
 
-nframes_t Jack_audio_interface::get_sample_rate() const
+nframes_t
+Jack_audio_interface::get_sample_rate() const
 {
     return _jack_client->get_sample_rate();
 }
 
-sample_t* Jack_audio_interface::get_in_buf(int chan_idx, nframes_t nframes) const
+int
+Jack_audio_interface::get_in_chan_count() const
+{
+    return _in_ports.size();
+}
+
+int
+Jack_audio_interface::get_out_chan_count() const
+{
+    return _out_ports.size();
+}
+
+sample_t*
+Jack_audio_interface::get_in_buf(int chan_idx, nframes_t nframes) const
 {
     return _in_ports[chan_idx].get_buffer(nframes);
 }
 
-sample_t* Jack_audio_interface::get_out_buf(int chan_idx, nframes_t nframes) const
+sample_t*
+Jack_audio_interface::get_out_buf(int chan_idx, nframes_t nframes) const
 {
     return _out_ports[chan_idx].get_buffer(nframes);
 }
 
-void Jack_audio_interface::connect_io_ports() const
+void
+Jack_audio_interface::connect_io_ports() const
 {
     for (int i = 0; i < _in_ports.size(); i++) {
         std::string suffix = "_" + std::to_string(i + 1);
@@ -45,5 +61,3 @@ void Jack_audio_interface::connect_io_ports() const
         _jack_client->connect_ports("beetchef", "main_out" + suffix, "system", "playback" + suffix);
     }
 }
-
-

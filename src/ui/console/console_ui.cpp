@@ -46,7 +46,7 @@ Console_ui::print_timeline(const int current_timeslot, const std::vector<Loop>& 
 
         std::cout << std::string(_displayed_timeslots * 2, '-') << "-" << std::endl;
 
-        for (auto loop : loops) {
+        for (auto& loop : loops) {
             for (int i = 0; i < _displayed_timeslots; i++) {
                 if (i == loop.begin_timeslot) {
                     std::cout << "|:";

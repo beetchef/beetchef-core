@@ -5,6 +5,7 @@
 #include "beetchef_error.hpp"
 #include "click.hpp"
 #include "engine.hpp"
+#include "track.hpp"
 
 #include <exception>
 #include <iostream>
@@ -22,12 +23,19 @@ try
 {
     std::cout << log_label << "Created..." << std::endl;
 
-    //_audio_base.get_audio_interface()->register_process_callback([&](nframes_t nframes)->int{ return _timeline.process(nframes); });
+    _tracks.emplace_back(_audio_base.get_audio_interface(), std::vector<int>{0, 1}, "track-1");
 
-    // TMP
     _audio_base.get_audio_interface()->register_process_callback([&](nframes_t nframes)->int{
         _timeline.update(nframes);
         _console_ui.update(_timeline.get_current_timeslot(), _timeline.get_loops());
+
+        for (auto& track : _tracks) {
+            for (auto& process_frame : _timeline.get_process_queue()) {
+                for (int chan_idx = 0; chan_idx < _audio_base.get_audio_interface()->get_out_chan_count(); chan_idx++) {
+                    track.produce_to(chan_idx, process_frame, _audio_base.get_audio_interface()->get_out_buf(chan_idx, process_frame.nframes));
+                }
+            }
+        }
 
         return 0;
     });
