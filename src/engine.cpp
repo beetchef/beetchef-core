@@ -21,7 +21,15 @@ try
 {
     std::cout << log_label << "Created..." << std::endl;
 
-    _audio_base.get_audio_interface()->register_process_callback([&](nframes_t nframes)->int{ return _timeline.process(nframes); });
+    //_audio_base.get_audio_interface()->register_process_callback([&](nframes_t nframes)->int{ return _timeline.process(nframes); });
+
+    // TMP
+    _audio_base.get_audio_interface()->register_process_callback([&](nframes_t nframes)->int{
+        int res = _timeline.process(nframes);
+        _console_ui.update(_timeline.get_current_timeslot(), _timeline.get_loops());
+        return res;
+    });
+
     std::cout << log_label << "Timeline registered for processing..." << std::endl;
 }
 catch (...) {
