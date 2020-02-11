@@ -28,6 +28,10 @@ class Audio_interface {
         }
 
         nframes_t get_sample_rate() const;
+
+        int get_in_chan_count() const;
+        int get_out_chan_count() const;
+
         sample_t* get_in_buf(int chan_idx, nframes_t nframes_t) const;
         sample_t* get_out_buf(int chan_idx, nframes_t nframes_t) const;
 
@@ -36,6 +40,8 @@ class Audio_interface {
         struct Impl_concept {
             virtual ~Impl_concept() = default;
             virtual nframes_t get_sample_rate() const = 0;
+            virtual int get_in_chan_count() const = 0;
+            virtual int get_out_chan_count() const = 0;
             virtual sample_t* get_in_buf(int chan_idx, nframes_t nframes) const = 0;
             virtual sample_t* get_out_buf(int chan_idx, nframes_t nframes) const = 0;
             virtual void set_process_callback(Callback_function& callback) = 0;
@@ -49,6 +55,16 @@ class Audio_interface {
             nframes_t get_sample_rate() const
             {
                 return _self.get_sample_rate();
+            }
+
+            int get_in_chan_count() const
+            {
+                return _self.get_in_chan_count();
+            }
+
+            int get_out_chan_count() const
+            {
+                return _self.get_out_chan_count();
             }
 
             sample_t* get_in_buf(int chan_idx, nframes_t nframes) const override

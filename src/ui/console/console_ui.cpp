@@ -4,14 +4,19 @@
 
 #include <iostream>
 
+Console_ui::Console_ui(const int tempo)
+    : _tempo{tempo}
+{
+}
+
 void
-Console_ui::update(int current_timeslot, std::vector<Timeline::Loop> loops)
+Console_ui::update(const int current_timeslot, const std::vector<Loop>& loops)
 {
     print_timeline(current_timeslot, loops);
 }
 
 void
-Console_ui::print_timeline(int current_timeslot, std::vector<Timeline::Loop> loops)
+Console_ui::print_timeline(const int current_timeslot, const std::vector<Loop>& loops)
 {
     if (current_timeslot != _last_timeslot_printed) {
         system("clear");
@@ -20,6 +25,10 @@ Console_ui::print_timeline(int current_timeslot, std::vector<Timeline::Loop> loo
         std::cout << "############" << std::endl;
         std::cout << "  timeline  " << std::endl;
         std::cout << "############" << std::endl;
+
+        std::cout << std::endl;
+
+        std::cout << "tempo: " << std::to_string(_tempo) << std::endl;
 
         std::cout << std::endl;
 
@@ -37,7 +46,7 @@ Console_ui::print_timeline(int current_timeslot, std::vector<Timeline::Loop> loo
 
         std::cout << std::string(_displayed_timeslots * 2, '-') << "-" << std::endl;
 
-        for (auto loop : loops) {
+        for (auto& loop : loops) {
             for (int i = 0; i < _displayed_timeslots; i++) {
                 if (i == loop.begin_timeslot) {
                     std::cout << "|:";
