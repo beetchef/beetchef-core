@@ -23,7 +23,7 @@ class Engine {
         Audio_base _audio_base;
         Click _click;
         bool _is_alive;
-        Timeline _timeline{60, 4, 4, 44100, 1};
+        Timeline _timeline;
         Console_ui _console_ui;
 };
 

@@ -33,13 +33,13 @@ Timeline::get_current_timeslot() const
     return _current_timeslot;
 }
 
-const std::vector<Timeline::Loop>&
+const std::vector<Loop>&
 Timeline::get_loops() const
 {
     return _loops;
 }
 
-const std::vector<Timeline::Process_frame>&
+const std::vector<Process_frame>&
 Timeline::get_process_queue() const
 {
     return _process_queue;
@@ -105,5 +105,5 @@ Timeline::update(const nframes_t nframes)
 nframes_t
 Timeline::Click_info::get_beat_length() const
 {
-    return 60 /* 1 minute in seconds */ / tempo * 4 /* quarter note length */ / signature_denominator * sample_rate;
+    return 60.0f /* 1 minute in seconds */ / tempo * 4.0f /* quarter note length */ / signature_denominator * sample_rate;
 }
