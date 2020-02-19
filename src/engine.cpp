@@ -27,7 +27,7 @@ try
 
     _audio_base.get_audio_interface()->register_process_callback([&](nframes_t nframes)->int{
         _timeline.update(nframes);
-        _console_ui.update(_timeline.get_current_timeslot(), _timeline.get_loops());
+        //_console_ui.update(_timeline.get_current_timeslot(), _timeline.get_loops());
 
         for (auto& track : _tracks) {
             for (auto& process_frame : _timeline.get_process_queue()) {
