@@ -1,9 +1,9 @@
 #ifndef BEETCHEF_JACK_CLIENT_HPP
 #define BEETCHEF_JACK_CLIENT_HPP
 
-#include "jack_port.hpp"
+#include "jack_audio_base/jack_port.hpp"
 
-#include "audio/audio_types.hpp"
+//#include "audio/audio_types.hpp"
 
 #include <memory>
 #include <iostream>
@@ -30,7 +30,7 @@ class Jack_client {
         void deactivate();
         bool is_active();
 
-        nframes_t get_sample_rate() const;
+        jack_nframes_t get_sample_rate() const;
 
         Jack_port register_input_port(std::string port_name);
         Jack_port register_output_port(std::string port_name);

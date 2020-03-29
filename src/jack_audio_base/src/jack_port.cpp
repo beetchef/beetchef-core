@@ -1,4 +1,4 @@
-#include "jack_port.hpp"
+#include "jack_audio_base/jack_port.hpp"
 
 #include <string>
 #include <jack/jack.h>
@@ -37,7 +37,7 @@ Jack_port::~Jack_port()
     if (_client && _port) jack_port_unregister(_client, _port);
 }
 
-sample_t* Jack_port::get_buffer(nframes_t nframes) const
+jack_default_audio_sample_t* Jack_port::get_buffer(jack_nframes_t nframes) const
 {
-    return static_cast<sample_t *>(jack_port_get_buffer(_port, nframes));
+    return static_cast<jack_default_audio_sample_t *>(jack_port_get_buffer(_port, nframes));
 }

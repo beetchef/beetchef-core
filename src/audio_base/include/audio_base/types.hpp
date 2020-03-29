@@ -1,9 +1,9 @@
 #ifndef BEETCHEF_AUDIO_TYPES_HPP
 #define BEETCHEF_AUDIO_TYPES_HPP
 
-#include <jack/types.h>
+#include <cstdint>
 
-typedef jack_default_audio_sample_t sample_t;
-typedef jack_nframes_t nframes_t;
+using sample_t = float;
+using nframes_t = unsigned long int;
 
 #endif // BEETCHEF_AUDIO_TYPES_HPP

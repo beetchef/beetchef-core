@@ -1,14 +1,13 @@
 #include "engine.hpp"
 
-#include "audio/jack/jack_client.hpp"
-#include "audio/jack/jack_impl_provider.hpp"
+#include "jack_audio_base/jack_client.hpp"
+#include "jack_audio_base/jack_impl_provider.hpp"
 
 #include <exception>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <string>
-
 
 
 namespace Beetchef {

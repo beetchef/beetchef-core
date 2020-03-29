@@ -1,7 +1,7 @@
 #ifndef BEETCHEF_AUDIO_INTERFACE_HPP
 #define BEETCHEF_AUDIO_INTERFACE_HPP
 
-#include "audio_types.hpp"
+#include "types.hpp"
 #include "callback_function.hpp"
 
 #include <memory>

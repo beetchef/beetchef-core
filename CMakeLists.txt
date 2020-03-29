@@ -1,37 +1,35 @@
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.17)
 
-# project name
 project(Beetchef VERSION 1.0.0)
 
-# set the C++17 standard
-set(CMAKE_CXX_STANDARD 17)
+#add_compile_options(-W -Wall -Werror)
 
-# set compiler flags
-set(CMAKE_CXX_FLAGS "-pthread -ljack -lpthread -O")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/archive")
 
-# set output directory for final executable to be ./build/bin
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/build/bin)
+add_executable(
+    beetchef
 
-# add external library cmake project
-add_subdirectory(lib/oscpack_1_1_0)
-
-# include src as project root
-include_directories(${CMAKE_SOURCE_DIR}/src)
-
-# include external library sources
-target_include_directories(oscpack PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/lib/oscpack_1_1_0")
-
-# add "make run" target
-add_custom_target(run
-    COMMAND build/bin/beetchef
-    WORKING_DIRECTORY ${CMAKE_PROJECT_DIR}
+    src/beetchef.cpp
+    src/click.cpp
+    src/console_ui.cpp
+    src/engine.cpp
+    src/timeline.cpp
+    src/track.cpp
 )
 
-# set beetchef sources to variable SOURCES
-file(GLOB SOURCES "./src/*.cpp" "./src/*.hpp" "./src/**/*.cpp" "./src/**/*.hpp" "./src/**/**/*.cpp" "./src/**/**/*.hpp") # TODO: use target_sources,
+set_target_properties(
+    beetchef PROPERTIES
 
-# specify final executable beetchef based on sources specified in variable SOURCES
-add_executable(beetchef ${SOURCES})
+    CXX_STANDARD 17
+    CXX_STANDARD_REQUIRED ON
+)
 
-# link the executable and the library together
-target_link_libraries(beetchef oscpack)
+target_include_directories(beetchef PRIVATE src)
+
+add_subdirectory(src/audio_base)
+add_subdirectory(src/jack_audio_base)
+
+target_link_libraries(beetchef PRIVATE audio_base)
+target_link_libraries(beetchef PRIVATE jack_audio_base)

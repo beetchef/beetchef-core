@@ -1,7 +1,7 @@
 #ifndef BEETCHEF_JACK_PORT_HANDLE_HPP
 #define BEETCHEF_JACK_PORT_HANDLE_HPP
 
-#include "audio/audio_types.hpp"
+//#include "audio/audio_types.hpp"
 
 #include <string>
 #include <jack/jack.h>
@@ -20,7 +20,7 @@ class Jack_port {
         Jack_port& operator=(Jack_port&&);
         ~Jack_port();
 
-        sample_t* get_buffer(nframes_t nframes) const;
+        jack_default_audio_sample_t* get_buffer(jack_nframes_t nframes) const;
     private:
         jack_client_t* _client;
         jack_port_t* _port;

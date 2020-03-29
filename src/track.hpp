@@ -3,8 +3,8 @@
 
 #include "timeline.hpp"
 
-#include "audio/audio_interface.hpp"
-#include "audio/audio_types.hpp"
+#include "audio_base/audio_interface.hpp"
+#include "audio_base/types.hpp"
 
 #include <string>
 #include <vector>
