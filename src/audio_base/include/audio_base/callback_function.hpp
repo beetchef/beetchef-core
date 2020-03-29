@@ -1,7 +1,7 @@
 #ifndef BEETCHEF_CALLBACK_FUNCTION_HPP
 #define BEETCHEF_CALLBACK_FUNCTION_HPP
 
-#include "audio_types.hpp"
+#include "types.hpp"
 
 #include <memory>
 

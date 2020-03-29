@@ -5,9 +5,9 @@
 #include "timeline.hpp"
 #include "track.hpp"
 
-#include "audio/audio_base.hpp"
+#include "audio_base/audio_base.hpp"
 
-#include "ui/console/console_ui.hpp"
+#include "console_ui.hpp"
 
 #include <memory>
 #include <string>

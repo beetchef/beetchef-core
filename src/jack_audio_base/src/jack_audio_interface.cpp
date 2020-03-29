@@ -1,7 +1,7 @@
-#include "jack_audio_interface.hpp"
-#include "jack_client.hpp"
+#include "jack_audio_base/jack_audio_interface.hpp"
+#include "jack_audio_base/jack_client.hpp"
 
-#include "audio/audio_types.hpp"
+//#include "audio/audio_types.hpp"
 
 #include <memory>
 #include <string>
@@ -19,7 +19,7 @@ Jack_audio_interface::Jack_audio_interface(Jack_client* jack_client, int in_chan
     }
 }
 
-nframes_t
+jack_nframes_t
 Jack_audio_interface::get_sample_rate() const
 {
     return _jack_client->get_sample_rate();
@@ -37,14 +37,14 @@ Jack_audio_interface::get_out_chan_count() const
     return _out_ports.size();
 }
 
-sample_t*
-Jack_audio_interface::get_in_buf(int chan_idx, nframes_t nframes) const
+jack_default_audio_sample_t*
+Jack_audio_interface::get_in_buf(int chan_idx, jack_nframes_t nframes) const
 {
     return _in_ports[chan_idx].get_buffer(nframes);
 }
 
-sample_t*
-Jack_audio_interface::get_out_buf(int chan_idx, nframes_t nframes) const
+jack_default_audio_sample_t*
+Jack_audio_interface::get_out_buf(int chan_idx, jack_nframes_t nframes) const
 {
     return _out_ports[chan_idx].get_buffer(nframes);
 }

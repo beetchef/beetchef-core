@@ -1,7 +1,7 @@
 #ifndef BEETCHEF_CONSOLE_UI_HPP
 #define BEETCHEF_CONSOLE_UI_HPP
 
-#include "timeline.hpp"
+#include "../../timeline.hpp"
 
 #include <vector>
 

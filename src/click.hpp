@@ -1,7 +1,7 @@
 #ifndef BEETCHEF_CLICK_HPP
 #define BEETCHEF_CLICK_HPP
 
-#include "messaging_handler.hpp"
+//#include "messaging_handler.hpp"
 
 #include <string>
 
@@ -19,7 +19,7 @@ class Click {
         long _beat_duration;
         long _bar_duration;
         bool _is_running {false};
-        Messaging_handler _messaging_handler;
+        //Messaging_handler _messaging_handler;
 };
 
 #endif // BEETCHEF_CLICK_HPP

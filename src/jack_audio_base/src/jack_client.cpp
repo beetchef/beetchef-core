@@ -1,7 +1,8 @@
-#include "audio/audio_types.hpp"
-#include "beetchef_error.hpp"
-#include "jack_client.hpp"
-#include "jack_port.hpp"
+//#include "audio/audio_types.hpp"
+//#include "beetchef_error.hpp"
+#include "jack_audio_base/jack_client.hpp"
+#include "jack_audio_base/jack_init_error.hpp"
+#include "jack_audio_base/jack_port.hpp"
 
 #include <cstdlib>
 #include <cstdio>
@@ -60,7 +61,7 @@ Jack_client::Jack_client(std::string client_name, jack_status_t client_status)
                 ? ", unable to connect to JACK server."
                 : ".");
 
-		throw Beetchef_error{msg_buf.str()};
+		throw Jack_init_error{msg_buf.str()};
 	}
 
 	if (client_status & JackServerStarted)
@@ -77,7 +78,7 @@ Jack_client::Jack_client(std::string client_name, jack_status_t client_status)
 void Jack_client::activate()
 {
     if (int err_code = jack_activate(_client.get()))
-        throw Beetchef_error{"Failed to activate JACK client, error code = " + std::to_string(err_code) + "."};
+        throw Jack_init_error{"Failed to activate JACK client, error code = " + std::to_string(err_code) + "."};
     else
 
         std::cout << log_label << "Activated..." << std::endl;
@@ -87,7 +88,7 @@ void Jack_client::activate()
 void Jack_client::deactivate()
 {
     if (int err_code = jack_deactivate(_client.get()))
-        throw Beetchef_error{"Failed to deactivate JACK client, error code = " + std::to_string(err_code) + "."};
+        throw Jack_init_error{"Failed to deactivate JACK client, error code = " + std::to_string(err_code) + "."};
     else
 
         std::cout << log_label << "Deactivated..." << std::endl;
@@ -98,7 +99,7 @@ bool Jack_client::is_active()
     return _active;
 }
 
-nframes_t Jack_client::get_sample_rate() const
+jack_nframes_t Jack_client::get_sample_rate() const
 {
     return jack_get_sample_rate(_client.get());
 }

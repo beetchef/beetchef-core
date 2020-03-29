@@ -1,5 +1,5 @@
-#include "callback_function.hpp"
-#include "audio/audio_types.hpp"
+#include "audio_base/callback_function.hpp"
+#include "audio_base/types.hpp"
 
 Callback_function::Callback_function()
     : _pimpl{nullptr}
