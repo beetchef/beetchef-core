@@ -1,4 +1,5 @@
-#include "timeline.hpp"
+#include "processing/timeline.hpp"
+#include "processing/types.hpp"
 
 #include <iostream>
 #include <vector>

@@ -15,8 +15,6 @@ add_executable(
     src/click.cpp
     src/console_ui.cpp
     src/engine.cpp
-    src/timeline.cpp
-    src/track.cpp
 )
 
 set_target_properties(
@@ -30,6 +28,8 @@ target_include_directories(beetchef PRIVATE src)
 
 add_subdirectory(src/audio_base)
 add_subdirectory(src/jack_audio_base)
+add_subdirectory(src/processing)
 
 target_link_libraries(beetchef PRIVATE audio_base)
 target_link_libraries(beetchef PRIVATE jack_audio_base)
+target_link_libraries(beetchef PRIVATE processing)

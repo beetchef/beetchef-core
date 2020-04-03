@@ -2,10 +2,10 @@
 #include "audio_base/audio_interface.hpp"
 #include "jack_audio_base/jack_audio_interface.hpp"
 #include "jack_audio_base/jack_client.hpp"
-#include "beetchef_error.hpp"
 #include "click.hpp"
 #include "engine.hpp"
-#include "track.hpp"
+
+#include "processing/track.hpp"
 
 #include <exception>
 #include <iostream>
@@ -14,7 +14,6 @@
 #include <unistd.h>
 
 Engine::Engine(Audio_base audio_base)
-try
     : _audio_base{std::move(audio_base)}
     , _timeline{120, 4, 4, _audio_base.get_audio_interface()->get_sample_rate(), 1}
     , _console_ui{120}
@@ -41,10 +40,6 @@ try
     });
 
     std::cout << log_label << "Timeline registered for processing..." << std::endl;
-}
-catch (...) {
-    Beetchef_error err{"Failed to initialize engine."};
-    std::throw_with_nested(err);
 }
 
 bool Engine::is_alive()

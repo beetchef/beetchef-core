@@ -21,7 +21,7 @@ class Jack_audio_interface {
         jack_default_audio_sample_t* get_out_buf(int chan_idx, jack_nframes_t nframes) const;
 
         template<typename T>
-        void set_process_callback(T& callback)
+        void set_process_callback(T* callback)
         {
             _jack_client->set_process_callback(callback);
             _jack_client->activate();

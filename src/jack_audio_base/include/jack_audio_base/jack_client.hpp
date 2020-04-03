@@ -37,9 +37,9 @@ class Jack_client {
         int connect_ports(std::string src_client_name, std::string src_port_name, std::string dest_client_name, std::string dest_port_name);
 
         template<typename T>
-        void set_process_callback(T& callback)
+        void set_process_callback(T* callback)
         {
-            int err_code = jack_set_process_callback(_client.get(), process_callback<T>, &callback);
+            int err_code = jack_set_process_callback(_client.get(), process_callback<T>, callback);
 
             if (err_code)
                 std::cerr << log_label << "Failed to set process callback, error code = " << std::to_string(err_code) << "." << std::endl;

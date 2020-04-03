@@ -1,5 +1,3 @@
-//#include "audio/audio_types.hpp"
-//#include "beetchef_error.hpp"
 #include "jack_audio_base/jack_client.hpp"
 #include "jack_audio_base/jack_init_error.hpp"
 #include "jack_audio_base/jack_port.hpp"

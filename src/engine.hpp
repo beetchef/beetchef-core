@@ -2,12 +2,12 @@
 #define BEETCHEF_ENGINE_HPP
 
 #include "click.hpp"
-#include "timeline.hpp"
-#include "track.hpp"
+#include "console_ui.hpp"
 
 #include "audio_base/audio_base.hpp"
 
-#include "console_ui.hpp"
+#include "processing/timeline.hpp"
+#include "processing/track.hpp"
 
 #include <memory>
 #include <string>

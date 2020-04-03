@@ -23,8 +23,8 @@ class Audio_interface {
         template<typename T>
         void register_process_callback(T callback)
         {
-            _callback = Callback_function{std::move(callback)};
-            _pimpl->set_process_callback(_callback);
+            _callback = std::make_unique<Callback_function>(callback);
+            _pimpl->set_process_callback(_callback.get());
         }
 
         nframes_t get_sample_rate() const;
@@ -44,7 +44,7 @@ class Audio_interface {
             virtual int get_out_chan_count() const = 0;
             virtual sample_t* get_in_buf(int chan_idx, nframes_t nframes) const = 0;
             virtual sample_t* get_out_buf(int chan_idx, nframes_t nframes) const = 0;
-            virtual void set_process_callback(Callback_function& callback) = 0;
+            virtual void set_process_callback(Callback_function* callback) = 0;
         };
 
         template<typename T>
@@ -77,7 +77,7 @@ class Audio_interface {
                 return _self.get_out_buf(chan_idx, nframes);
             }
 
-            void set_process_callback(Callback_function& callback) override
+            void set_process_callback(Callback_function* callback) override
             {
                 _self.set_process_callback(callback);
             }
@@ -86,7 +86,7 @@ class Audio_interface {
         };
 
         std::unique_ptr<Impl_concept> _pimpl;
-        Callback_function _callback;
+        std::unique_ptr<Callback_function> _callback;
 };
 
 #endif // BEETCHEF_AUDIO_INTERFACE_HPP

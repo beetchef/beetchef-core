@@ -2,21 +2,11 @@
 #define BEETCHEF_TIMELINE_HPP
 
 #include "audio_base/types.hpp"
+#include "processing/types.hpp"
 
 #include <string>
 #include <vector>
 
-struct Loop {
-    int begin_timeslot{0};
-    int end_timeslot{0};
-    int repeats{-1};
-};
-
-struct Process_frame {
-    int begin_timeslot{0};
-    nframes_t offset{0};
-    nframes_t nframes{0};
-};
 
 class Timeline {
     public:
