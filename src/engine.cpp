@@ -1,7 +1,7 @@
-#include "audio_base/audio_base.hpp"
-#include "audio_base/audio_interface.hpp"
-#include "jack_audio_base/jack_audio_interface.hpp"
-#include "jack_audio_base/jack_client.hpp"
+#include "audio/audio_base.hpp"
+#include "audio/audio_interface.hpp"
+#include "jack_audio/jack_audio_interface.hpp"
+#include "jack_audio/jack_client.hpp"
 #include "click.hpp"
 #include "engine.hpp"
 

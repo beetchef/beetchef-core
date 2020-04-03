@@ -1,7 +1,7 @@
 #include "engine.hpp"
 
-#include "jack_audio_base/jack_client.hpp"
-#include "jack_audio_base/jack_impl_provider.hpp"
+#include "jack_audio/jack_client.hpp"
+#include "jack_audio/jack_impl_provider.hpp"
 
 #include <exception>
 #include <iostream>

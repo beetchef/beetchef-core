@@ -15,4 +15,4 @@ set_target_properties(
 target_include_directories(processing PUBLIC include)
 target_include_directories(processing PRIVATE src)
 
-target_link_libraries(processing PRIVATE audio_base)
+target_link_libraries(processing PRIVATE audio)

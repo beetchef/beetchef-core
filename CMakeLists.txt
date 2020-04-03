@@ -26,10 +26,10 @@ set_target_properties(
 
 target_include_directories(beetchef PRIVATE src)
 
-add_subdirectory(src/audio_base)
-add_subdirectory(src/jack_audio_base)
+add_subdirectory(src/audio)
+add_subdirectory(src/jack_audio)
 add_subdirectory(src/processing)
 
-target_link_libraries(beetchef PRIVATE audio_base)
-target_link_libraries(beetchef PRIVATE jack_audio_base)
+target_link_libraries(beetchef PRIVATE audio)
+target_link_libraries(beetchef PRIVATE jack_audio)
 target_link_libraries(beetchef PRIVATE processing)

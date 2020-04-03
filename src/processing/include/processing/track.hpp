@@ -1,8 +1,8 @@
 #ifndef BEETCHEF_TRACK_HPP
 #define BEETCHEF_TRACK_HPP
 
-#include "audio_base/audio_interface.hpp"
-#include "audio_base/types.hpp"
+#include "audio/audio_interface.hpp"
+#include "audio/types.hpp"
 
 #include "processing/types.hpp"
 

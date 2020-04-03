@@ -1,7 +1,7 @@
 #ifndef BEETCHEF_TIMELINE_HPP
 #define BEETCHEF_TIMELINE_HPP
 
-#include "audio_base/types.hpp"
+#include "audio/types.hpp"
 #include "processing/types.hpp"
 
 #include <string>

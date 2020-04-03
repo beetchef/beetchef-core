@@ -1,7 +1,7 @@
 #ifndef BEETCHEF_JACK_CLIENT_HPP
 #define BEETCHEF_JACK_CLIENT_HPP
 
-#include "jack_audio_base/jack_port.hpp"
+#include "jack_audio/jack_port.hpp"
 
 //#include "audio/audio_types.hpp"
 

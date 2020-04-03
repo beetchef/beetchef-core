@@ -4,7 +4,7 @@
 #include "click.hpp"
 #include "console_ui.hpp"
 
-#include "audio_base/audio_base.hpp"
+#include "audio/audio_base.hpp"
 
 #include "processing/timeline.hpp"
 #include "processing/track.hpp"

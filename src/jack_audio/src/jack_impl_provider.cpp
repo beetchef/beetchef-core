@@ -1,6 +1,6 @@
-#include "jack_audio_base/jack_audio_interface.hpp"
-#include "jack_audio_base/jack_client.hpp"
-#include "jack_audio_base/jack_impl_provider.hpp"
+#include "jack_audio/jack_audio_interface.hpp"
+#include "jack_audio/jack_client.hpp"
+#include "jack_audio/jack_impl_provider.hpp"
 
 #include <memory>
 

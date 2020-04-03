@@ -4,8 +4,6 @@
 #include "jack_client.hpp"
 #include "jack_port.hpp"
 
-//#include "audio/audio_types.hpp"
-
 #include <memory>
 #include <vector>
 

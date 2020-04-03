@@ -1,7 +1,7 @@
 #ifndef BEETCHEF_PROCESSING_TYPES_HPP
 #define BEETCHEF_PROCESSING_TYPES_HPP
 
-#include "audio_base/types.hpp"
+#include "audio/types.hpp"
 
 struct Loop {
     int begin_timeslot{0};
