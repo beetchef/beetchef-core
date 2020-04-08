@@ -4,8 +4,8 @@
 #include <memory>
 #include <string>
 
-Jack_audio_interface::Jack_audio_interface(Jack_client* jack_client, int in_chan_count, int out_chan_count)
-    : _jack_client{jack_client}
+Jack_audio_interface::Jack_audio_interface(Jack_client jack_client, int in_chan_count, int out_chan_count)
+    : _jack_client{std::make_unique<Jack_client>(std::move(jack_client))}
 {
     for (int i = 0; i < in_chan_count; i++) {
         std::string suffix = "_" + std::to_string(i + 1);
@@ -17,38 +17,52 @@ Jack_audio_interface::Jack_audio_interface(Jack_client* jack_client, int in_chan
     }
 }
 
-jack_nframes_t
-Jack_audio_interface::get_sample_rate() const
+bool Jack_audio_interface::unset_process_callback()
+{
+    return _jack_client->unset_process_callback();
+}
+
+bool Jack_audio_interface::start_processing()
+{
+    return _jack_client->activate();
+}
+
+bool Jack_audio_interface::stop_processing()
+{
+    return _jack_client->deactivate();
+}
+
+Jack_client* Jack_audio_interface::get_jack_client()
+{
+    return _jack_client.get();
+}
+
+jack_nframes_t Jack_audio_interface::get_sample_rate() const
 {
     return _jack_client->get_sample_rate();
 }
 
-int
-Jack_audio_interface::get_in_chan_count() const
+int Jack_audio_interface::get_in_chan_count() const
 {
     return _in_ports.size();
 }
 
-int
-Jack_audio_interface::get_out_chan_count() const
+int Jack_audio_interface::get_out_chan_count() const
 {
     return _out_ports.size();
 }
 
-jack_default_audio_sample_t*
-Jack_audio_interface::get_in_buf(int chan_idx, jack_nframes_t nframes) const
+jack_default_audio_sample_t* Jack_audio_interface::get_in_buf(int chan_idx, jack_nframes_t nframes) const
 {
     return _in_ports[chan_idx].get_buffer(nframes);
 }
 
-jack_default_audio_sample_t*
-Jack_audio_interface::get_out_buf(int chan_idx, jack_nframes_t nframes) const
+jack_default_audio_sample_t* Jack_audio_interface::get_out_buf(int chan_idx, jack_nframes_t nframes) const
 {
     return _out_ports[chan_idx].get_buffer(nframes);
 }
 
-void
-Jack_audio_interface::connect_io_ports() const
+void Jack_audio_interface::connect_io_ports() const
 {
     for (int i = 0; i < _in_ports.size(); i++) {
         std::string suffix = "_" + std::to_string(i + 1);

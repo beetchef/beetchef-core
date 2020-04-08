@@ -1,12 +1,14 @@
-#include "audio/audio_interface.hpp"
+#include "audio/audio_interface_wrap.hpp"
+#include "audio/types.hpp"
 
 #include "processing/track.hpp"
+#include "processing/types.hpp"
 
 #include <algorithm>
 #include <cstring>
 #include <string>
 
-Track::Track(Audio_interface* const audio_interface, const std::vector<int> in_chans, const std::string name)
+Track::Track(Audio_interface_wrap* const audio_interface, const std::vector<int> in_chans, const std::string name)
     : _audio_interface{audio_interface}
     , _in_chans{in_chans}
     , _name{name}
@@ -18,9 +20,8 @@ Track::produce_to(const int chan_idx, const Process_frame& process_frame, sample
 {
     sample_t* in_buf = _audio_interface->get_in_buf(_in_chans[chan_idx], process_frame.nframes);
 
-    //std::copy(in_buf, in_buf + process_frame.nframes, out_buf);
+    std::copy(in_buf, in_buf + process_frame.nframes, out_buf);
 
-    // seems to perform better
-    std::memcpy(out_buf, _audio_interface->get_in_buf(_in_chans[chan_idx], process_frame.nframes),
-		sizeof (sample_t) * process_frame.nframes);
+    //std::memcpy(out_buf, _audio_interface->get_in_buf(_in_chans[chan_idx], process_frame.nframes),
+		//sizeof (sample_t) * process_frame.nframes);
 }

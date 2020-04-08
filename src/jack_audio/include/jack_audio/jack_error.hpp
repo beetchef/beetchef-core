@@ -4,9 +4,9 @@
 #include <exception>
 #include <string>
 
-class Jack_init_error : public std::exception {
+class Jack_error : public std::exception {
     public:
-        explicit Jack_init_error(std::string const& msg) : _msg{msg} { };
+        explicit Jack_error(std::string const& msg) : _msg{msg} { };
         char const* what() const noexcept override { return _msg.c_str(); };
     private:
         std::string _msg;

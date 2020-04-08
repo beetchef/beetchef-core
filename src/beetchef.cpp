@@ -1,7 +1,7 @@
 #include "engine.hpp"
 
+#include "jack_audio/jack_audio_interface.hpp"
 #include "jack_audio/jack_client.hpp"
-#include "jack_audio/jack_impl_provider.hpp"
 
 #include <exception>
 #include <iostream>
@@ -59,11 +59,8 @@ int main()
 try {
 
     Jack_client jack_client;
-    Jack_impl_provider jap(std::move(jack_client));
-    Audio_base audio_base(std::move(jap));
-    Engine engine(std::move(audio_base));
-
-    //Engine engine{Audio_base(Jack_impl_provider(Jack_client()))};
+    Jack_audio_interface jack_audio_interface(std::move(jack_client));
+    Engine engine(std::move(jack_audio_interface));
 
     engine.start();
 

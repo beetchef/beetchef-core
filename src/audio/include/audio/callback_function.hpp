@@ -11,7 +11,7 @@ class Callback_function {
 
         template<typename T>
         explicit Callback_function(T callable)
-            : _pimpl(std::make_unique<Cb_model<T>>(std::move(callable)))
+            : _callable(std::make_unique<Cb_model<T>>(std::move(callable)))
         { }
 
         Callback_function(const Callback_function&);
@@ -50,7 +50,7 @@ class Callback_function {
             T _self;
         };
 
-        std::unique_ptr<Cb_concept> _pimpl;
+        std::unique_ptr<Cb_concept> _callable;
 };
 
 #endif // BEETCHEF_CALLBACK_FUNCTION_HPP

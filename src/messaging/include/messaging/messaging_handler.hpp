@@ -3,7 +3,6 @@
 
 #include "ip/UdpSocket.h"
 
-#include <iostream>
 #include <string>
 
 class Messaging_handler {

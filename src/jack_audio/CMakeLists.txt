@@ -3,7 +3,6 @@ add_library(
 
     src/jack_audio_interface.cpp
     src/jack_client.cpp
-    src/jack_impl_provider.cpp
     src/jack_port.cpp
 )
 
