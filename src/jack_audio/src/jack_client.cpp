@@ -2,14 +2,10 @@
 #include "jack_audio/jack_error.hpp"
 #include "jack_audio/jack_port.hpp"
 
-#include <cstdlib>
-#include <cstdio>
 #include <iostream>
 #include <memory>
-#include <stdexcept>
-#include <sstream>
 #include <string>
-#include <unistd.h>
+
 #include <jack/jack.h>
 #include <jack/types.h>
 
@@ -62,14 +58,13 @@ Jack_client::Jack_client(std::string client_name, jack_status_t client_status)
 
     if (_client == NULL)
     {
-        std::stringstream msg_buf;
-        msg_buf << "Failed to create JACK client, status = "
-            << client_status
-            << ((client_status & JackServerFailed)
-                ? ", unable to connect to JACK server."
-                : ".");
-
-		throw Jack_error{msg_buf.str()};
+        throw Jack_error{
+            "Failed to create JACK client, status = "
+                + client_status
+                + (client_status & JackServerFailed)
+                    ? ", unable to connect to JACK server."
+                    : "."
+        };
 	}
 
 	if (client_status & JackServerStarted)
@@ -89,10 +84,7 @@ void Jack_client::unset_process_callback()
 
     if (res_code)
     {
-        std::stringstream msg_buf;
-        msg_buf << "Failed to unset process callback, error code = " << std::to_string(res_code) << ".";
-
-        throw Jack_error{msg_buf.str()};
+        throw Jack_error{"Failed to unset process callback, error code = " + std::to_string(res_code) + "."};
     }
     else
     {
@@ -106,10 +98,7 @@ void Jack_client::activate()
 
     if (res_code)
     {
-        std::stringstream msg_buf;
-        msg_buf << "Failed to activate JACK client, error code = " << std::to_string(res_code) << ". Maybe JACK client is active?";
-
-        throw Jack_error{msg_buf.str()};
+        throw Jack_error{"Failed to activate JACK client, error code = " + std::to_string(res_code) + ". Maybe JACK client is active?"};
     }
     else
     {
@@ -125,10 +114,7 @@ void Jack_client::deactivate()
 
     if (res_code)
     {
-        std::stringstream msg_buf;
-        msg_buf << "Failed to deactivate JACK client, error code = " << std::to_string(res_code) << ".";
-
-        throw Jack_error{msg_buf.str()};
+        throw Jack_error{"Failed to deactivate JACK client, error code = " + std::to_string(res_code) + "."};
     }
     else
     {
@@ -155,14 +141,12 @@ void Jack_client::connect_ports(std::string src_client_name, std::string src_por
 
     if(res_code)
     {
-        std::stringstream msg_buf;
-        msg_buf << log_label
-            << "Failed to connect port " << src_full_name
-            << " with port " << dest_full_name
-            << ", error code = " << std::to_string(res_code) << ". "
-            << "Maybe JACK client is not activated?";
-
-        throw Jack_error{msg_buf.str()};
+        throw Jack_error{
+            "Failed to connect port " + src_full_name
+                + " with port " + dest_full_name
+                + ", error code = " + std::to_string(res_code) + ". "
+                + "Maybe JACK client is not activated?"
+        };
     }
 }
 

@@ -6,7 +6,6 @@
 
 #include <memory>
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -35,10 +34,7 @@ namespace Jack_audio
 
                 if (res_code)
                 {
-                    std::stringstream msg_buf;
-                    msg_buf << "Failed to set process callback, error code = " << std::to_string(res_code) << ". Maybe JACK client is active?";
-
-                    throw Jack_error{msg_buf.str()};
+                    throw Jack_error{"Failed to set process callback, error code = " + std::to_string(res_code) + ". Maybe JACK client is active?"};
                 }
                 else
                 {
