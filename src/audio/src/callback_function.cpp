@@ -1,6 +1,8 @@
 #include "audio/callback_function.hpp"
 #include "audio/types.hpp"
 
+using Audio::Callback_function;
+
 Callback_function::Callback_function(const Callback_function& other)
     : _callable{other._callable->clone()}
 {

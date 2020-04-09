@@ -58,9 +58,9 @@ namespace Beetchef {
 int main()
 try {
 
-    Jack_client jack_client;
-    Jack_audio_interface jack_audio_interface(std::move(jack_client));
-    Engine engine(std::move(jack_audio_interface));
+    Jack_audio::Jack_client jack_client;
+    Jack_audio::Jack_audio_interface jack_audio_interface(std::move(jack_client));
+    Beetchef::Engine engine(std::move(jack_audio_interface));
 
     engine.start();
 

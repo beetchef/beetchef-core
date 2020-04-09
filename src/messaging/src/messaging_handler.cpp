@@ -6,6 +6,8 @@
 #include <iostream>
 #include <string>
 
+using Messaging::Messaging_handler;
+
 Messaging_handler::Messaging_handler() : _transmit_socket(IpEndpointName(address.c_str(), port))
 {
     std::cout << log_label << "Created..." << std::endl;

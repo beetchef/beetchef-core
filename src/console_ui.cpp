@@ -4,19 +4,21 @@
 
 #include <iostream>
 
+using Beetchef::Console_ui;
+
 Console_ui::Console_ui(const int tempo)
     : _tempo{tempo}
 {
 }
 
 void
-Console_ui::update(const int current_timeslot, const std::vector<Loop>& loops)
+Console_ui::update(const int current_timeslot, const std::vector<Processing::Loop>& loops)
 {
     print_timeline(current_timeslot, loops);
 }
 
 void
-Console_ui::print_timeline(const int current_timeslot, const std::vector<Loop>& loops)
+Console_ui::print_timeline(const int current_timeslot, const std::vector<Processing::Loop>& loops)
 {
     if (current_timeslot != _last_timeslot_printed) {
         system("clear");

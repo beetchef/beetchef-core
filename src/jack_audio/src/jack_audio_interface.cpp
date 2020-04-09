@@ -4,6 +4,9 @@
 #include <memory>
 #include <string>
 
+using Jack_audio::Jack_audio_interface;
+using Jack_audio::Jack_client;
+
 Jack_audio_interface::Jack_audio_interface(Jack_client jack_client, int in_chan_count, int out_chan_count)
     : _jack_client{std::make_unique<Jack_client>(std::move(jack_client))}
 {

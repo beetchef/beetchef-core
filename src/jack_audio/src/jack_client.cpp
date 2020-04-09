@@ -13,6 +13,10 @@
 #include <jack/jack.h>
 #include <jack/types.h>
 
+using Jack_audio::Client_handle_deleter;
+using Jack_audio::Jack_client;
+using Jack_audio::Jack_port;
+
 /**
  * Custom deleter for unique_ptr owning jack_client_t pointer
  */

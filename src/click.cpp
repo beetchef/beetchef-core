@@ -6,6 +6,8 @@
 #include <iostream>
 #include <thread>
 
+using Beetchef::Click;
+
 /*
     NOTE:
 

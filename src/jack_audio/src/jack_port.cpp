@@ -5,6 +5,8 @@
 #include <string>
 #include <jack/jack.h>
 
+using Jack_audio::Jack_port;
+
 Jack_port::Jack_port(jack_client_t* client, std::string port_name, Port_type port_type)
     : _client{client}
     , _port{jack_port_register(

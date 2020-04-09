@@ -13,36 +13,40 @@
 #include <string>
 #include <vector>
 
-class Engine {
-    public:
+namespace Beetchef
+{
+    class Engine {
+        public:
 
-        template<typename T>
-        explicit Engine(T audio_interface)
-            : _audio_interface{std::move(audio_interface)}
-            , _timeline{120, 4, 4, _audio_interface.get_sample_rate(), 1}
-            , _console_ui{120}
-            , _click{} // TODO: _click will be removed from here
-            , _is_alive{true}
-        {
-            init();
-        }
+            template<typename T>
+            explicit Engine(T audio_interface)
+                : _audio_interface{std::move(audio_interface)}
+                , _timeline{120, 4, 4, _audio_interface.get_sample_rate(), 1}
+                , _console_ui{120}
+                , _click{} // TODO: _click will be removed from here
+                , _is_alive{true}
+            {
+                init();
+            }
 
-        int start();
-        bool is_alive();
+            int start();
+            bool is_alive();
 
-    private:
-        static constexpr std::string_view log_label{"[engine]: "};
+        private:
+            static constexpr std::string_view log_label{"[engine]: "};
 
-        Audio_interface_wrap _audio_interface;
+            Audio::Audio_interface_wrap _audio_interface;
 
-        Click _click;
-        bool _is_alive;
-        Timeline _timeline;
-        Console_ui _console_ui;
+            Click _click;
+            bool _is_alive;
+            Processing::Timeline _timeline;
+            Console_ui _console_ui;
 
-        std::vector<Track> _tracks;
+            std::vector<Processing::Track> _tracks;
 
-        void init();
-};
+            void init();
+    };
+
+}; // namespace Beetchef
 
 #endif // BEETCHEF_ENGINE_HPP

@@ -8,7 +8,9 @@
 #include <cstring>
 #include <string>
 
-Track::Track(Audio_interface_wrap* const audio_interface, const std::vector<int> in_chans, const std::string name)
+using Processing::Track;
+
+Track::Track(Audio::Audio_interface_wrap* const audio_interface, const std::vector<int> in_chans, const std::string name)
     : _audio_interface{audio_interface}
     , _in_chans{in_chans}
     , _name{name}
@@ -16,12 +18,12 @@ Track::Track(Audio_interface_wrap* const audio_interface, const std::vector<int>
 }
 
 void
-Track::produce_to(const int chan_idx, const Process_frame& process_frame, sample_t* out_buf)
+Track::produce_to(const int chan_idx, const Process_frame& process_frame, Audio::sample_t* out_buf)
 {
-    sample_t* in_buf = _audio_interface->get_in_buf(_in_chans[chan_idx], process_frame.nframes);
+    Audio::sample_t* in_buf = _audio_interface->get_in_buf(_in_chans[chan_idx], process_frame.nframes);
 
     std::copy(in_buf, in_buf + process_frame.nframes, out_buf);
 
     //std::memcpy(out_buf, _audio_interface->get_in_buf(_in_chans[chan_idx], process_frame.nframes),
-		//sizeof (sample_t) * process_frame.nframes);
+		//sizeof (Audio::sample_t) * process_frame.nframes);
 }

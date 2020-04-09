@@ -7,45 +7,48 @@
 #include <string>
 #include <vector>
 
+namespace Processing
+{
+    class Timeline {
+        public:
 
-class Timeline {
-    public:
+            Timeline(
+                int tempo = 60,
+                int signature_numerator = 4,
+                int signature_denominator = 4,
+                Audio::nframes_t sample_rate = 44100,
+                int timeslots_per_beat = 1);
 
-        Timeline(
-            int tempo = 60,
-            int signature_numerator = 4,
-            int signature_denominator = 4,
-            nframes_t sample_rate = 44100,
-            int timeslots_per_beat = 1);
+                int get_current_timeslot() const;
+                const std::vector<Loop>& get_loops() const;
+                const std::vector<Process_frame>& get_process_queue() const;
 
-            int get_current_timeslot() const;
-            const std::vector<Loop>& get_loops() const;
-            const std::vector<Process_frame>& get_process_queue() const;
+                void update(Audio::nframes_t);
+        private:
+            static constexpr std::string_view log_label{"[timeline]: "};
 
-            void update(nframes_t);
-    private:
-        static constexpr std::string_view log_label{"[timeline]: "};
+            struct Click_info {
+                int tempo;
+                int signature_numerator;
+                int signature_denominator;
+                Audio::nframes_t sample_rate;
 
-        struct Click_info {
-            int tempo;
-            int signature_numerator;
-            int signature_denominator;
-            nframes_t sample_rate;
+                Audio::nframes_t get_beat_length() const;
+            };
 
-            nframes_t get_beat_length() const;
-        };
+            Click_info _click_info;
 
-        Click_info _click_info;
+            std::vector<Loop> _loops;
 
-        std::vector<Loop> _loops;
+            int _timeslots_per_beat;
+            Audio::nframes_t _timeslot_length;
 
-        int _timeslots_per_beat;
-        nframes_t _timeslot_length;
+            int _current_timeslot{0};
+            Audio::nframes_t _current_offset{0};
 
-        int _current_timeslot{0};
-        nframes_t _current_offset{0};
-
-        std::vector<Process_frame> _process_queue;
-};
+            std::vector<Process_frame> _process_queue;
+    };
+    
+}; // namespace Processing
 
 #endif // BEETCHEF_TIMELINE_HPP

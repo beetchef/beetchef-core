@@ -4,11 +4,13 @@
 #include <iostream>
 #include <vector>
 
+using Processing::Timeline;
+
 Timeline::Timeline(
     int tempo,
     int signature_numerator,
     int signature_denominator,
-    nframes_t sample_rate,
+    Audio::nframes_t sample_rate,
     int timeslots_per_beat)
         : _click_info{tempo, signature_numerator, signature_denominator, sample_rate}
         , _timeslots_per_beat{timeslots_per_beat}
@@ -28,26 +30,22 @@ Timeline::Timeline(
     std::cout << log_label << "Timeslot length: " << _timeslot_length << std::endl;
 }
 
-int
-Timeline::get_current_timeslot() const
+int Timeline::get_current_timeslot() const
 {
     return _current_timeslot;
 }
 
-const std::vector<Loop>&
-Timeline::get_loops() const
+const std::vector<Processing::Loop>& Timeline::get_loops() const
 {
     return _loops;
 }
 
-const std::vector<Process_frame>&
-Timeline::get_process_queue() const
+const std::vector<Processing::Process_frame>& Timeline::get_process_queue() const
 {
     return _process_queue;
 }
 
-void
-Timeline::update(const nframes_t nframes)
+void Timeline::update(const Audio::nframes_t nframes)
 {
     _process_queue.clear();
 
@@ -69,7 +67,7 @@ Timeline::update(const nframes_t nframes)
         // exceeding current timeslot and current loop - the least frequent case
 
         // rest of current loop
-        nframes_t loop_frames_left = (_loops.back().end_timeslot + 1 - _current_timeslot) * _timeslot_length - _current_offset;
+        Audio::nframes_t loop_frames_left = (_loops.back().end_timeslot + 1 - _current_timeslot) * _timeslot_length - _current_offset;
         _process_queue.emplace_back(Process_frame{_current_timeslot, _current_offset, loop_frames_left});
 
         // set position according to loop
@@ -103,8 +101,7 @@ Timeline::update(const nframes_t nframes)
 
     beat_duration = 60(1min in seconds) / 120(tempo) * 4(quarter note length) / 4(signature_denominator) * sample_rate = 60 / 120 * 44100 = 22050 frames
 */
-nframes_t
-Timeline::Click_info::get_beat_length() const
+Audio::nframes_t Timeline::Click_info::get_beat_length() const
 {
     return 60.0f /* 1 minute in seconds */ / tempo * 4.0f /* quarter note length */ / signature_denominator * sample_rate;
 }

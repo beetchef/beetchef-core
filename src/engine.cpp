@@ -9,13 +9,15 @@
 #include <string>
 #include <unistd.h>
 
+using Beetchef::Engine;
+
 void Engine::init()
 {
     std::cout << log_label << "Created..." << std::endl;
 
     _tracks.emplace_back(&_audio_interface, std::vector<int>{0, 1}, "track-1");
 
-    _audio_interface.register_process_callback([&](nframes_t nframes)->int{
+    _audio_interface.register_process_callback([&](Audio::nframes_t nframes)->int{
         _timeline.update(nframes);
         //_console_ui.update(_timeline.get_current_timeslot(), _timeline.get_loops());
 
