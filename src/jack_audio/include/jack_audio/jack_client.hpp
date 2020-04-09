@@ -38,7 +38,7 @@ namespace Jack_audio
                 }
                 else
                 {
-                    std::cout << log_label << "Process callback set..." << std::endl;
+                    std::cout << log_label << "Process callback set..." << "\n";
                 }
             }
 

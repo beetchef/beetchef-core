@@ -22,12 +22,12 @@ Timeline::Timeline(
     // TMP
     _loops.emplace_back(Loop{4, 7, 4});
 
-    std::cout << log_label << "Created..." << std::endl;
-    std::cout << log_label << "Tempo: " << _click_info.tempo << std::endl;
+    std::cout << log_label << "Created..." << "\n";
+    std::cout << log_label << "Tempo: " << _click_info.tempo << "\n";
     std::cout << log_label << "Time signature: "
-        << _click_info.signature_numerator << "/" << _click_info.signature_denominator << std::endl;
-    std::cout << log_label << "Beat length: " << _click_info.get_beat_length() << std::endl;
-    std::cout << log_label << "Timeslot length: " << _timeslot_length << std::endl;
+        << _click_info.signature_numerator << "/" << _click_info.signature_denominator << "\n";
+    std::cout << log_label << "Beat length: " << _click_info.get_beat_length() << "\n";
+    std::cout << log_label << "Timeslot length: " << _timeslot_length << "\n";
 }
 
 int Timeline::get_current_timeslot() const

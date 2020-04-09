@@ -13,7 +13,7 @@ using Beetchef::Engine;
 
 void Engine::init()
 {
-    std::cout << log_label << "Created..." << std::endl;
+    std::cout << log_label << "Created..." << "\n";
 
     _tracks.emplace_back(&_audio_interface, std::vector<int>{0, 1}, "track-1");
 
@@ -32,11 +32,11 @@ void Engine::init()
         return 0;
     });
 
-    std::cout << log_label << "Timeline registered for processing..." << std::endl;
+    std::cout << log_label << "Timeline registered for processing..." << "\n";
 
     _audio_interface.start_processing();
 
-    std::cout << log_label << "Processing started..." << std::endl;
+    std::cout << log_label << "Processing started..." << "\n";
 }
 
 bool Engine::is_alive()
@@ -46,7 +46,7 @@ bool Engine::is_alive()
 
 int Engine::start()
 {
-    std::cout << log_label << "Started..." << std::endl;
+    std::cout << log_label << "Started..." << "\n";
 
     _click.start();
 
@@ -58,7 +58,7 @@ int Engine::start()
         //_timeline.process(50000);
         //usleep(500000);
 
-        //std::cout << log_label << "Main loop - doing nothing..." << std::endl;
+        //std::cout << log_label << "Main loop - doing nothing..." << "\n";
         // sleep for 5 seconds
         usleep(5000000);
     }

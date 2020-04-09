@@ -20,11 +20,11 @@ namespace Beetchef {
         }
         catch (const std::exception& err) {
             // it's std::exception, print it
-            std::cerr << std::string(level, ' ') << "exception: " << err.what() << std::endl;
+            std::cerr << std::string(level, ' ') << "exception: " << err.what() << "\n";
         }
         catch (...) {
             // it's an unknown exception, print message
-            std::cerr << std::string(level, ' ') << "unknown exception" << std::endl;
+            std::cerr << std::string(level, ' ') << "unknown exception" << "\n";
         }
 
         try {
@@ -48,9 +48,9 @@ namespace Beetchef {
     }
     static void exit_with_error(std::string msg)
     {
-        std::cerr << log_label << msg << std::endl;
+        std::cerr << log_label << msg << "\n";
         print_current_exception_with_nested();
-        std::cerr << log_label << "Exiting..." << std::endl;
+        std::cerr << log_label << "Exiting..." << "\n";
         exit(1);
     }
 }

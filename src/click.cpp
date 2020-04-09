@@ -37,15 +37,15 @@ Click::Click()
 {
     _beat_duration = 60000 /* 1 minute in milis */ / _tempo * 4 /* quarter note length */ / _signature_denominator;
     _bar_duration = _beat_duration * _signature_numerator;
-    std::cout << log_label << "Created..." << std::endl;
-    std::cout << log_label << "Tempo: " << _tempo << std::endl;
-    std::cout << log_label << "Time signature: " << _signature_numerator << "/" << _signature_denominator << std::endl;
+    std::cout << log_label << "Created..." << "\n";
+    std::cout << log_label << "Tempo: " << _tempo << "\n";
+    std::cout << log_label << "Time signature: " << _signature_numerator << "/" << _signature_denominator << "\n";
 }
 
 void Click::start()
 {
     _is_running = true;
-    std::cout << log_label << "Started..." << std::endl;
+    std::cout << log_label << "Started..." << "\n";
 
     std::thread click_loop_thread([this]()
     {
@@ -56,7 +56,7 @@ void Click::start()
             // next_beat_timepoint is current time + beat duration
             auto next_beat_timepoint = std::chrono::steady_clock::now() + std::chrono::milliseconds(_beat_duration);
 
-            //std::cout << log_label << "*click* " << _current_beat - 1 << std::endl;
+            //std::cout << log_label << "*click* " << _current_beat - 1 << "\n";
 
             // TMP: testing
             total_beat_count++;
@@ -72,7 +72,7 @@ void Click::start()
             } else {
                 // this was the last beat within the bar, reset mCurrentBeat to 1
                 _current_beat = 1;
-                //std::cout << std::endl;
+                //std::cout << "\n";
             }
             std::this_thread::sleep_until(next_beat_timepoint);
         }

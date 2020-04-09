@@ -21,13 +21,13 @@ void Client_handle_deleter::operator()(jack_client_t* client_ptr) const
     // deactivate jack client, unregister all ports
     int res_code = jack_deactivate(client_ptr);
     if (res_code)
-        std::cerr << Jack_client::log_label << "Failed to deactivate JACK client, error code = " << std::to_string(res_code) << std::endl;
+        std::cerr << Jack_client::log_label << "Failed to deactivate JACK client, error code = " << std::to_string(res_code) << "\n";
 
     // within jack_client_close() a "delete" keyword is used to free the memory
     // used by jack client object on the heap
     res_code = jack_client_close(client_ptr);
     if (res_code)
-        std::cerr << Jack_client::log_label << "Failed to close JACK client, error code = " << std::to_string(res_code) << std::endl;
+        std::cerr << Jack_client::log_label << "Failed to close JACK client, error code = " << std::to_string(res_code) << "\n";
 }
 
 /**
@@ -68,14 +68,14 @@ Jack_client::Jack_client(std::string client_name, jack_status_t client_status)
 	}
 
 	if (client_status & JackServerStarted)
-        std::cout << log_label << "JACK server started." << std::endl;
+        std::cout << log_label << "JACK server started." << "\n";
 
 	if (client_status & JackNameNotUnique)
-		std::cout << log_label << "Unique name " << jack_get_client_name(_client.get()) << " assigned." << std::endl;
+		std::cout << log_label << "Unique name " << jack_get_client_name(_client.get()) << " assigned." << "\n";
 
 	jack_on_shutdown(_client.get(), shutdown_callback, 0);
 
-    std::cout << log_label << "Created..." << std::endl;
+    std::cout << log_label << "Created..." << "\n";
 }
 
 void Jack_client::unset_process_callback()
@@ -88,7 +88,7 @@ void Jack_client::unset_process_callback()
     }
     else
     {
-        std::cout << log_label << "Process callback unset..." << std::endl;
+        std::cout << log_label << "Process callback unset..." << "\n";
     }
 }
 
@@ -103,7 +103,7 @@ void Jack_client::activate()
     else
     {
         _active = true;
-        std::cout << log_label << "Activated..." << std::endl;
+        std::cout << log_label << "Activated..." << "\n";
     }
 }
 
@@ -119,7 +119,7 @@ void Jack_client::deactivate()
     else
     {
         _active = false;
-        std::cout << log_label << "Deactivated..." << std::endl;
+        std::cout << log_label << "Deactivated..." << "\n";
     }
 }
 
@@ -166,6 +166,6 @@ jack_nframes_t Jack_client::get_sample_rate() const
  */
 void Jack_client::shutdown_callback(void* arg)
 {
-	std::cerr << log_label << "Client was shut down by Jack." << std::endl;
+	std::cerr << log_label << "Client was shut down by Jack." << "\n";
 	return;
 }
