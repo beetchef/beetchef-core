@@ -79,51 +79,58 @@ Jack_client::Jack_client(std::string client_name, jack_status_t client_status)
     std::cout << log_label << "Created..." << std::endl;
 }
 
-bool Jack_client::unset_process_callback()
+void Jack_client::unset_process_callback()
 {
     int res_code = jack_set_process_callback(_client.get(), nullptr, nullptr);
 
     if (res_code)
-        std::cerr << log_label << "Failed to unset process callback, error code = " << std::to_string(res_code) << "." << std::endl;
-    else
-        std::cout << log_label << "Process callback unset..." << std::endl;
+    {
+        std::stringstream msg_buf;
+        msg_buf << "Failed to unset process callback, error code = " << std::to_string(res_code) << ".";
 
-    return !res_code;
+        throw Jack_error{msg_buf.str()};
+    }
+    else
+    {
+        std::cout << log_label << "Process callback unset..." << std::endl;
+    }
 }
 
-bool Jack_client::activate()
+void Jack_client::activate()
 {
     int res_code = jack_activate(_client.get());
 
     if (res_code)
     {
-        std::cerr << log_label << "Failed to activate JACK client, error code = " << std::to_string(res_code) << "." << std::endl;
+        std::stringstream msg_buf;
+        msg_buf << "Failed to activate JACK client, error code = " << std::to_string(res_code) << ". Maybe JACK client is active?";
+
+        throw Jack_error{msg_buf.str()};
     }
     else
     {
         _active = true;
         std::cout << log_label << "Activated..." << std::endl;
     }
-
-    return !res_code;
 }
 
 
-bool Jack_client::deactivate()
+void Jack_client::deactivate()
 {
     int res_code = jack_deactivate(_client.get());
 
     if (res_code)
     {
-        std::cerr << log_label << "Failed to deactivate JACK client, error code = " << std::to_string(res_code) << "." << std::endl;
+        std::stringstream msg_buf;
+        msg_buf << "Failed to deactivate JACK client, error code = " << std::to_string(res_code) << ".";
+
+        throw Jack_error{msg_buf.str()};
     }
     else
     {
         _active = false;
         std::cout << log_label << "Deactivated..." << std::endl;
     }
-
-    return !res_code;
 }
 
 Jack_port Jack_client::register_input_port(std::string port_name)
@@ -136,7 +143,7 @@ Jack_port Jack_client::register_output_port(std::string port_name)
     return Jack_port{_client.get(), port_name, Port_type::output};
 }
 
-bool Jack_client::connect_ports(std::string src_client_name, std::string src_port_name, std::string dest_client_name, std::string dest_port_name)
+void Jack_client::connect_ports(std::string src_client_name, std::string src_port_name, std::string dest_client_name, std::string dest_port_name)
 {
     std::string src_full_name = src_client_name + ":" + src_port_name;
     std::string dest_full_name = dest_client_name + ":" + dest_port_name;
@@ -144,15 +151,15 @@ bool Jack_client::connect_ports(std::string src_client_name, std::string src_por
 
     if(res_code)
     {
-        std::cerr
-            << log_label
+        std::stringstream msg_buf;
+        msg_buf << log_label
             << "Failed to connect port " << src_full_name
             << " with port " << dest_full_name
-            << ", error code = " << std::to_string(res_code)
-            << "." << std::endl;
-    }
+            << ", error code = " << std::to_string(res_code) << ". "
+            << "Maybe JACK client is not activated?";
 
-    return res_code;
+        throw Jack_error{msg_buf.str()};
+    }
 }
 
 bool Jack_client::is_active()

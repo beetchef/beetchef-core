@@ -7,7 +7,6 @@
 
 class Callback_function {
     public:
-        Callback_function();
 
         template<typename T>
         explicit Callback_function(T callable)
@@ -52,5 +51,7 @@ class Callback_function {
 
         std::unique_ptr<Cb_concept> _callable;
 };
+
+inline constexpr auto dummy_callback {[](nframes_t nframes)->int { return 0; }};
 
 #endif // BEETCHEF_CALLBACK_FUNCTION_HPP

@@ -1,8 +1,6 @@
 #ifndef BEETCHEF_JACK_PORT_HANDLE_HPP
 #define BEETCHEF_JACK_PORT_HANDLE_HPP
 
-//#include "audio/audio_types.hpp"
-
 #include <string>
 #include <jack/jack.h>
 

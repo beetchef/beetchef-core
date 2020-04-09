@@ -9,7 +9,6 @@
 #include <string>
 #include <unistd.h>
 
-
 void Engine::init()
 {
     std::cout << log_label << "Created..." << std::endl;

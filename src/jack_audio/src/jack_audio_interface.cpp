@@ -17,19 +17,20 @@ Jack_audio_interface::Jack_audio_interface(Jack_client jack_client, int in_chan_
     }
 }
 
-bool Jack_audio_interface::unset_process_callback()
+void Jack_audio_interface::unset_process_callback()
 {
-    return _jack_client->unset_process_callback();
+    _jack_client->unset_process_callback();
 }
 
-bool Jack_audio_interface::start_processing()
+void Jack_audio_interface::start_processing()
 {
-    return _jack_client->activate();
+    _jack_client->activate();
+    connect_io_ports();
 }
 
-bool Jack_audio_interface::stop_processing()
+void Jack_audio_interface::stop_processing()
 {
-    return _jack_client->deactivate();
+    _jack_client->deactivate();
 }
 
 Jack_client* Jack_audio_interface::get_jack_client()

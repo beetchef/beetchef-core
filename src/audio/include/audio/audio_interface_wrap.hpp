@@ -5,40 +5,41 @@
 #include "types.hpp"
 
 #include <memory>
-#include <optional>
 
 class Audio_interface_wrap {
     public:
         template<typename T>
         explicit Audio_interface_wrap(T audio_interface)
             : _audio_interface{std::make_unique<Audio_interface_model<T>>(std::move(audio_interface))}
-        { }
+            , _callback{dummy_callback}
+        {
+            _audio_interface->set_process_callback(&_callback);
+        }
+
+        // disable move/copy operations because _callback member is being referenced by _audio_intertface member
+        // meaning that the address of _callback is not supposed to change
+        Audio_interface_wrap(const Audio_interface_wrap&) = delete;
+        Audio_interface_wrap(Audio_interface_wrap&&) = delete;
+        Audio_interface_wrap& operator=(const Audio_interface_wrap&) = delete;
+        Audio_interface_wrap& operator=(Audio_interface_wrap&&) = delete;
 
         template<typename T>
         void reset_audio_interface(T audio_interface)
         {
             _audio_interface = std::make_unique<Audio_interface_model<T>>(std::move(audio_interface));
+            _audio_interface->set_process_callback(&_callback);
         }
 
         template<typename T>
-        bool register_process_callback(T callable)
+        void register_process_callback(T callable)
         {
-            _callback.emplace(callable);
-            
-            bool res = _audio_interface->set_process_callback(&_callback.value());
-
-            if (!res)
-            {
-               _callback.reset(); 
-            }
-
-            return res;
+            _callback = Callback_function{callable};
         }
 
-        bool unregister_process_callback();
+        void unregister_process_callback();
 
-        bool start_processing();
-        bool stop_processing();
+        void start_processing();
+        void stop_processing();
 
         nframes_t get_sample_rate() const;
 
@@ -56,10 +57,10 @@ class Audio_interface_wrap {
             virtual int get_out_chan_count() const = 0;
             virtual sample_t* get_in_buf(int chan_idx, nframes_t nframes) const = 0;
             virtual sample_t* get_out_buf(int chan_idx, nframes_t nframes) const = 0;
-            virtual bool set_process_callback(Callback_function* callback) = 0;
-            virtual bool unset_process_callback() = 0;
-            virtual bool start_processing() = 0;
-            virtual bool stop_processing() = 0;
+            virtual void set_process_callback(Callback_function* callback) = 0;
+            virtual void unset_process_callback() = 0;
+            virtual void start_processing() = 0;
+            virtual void stop_processing() = 0;
         };
 
         template<typename T>
@@ -92,22 +93,22 @@ class Audio_interface_wrap {
                 return _self.get_out_buf(chan_idx, nframes);
             }
 
-            bool set_process_callback(Callback_function* callback) override
+            void set_process_callback(Callback_function* callback) override
             {
-                return _self.set_process_callback(callback);
+                _self.set_process_callback(callback);
             }
 
-            bool unset_process_callback() override
+            void unset_process_callback() override
             {
-                return _self.unset_process_callback();
+                _self.unset_process_callback();
             }
 
-            bool start_processing() override
+            void start_processing() override
             {
                 return _self.start_processing();
             }
 
-            bool stop_processing() override
+            void stop_processing() override
             {
                 return _self.stop_processing();
             }
@@ -116,7 +117,7 @@ class Audio_interface_wrap {
         };
 
         std::unique_ptr<Audio_interface_concept> _audio_interface;
-        std::optional<Callback_function> _callback;
+        Callback_function _callback;
 };
 
 #endif // BEETCHEF_AUDIO_INTERFACE_WRAP_HPP
