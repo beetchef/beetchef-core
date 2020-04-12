@@ -1,7 +1,7 @@
 #ifndef BEETCHEF_CONSOLE_UI_HPP
 #define BEETCHEF_CONSOLE_UI_HPP
 
-#include "processing/types.hpp"
+#include <processing/types.hpp>
 
 #include <vector>
 

@@ -1,8 +1,8 @@
-#include "audio/audio_interface_wrap.hpp"
-#include "audio/types.hpp"
+#include <audio/audio_interface_wrap.hpp>
+#include <audio/types.hpp>
 
-#include "processing/track.hpp"
-#include "processing/types.hpp"
+#include <processing/track.hpp>
+#include <processing/types.hpp>
 
 #include <algorithm>
 #include <cstring>

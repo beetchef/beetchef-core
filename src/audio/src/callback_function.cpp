@@ -1,5 +1,5 @@
-#include "audio/callback_function.hpp"
-#include "audio/types.hpp"
+#include <audio/callback_function.hpp>
+#include <audio/types.hpp>
 
 using Audio::Callback_function;
 

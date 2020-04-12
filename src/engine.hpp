@@ -4,10 +4,10 @@
 #include "click.hpp"
 #include "console_ui.hpp"
 
-#include "audio/audio_interface_wrap.hpp"
+#include <audio/audio_interface_wrap.hpp>
 
-#include "processing/timeline.hpp"
-#include "processing/track.hpp"
+#include <processing/timeline.hpp>
+#include <processing/track.hpp>
 
 #include <memory>
 #include <string>

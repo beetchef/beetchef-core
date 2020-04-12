@@ -1,7 +1,7 @@
 #include "click.hpp"
 #include "engine.hpp"
 
-#include "processing/track.hpp"
+#include <processing/track.hpp>
 
 #include <exception>
 #include <memory>

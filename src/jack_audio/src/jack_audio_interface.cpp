@@ -1,5 +1,5 @@
-#include "jack_audio/jack_audio_interface.hpp"
-#include "jack_audio/jack_client.hpp"
+#include <jack_audio/jack_audio_interface.hpp>
+#include <jack_audio/jack_client.hpp>
 
 #include <memory>
 #include <string>

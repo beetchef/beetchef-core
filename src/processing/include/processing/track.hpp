@@ -1,10 +1,10 @@
 #ifndef BEETCHEF_TRACK_HPP
 #define BEETCHEF_TRACK_HPP
 
-#include "audio/audio_interface_wrap.hpp"
-#include "audio/types.hpp"
+#include <audio/audio_interface_wrap.hpp>
+#include <audio/types.hpp>
 
-#include "processing/types.hpp"
+#include <processing/types.hpp>
 
 #include <string>
 #include <vector>

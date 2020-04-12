@@ -1,6 +1,6 @@
-#include "jack_audio/jack_client.hpp"
-#include "jack_audio/jack_error.hpp"
-#include "jack_audio/jack_port.hpp"
+#include <jack_audio/jack_client.hpp>
+#include <jack_audio/jack_error.hpp>
+#include <jack_audio/jack_port.hpp>
 
 #include <memory>
 #include <string>

@@ -1,7 +1,7 @@
 #ifndef BEETCHEF_PROCESSING_TYPES_HPP
 #define BEETCHEF_PROCESSING_TYPES_HPP
 
-#include "audio/types.hpp"
+#include <audio/types.hpp>
 
 namespace Processing
 {

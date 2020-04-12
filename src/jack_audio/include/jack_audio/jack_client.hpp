@@ -1,8 +1,8 @@
 #ifndef BEETCHEF_JACK_CLIENT_HPP
 #define BEETCHEF_JACK_CLIENT_HPP
 
-#include <jack_audio/jack_error.hpp>
-#include <jack_audio/jack_port.hpp>
+#include "jack_error.hpp"
+#include "jack_audio/jack_port.hpp"
 
 #include <memory>
 #include <string>
