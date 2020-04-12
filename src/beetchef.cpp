@@ -1,18 +1,19 @@
 #include "engine.hpp"
 
-#include "jack_audio/jack_client.hpp"
-#include "jack_audio/jack_impl_provider.hpp"
+#include <jack_audio/jack_audio_interface.hpp>
+#include <jack_audio/jack_client.hpp>
+
+#include <spdlog/spdlog.h>
 
 #include <exception>
-#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <string>
 
 
 namespace Beetchef {
-    static constexpr std::string_view log_label{"[beetchef]: "};
-    void print_current_exception_with_nested(int level =  0)
+    static constexpr std::string_view log_label{"[beetchef]"};
+    void print_current_exception_with_nested(int level = 0)
     {
         try {
             // re-throw current exception
@@ -20,11 +21,11 @@ namespace Beetchef {
         }
         catch (const std::exception& err) {
             // it's std::exception, print it
-            std::cerr << std::string(level, ' ') << "exception: " << err.what() << std::endl;
+            spdlog::error("\t{}exception: {}", std::string(level, ' '), err.what());
         }
         catch (...) {
             // it's an unknown exception, print message
-            std::cerr << std::string(level, ' ') << "unknown exception" << std::endl;
+            spdlog::error("\t{}unknown exception", std::string(level, ' '));
         }
 
         try {
@@ -48,9 +49,9 @@ namespace Beetchef {
     }
     static void exit_with_error(std::string msg)
     {
-        std::cerr << log_label << msg << std::endl;
+        spdlog::error("{} {}", log_label, msg);
         print_current_exception_with_nested();
-        std::cerr << log_label << "Exiting..." << std::endl;
+        spdlog::error("{} Exiting.", log_label);
         exit(1);
     }
 }
@@ -58,12 +59,9 @@ namespace Beetchef {
 int main()
 try {
 
-    Jack_client jack_client;
-    Jack_impl_provider jap(std::move(jack_client));
-    Audio_base audio_base(std::move(jap));
-    Engine engine(std::move(audio_base));
-
-    //Engine engine{Audio_base(Jack_impl_provider(Jack_client()))};
+    Jack_audio::Jack_client jack_client;
+    Jack_audio::Jack_audio_interface jack_audio_interface(std::move(jack_client));
+    Beetchef::Engine engine(std::move(jack_audio_interface));
 
     engine.start();
 

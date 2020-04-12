@@ -1,17 +1,18 @@
-#include "jack_audio/jack_client.hpp"
-#include "jack_audio/jack_init_error.hpp"
-#include "jack_audio/jack_port.hpp"
+#include <jack_audio/jack_client.hpp>
+#include <jack_audio/jack_error.hpp>
+#include <jack_audio/jack_port.hpp>
 
-#include <cstdlib>
-#include <cstdio>
-#include <iostream>
 #include <memory>
-#include <stdexcept>
-#include <sstream>
 #include <string>
-#include <unistd.h>
+
 #include <jack/jack.h>
 #include <jack/types.h>
+
+#include <spdlog/spdlog.h>
+
+using Jack_audio::Client_handle_deleter;
+using Jack_audio::Jack_client;
+using Jack_audio::Jack_port;
 
 /**
  * Custom deleter for unique_ptr owning jack_client_t pointer
@@ -19,10 +20,15 @@
 void Client_handle_deleter::operator()(jack_client_t* client_ptr) const
 {
     // deactivate jack client, unregister all ports
-    jack_deactivate(client_ptr);
+    int res_code = jack_deactivate(client_ptr);
+    if (res_code)
+        spdlog::error("{} Failed to deactivate JACK client, error code = {}", Jack_client::log_label, res_code);
+
     // within jack_client_close() a "delete" keyword is used to free the memory
     // used by jack client object on the heap
-    jack_client_close(client_ptr);
+    res_code = jack_client_close(client_ptr);
+    if (res_code)
+        spdlog::error("{} Failed to close JACK client, error code = {}", Jack_client::log_label, res_code);
 }
 
 /**
@@ -51,55 +57,72 @@ Jack_client::Jack_client(std::string client_name, jack_status_t client_status)
         Client_handle_deleter{}}
 {
 
-    if (_client == NULL) {
-        std::stringstream msg_buf;
-        msg_buf << "Failed to create JACK client, status = "
-            << client_status
-            << ((client_status & JackServerFailed)
-                ? ", unable to connect to JACK server."
-                : ".");
-
-		throw Jack_init_error{msg_buf.str()};
+    if (_client == NULL)
+    {
+        throw Jack_error{
+            "Failed to create JACK client, status = "
+                + std::to_string(client_status)
+                + std::string(
+                    client_status & JackServerFailed
+                        ? ", unable to connect to JACK server."
+                        : ".")
+        };
 	}
 
 	if (client_status & JackServerStarted)
-        std::cout << log_label << "JACK server started." << std::endl;
+        spdlog::info("{} JACK server started.", log_label);
 
 	if (client_status & JackNameNotUnique)
-		std::cerr << log_label << "Unique name " << jack_get_client_name(_client.get()) << " assigned." << std::endl;
-
+        spdlog::info("{} Unique name {} assigned.", log_label, jack_get_client_name(_client.get()));
+		
 	jack_on_shutdown(_client.get(), shutdown_callback, 0);
 
-    std::cout << log_label << "Created..." << std::endl;
+    spdlog::info("{} Created.", log_label);
+}
+
+void Jack_client::unset_process_callback()
+{
+    int res_code = jack_set_process_callback(_client.get(), nullptr, nullptr);
+
+    if (res_code)
+    {
+        throw Jack_error{"Failed to unset process callback, error code = " + std::to_string(res_code) + "."};
+    }
+    else
+    {
+        spdlog::info("{} Process callback unset.", log_label);
+    }
 }
 
 void Jack_client::activate()
 {
-    if (int err_code = jack_activate(_client.get()))
-        throw Jack_init_error{"Failed to activate JACK client, error code = " + std::to_string(err_code) + "."};
-    else
+    int res_code = jack_activate(_client.get());
 
-        std::cout << log_label << "Activated..." << std::endl;
+    if (res_code)
+    {
+        throw Jack_error{"Failed to activate JACK client, error code = " + std::to_string(res_code) + ". Maybe JACK client is active?"};
+    }
+    else
+    {
+        _active = true;
+        spdlog::info("{} Activated.", log_label);
+    }
 }
 
 
 void Jack_client::deactivate()
 {
-    if (int err_code = jack_deactivate(_client.get()))
-        throw Jack_init_error{"Failed to deactivate JACK client, error code = " + std::to_string(err_code) + "."};
+    int res_code = jack_deactivate(_client.get());
+
+    if (res_code)
+    {
+        throw Jack_error{"Failed to deactivate JACK client, error code = " + std::to_string(res_code) + "."};
+    }
     else
-
-        std::cout << log_label << "Deactivated..." << std::endl;
-}
-
-bool Jack_client::is_active()
-{
-    return _active;
-}
-
-jack_nframes_t Jack_client::get_sample_rate() const
-{
-    return jack_get_sample_rate(_client.get());
+    {
+        _active = false;
+        spdlog::info("{} Deactivated.", log_label);
+    }
 }
 
 Jack_port Jack_client::register_input_port(std::string port_name)
@@ -112,17 +135,31 @@ Jack_port Jack_client::register_output_port(std::string port_name)
     return Jack_port{_client.get(), port_name, Port_type::output};
 }
 
-int Jack_client::connect_ports(std::string src_client_name, std::string src_port_name, std::string dest_client_name, std::string dest_port_name)
+void Jack_client::connect_ports(std::string src_client_name, std::string src_port_name, std::string dest_client_name, std::string dest_port_name)
 {
     std::string src_full_name = src_client_name + ":" + src_port_name;
     std::string dest_full_name = dest_client_name + ":" + dest_port_name;
-    int res = jack_connect(_client.get(), src_full_name.c_str(), dest_full_name.c_str());
+    int res_code = jack_connect(_client.get(), src_full_name.c_str(), dest_full_name.c_str());
 
-    if(res) {
-        std::cerr << log_label << "Failed to connect port " << src_full_name << " with port " << dest_full_name << "." << std::endl;
+    if(res_code)
+    {
+        throw Jack_error{
+            "Failed to connect port " + src_full_name
+                + " with port " + dest_full_name
+                + ", error code = " + std::to_string(res_code) + ". "
+                + "Maybe JACK client is not activated?"
+        };
     }
+}
 
-    return res;
+bool Jack_client::is_active()
+{
+    return _active;
+}
+
+jack_nframes_t Jack_client::get_sample_rate() const
+{
+    return jack_get_sample_rate(_client.get());
 }
 
 /**
@@ -131,6 +168,5 @@ int Jack_client::connect_ports(std::string src_client_name, std::string src_port
  */
 void Jack_client::shutdown_callback(void* arg)
 {
-	std::cerr << log_label << "Client was shut down by Jack." << std::endl;
-	return;
+	throw Jack_error{"Client was shut down by JACK."};
 }

@@ -1,7 +1,10 @@
-#include "jack_audio/jack_port.hpp"
+#include <jack_audio/jack_error.hpp>
+#include <jack_audio/jack_port.hpp>
 
 #include <string>
 #include <jack/jack.h>
+
+using Jack_audio::Jack_port;
 
 Jack_port::Jack_port(jack_client_t* client, std::string port_name, Port_type port_type)
     : _client{client}
@@ -14,6 +17,16 @@ Jack_port::Jack_port(jack_client_t* client, std::string port_name, Port_type por
                     : JackPortIsOutput,
                 0)}
 {
+    if (!_port)
+    {
+        throw Jack_error{
+            "Failed to register JACK "
+                + std::string(port_type == Port_type::input ? "input " : "output ")
+                + "port: "
+                + port_name
+                + "."
+        };
+    }
 }
 
 // move constructor

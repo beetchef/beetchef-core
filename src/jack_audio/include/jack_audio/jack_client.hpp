@@ -1,69 +1,79 @@
 #ifndef BEETCHEF_JACK_CLIENT_HPP
 #define BEETCHEF_JACK_CLIENT_HPP
 
+#include "jack_error.hpp"
 #include "jack_audio/jack_port.hpp"
 
-//#include "audio/audio_types.hpp"
-
 #include <memory>
-#include <iostream>
 #include <string>
 #include <vector>
 
 #include <jack/jack.h>
 #include <jack/types.h>
 
-struct Client_handle_deleter {
-    void operator()(jack_client_t* client_ptr) const;
-};
+#include <spdlog/spdlog.h>
 
-class Jack_client {
-    public:
-        explicit Jack_client(std::string client_name = "beetchef");
-        Jack_client(const Jack_client&) = delete;
-        Jack_client(Jack_client&&) = default;
-        Jack_client& operator=(const Jack_client&) = delete;
-        Jack_client& operator=(Jack_client&&) = default;
-        ~Jack_client() = default;
+namespace Jack_audio
+{
+    struct Client_handle_deleter {
+        void operator()(jack_client_t* client_ptr) const;
+    };
 
-        void activate();
-        void deactivate();
-        bool is_active();
+    class Jack_client {
+        public:
+            explicit Jack_client(std::string client_name = "beetchef");
+            Jack_client(const Jack_client&) = delete;
+            Jack_client(Jack_client&&) = default;
+            Jack_client& operator=(const Jack_client&) = delete;
+            Jack_client& operator=(Jack_client&&) = default;
+            ~Jack_client() = default;
 
-        jack_nframes_t get_sample_rate() const;
+            template<typename T>
+            void set_process_callback(T* callable)
+            {
+                int res_code = jack_set_process_callback(_client.get(), process_callback<T>, callable);
 
-        Jack_port register_input_port(std::string port_name);
-        Jack_port register_output_port(std::string port_name);
-        int connect_ports(std::string src_client_name, std::string src_port_name, std::string dest_client_name, std::string dest_port_name);
+                if (res_code)
+                {
+                    throw Jack_error{"Failed to set process callback, error code = " + std::to_string(res_code) + ". Maybe JACK client is active?"};
+                }
+                else
+                {
+                    spdlog::info("{} Process callback set.", log_label);
+                }
+            }
 
-        template<typename T>
-        void set_process_callback(T* callback)
-        {
-            int err_code = jack_set_process_callback(_client.get(), process_callback<T>, callback);
+            void unset_process_callback();
 
-            if (err_code)
-                std::cerr << log_label << "Failed to set process callback, error code = " << std::to_string(err_code) << "." << std::endl;
+            void activate();
+            void deactivate();
 
-            std::cout << log_label << "Process callback registered..." << std::endl;
-        }
+            Jack_port register_input_port(std::string port_name);
+            Jack_port register_output_port(std::string port_name);
+            void connect_ports(std::string src_client_name, std::string src_port_name, std::string dest_client_name, std::string dest_port_name);
 
-    protected:
-    private:
-        static constexpr std::string_view log_label{"[JACK client]: "};
+            bool is_active();
+            jack_nframes_t get_sample_rate() const;
 
-        std::string _client_name;
-        std::unique_ptr<jack_client_t, Client_handle_deleter> _client;
-        bool _active{false};
+        private:
+            static constexpr std::string_view log_label{"[JACK client]"};
+            friend struct Client_handle_deleter;
 
-        Jack_client(std::string client_name, jack_status_t client_status);
+            std::string _client_name;
+            std::unique_ptr<jack_client_t, Client_handle_deleter> _client;
+            bool _active{false};
 
-        template<typename T>
-        static int process_callback(jack_nframes_t nframes, void* callback)
-        {
-            return static_cast<T*>(callback)->operator()(nframes);
-        }
+            Jack_client(std::string client_name, jack_status_t client_status);
 
-        static void shutdown_callback(void* arg);
-};
+            template<typename T>
+            static int process_callback(jack_nframes_t nframes, void* callback)
+            {
+                return static_cast<T*>(callback)->operator()(nframes);
+            }
+
+            static void shutdown_callback(void* arg);
+    };
+
+}; // namespace Jack_audio
 
 #endif // BEETCHEF_JACK_CLIENT_HPP
