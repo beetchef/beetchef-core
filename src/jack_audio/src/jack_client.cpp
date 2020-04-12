@@ -2,12 +2,13 @@
 #include "jack_audio/jack_error.hpp"
 #include "jack_audio/jack_port.hpp"
 
-#include <iostream>
 #include <memory>
 #include <string>
 
 #include <jack/jack.h>
 #include <jack/types.h>
+
+#include <spdlog/spdlog.h>
 
 using Jack_audio::Client_handle_deleter;
 using Jack_audio::Jack_client;
@@ -21,13 +22,13 @@ void Client_handle_deleter::operator()(jack_client_t* client_ptr) const
     // deactivate jack client, unregister all ports
     int res_code = jack_deactivate(client_ptr);
     if (res_code)
-        std::cerr << Jack_client::log_label << "Failed to deactivate JACK client, error code = " << std::to_string(res_code) << "\n";
+        spdlog::error("{} Failed to deactivate JACK client, error code = {}", Jack_client::log_label, res_code);
 
     // within jack_client_close() a "delete" keyword is used to free the memory
     // used by jack client object on the heap
     res_code = jack_client_close(client_ptr);
     if (res_code)
-        std::cerr << Jack_client::log_label << "Failed to close JACK client, error code = " << std::to_string(res_code) << "\n";
+        spdlog::error("{} Failed to close JACK client, error code = {}", Jack_client::log_label, res_code);
 }
 
 /**
@@ -60,22 +61,23 @@ Jack_client::Jack_client(std::string client_name, jack_status_t client_status)
     {
         throw Jack_error{
             "Failed to create JACK client, status = "
-                + client_status
-                + (client_status & JackServerFailed)
-                    ? ", unable to connect to JACK server."
-                    : "."
+                + std::to_string(client_status)
+                + std::string(
+                    client_status & JackServerFailed
+                        ? ", unable to connect to JACK server."
+                        : ".")
         };
 	}
 
 	if (client_status & JackServerStarted)
-        std::cout << log_label << "JACK server started." << "\n";
+        spdlog::info("{} JACK server started.", log_label);
 
 	if (client_status & JackNameNotUnique)
-		std::cout << log_label << "Unique name " << jack_get_client_name(_client.get()) << " assigned." << "\n";
-
+        spdlog::info("{} Unique name {} assigned.", log_label, jack_get_client_name(_client.get()));
+		
 	jack_on_shutdown(_client.get(), shutdown_callback, 0);
 
-    std::cout << log_label << "Created..." << "\n";
+    spdlog::info("{} Created.", log_label);
 }
 
 void Jack_client::unset_process_callback()
@@ -88,7 +90,7 @@ void Jack_client::unset_process_callback()
     }
     else
     {
-        std::cout << log_label << "Process callback unset..." << "\n";
+        spdlog::info("{} Process callback unset.", log_label);
     }
 }
 
@@ -103,7 +105,7 @@ void Jack_client::activate()
     else
     {
         _active = true;
-        std::cout << log_label << "Activated..." << "\n";
+        spdlog::info("{} Activated.", log_label);
     }
 }
 
@@ -119,7 +121,7 @@ void Jack_client::deactivate()
     else
     {
         _active = false;
-        std::cout << log_label << "Deactivated..." << "\n";
+        spdlog::info("{} Deactivated.", log_label);
     }
 }
 
@@ -166,6 +168,5 @@ jack_nframes_t Jack_client::get_sample_rate() const
  */
 void Jack_client::shutdown_callback(void* arg)
 {
-	std::cerr << log_label << "Client was shut down by Jack." << "\n";
-	return;
+	throw Jack_error{"Client was shut down by JACK."};
 }

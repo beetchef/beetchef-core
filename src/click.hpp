@@ -13,7 +13,7 @@ namespace Beetchef
             void start();
         protected:
         private:
-            static constexpr std::string_view log_label{"[click]: "};
+            static constexpr std::string_view log_label{"[click]"};
             unsigned int _tempo{60};
             unsigned int _signature_numerator{4};
             unsigned int _signature_denominator{4};

@@ -3,16 +3,17 @@
 #include "jack_audio/jack_audio_interface.hpp"
 #include "jack_audio/jack_client.hpp"
 
+#include <spdlog/spdlog.h>
+
 #include <exception>
-#include <iostream>
 #include <memory>
 #include <stdexcept>
 #include <string>
 
 
 namespace Beetchef {
-    static constexpr std::string_view log_label{"[beetchef]: "};
-    void print_current_exception_with_nested(int level =  0)
+    static constexpr std::string_view log_label{"[beetchef]"};
+    void print_current_exception_with_nested(int level = 0)
     {
         try {
             // re-throw current exception
@@ -20,11 +21,11 @@ namespace Beetchef {
         }
         catch (const std::exception& err) {
             // it's std::exception, print it
-            std::cerr << std::string(level, ' ') << "exception: " << err.what() << "\n";
+            spdlog::error("\t{}exception: {}", std::string(level, ' '), err.what());
         }
         catch (...) {
             // it's an unknown exception, print message
-            std::cerr << std::string(level, ' ') << "unknown exception" << "\n";
+            spdlog::error("\t{}unknown exception", std::string(level, ' '));
         }
 
         try {
@@ -48,9 +49,9 @@ namespace Beetchef {
     }
     static void exit_with_error(std::string msg)
     {
-        std::cerr << log_label << msg << "\n";
+        spdlog::error("{} {}", log_label, msg);
         print_current_exception_with_nested();
-        std::cerr << log_label << "Exiting..." << "\n";
+        spdlog::error("{} Exiting.", log_label);
         exit(1);
     }
 }

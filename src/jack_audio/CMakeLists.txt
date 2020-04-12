@@ -17,4 +17,5 @@ target_link_options(jack_audio PUBLIC "-ljack")
 target_link_options(jack_audio PUBLIC "-lpthread")
 
 target_include_directories(jack_audio PUBLIC include)
-target_include_directories(jack_audio PRIVATE src)
+
+target_link_libraries(jack_audio PRIVATE spdlog::spdlog)

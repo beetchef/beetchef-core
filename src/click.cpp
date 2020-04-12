@@ -3,8 +3,9 @@
 //#include "messaging_handler.hpp"
 
 #include <chrono>
-#include <iostream>
 #include <thread>
+
+#include <spdlog/spdlog.h>
 
 using Beetchef::Click;
 
@@ -37,15 +38,15 @@ Click::Click()
 {
     _beat_duration = 60000 /* 1 minute in milis */ / _tempo * 4 /* quarter note length */ / _signature_denominator;
     _bar_duration = _beat_duration * _signature_numerator;
-    std::cout << log_label << "Created..." << "\n";
-    std::cout << log_label << "Tempo: " << _tempo << "\n";
-    std::cout << log_label << "Time signature: " << _signature_numerator << "/" << _signature_denominator << "\n";
+    spdlog::info("{} Created.", log_label);
+    spdlog::info("{} Tempo: {}", log_label, _tempo);
+    spdlog::info("{} Time signature: {}/{}", log_label, _signature_numerator, _signature_denominator);
 }
 
 void Click::start()
 {
     _is_running = true;
-    std::cout << log_label << "Started..." << "\n";
+    spdlog::info("{} Started.", log_label);
 
     std::thread click_loop_thread([this]()
     {

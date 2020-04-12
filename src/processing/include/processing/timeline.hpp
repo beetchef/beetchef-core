@@ -25,7 +25,7 @@ namespace Processing
 
                 void update(Audio::nframes_t);
         private:
-            static constexpr std::string_view log_label{"[timeline]: "};
+            static constexpr std::string_view log_label{"[timeline]"};
 
             struct Click_info {
                 int tempo;

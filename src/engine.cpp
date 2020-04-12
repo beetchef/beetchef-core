@@ -4,16 +4,17 @@
 #include "processing/track.hpp"
 
 #include <exception>
-#include <iostream>
 #include <memory>
 #include <string>
 #include <unistd.h>
+
+#include <spdlog/spdlog.h>
 
 using Beetchef::Engine;
 
 void Engine::init()
 {
-    std::cout << log_label << "Created..." << "\n";
+    spdlog::info("{} Created.", log_label);
 
     _tracks.emplace_back(&_audio_interface, std::vector<int>{0, 1}, "track-1");
 
@@ -32,11 +33,11 @@ void Engine::init()
         return 0;
     });
 
-    std::cout << log_label << "Timeline registered for processing..." << "\n";
+    spdlog::info("{} Timeline registered for processing.", log_label);
 
     _audio_interface.start_processing();
 
-    std::cout << log_label << "Processing started..." << "\n";
+    spdlog::info("{} Processing started.", log_label);
 }
 
 bool Engine::is_alive()
@@ -46,7 +47,7 @@ bool Engine::is_alive()
 
 int Engine::start()
 {
-    std::cout << log_label << "Started..." << "\n";
+    spdlog::info("{} Started.", log_label);
 
     _click.start();
 
@@ -58,7 +59,7 @@ int Engine::start()
         //_timeline.process(50000);
         //usleep(500000);
 
-        //std::cout << log_label << "Main loop - doing nothing..." << "\n";
+        //std::cout << log_label << "Main loop - doing nothing." << "\n";
         // sleep for 5 seconds
         usleep(5000000);
     }

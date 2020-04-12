@@ -4,7 +4,6 @@
 #include "jack_client.hpp"
 #include "jack_port.hpp"
 
-#include <iostream>
 #include <memory>
 #include <vector>
 

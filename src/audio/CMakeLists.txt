@@ -13,4 +13,3 @@ set_target_properties(
 )
 
 target_include_directories(audio PUBLIC include)
-target_include_directories(audio PRIVATE src)

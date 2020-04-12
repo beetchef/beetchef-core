@@ -17,3 +17,4 @@ target_include_directories(messaging PRIVATE lib/oscpack_1_1_0)
 add_subdirectory(lib/oscpack_1_1_0)
 
 target_link_libraries(messaging PUBLIC oscpack)
+target_link_libraries(messaging PRIVATE spdlog::spdlog)

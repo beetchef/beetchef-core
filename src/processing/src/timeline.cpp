@@ -1,8 +1,9 @@
 #include "processing/timeline.hpp"
 #include "processing/types.hpp"
 
-#include <iostream>
 #include <vector>
+
+#include <spdlog/spdlog.h>
 
 using Processing::Timeline;
 
@@ -22,12 +23,11 @@ Timeline::Timeline(
     // TMP
     _loops.emplace_back(Loop{4, 7, 4});
 
-    std::cout << log_label << "Created..." << "\n";
-    std::cout << log_label << "Tempo: " << _click_info.tempo << "\n";
-    std::cout << log_label << "Time signature: "
-        << _click_info.signature_numerator << "/" << _click_info.signature_denominator << "\n";
-    std::cout << log_label << "Beat length: " << _click_info.get_beat_length() << "\n";
-    std::cout << log_label << "Timeslot length: " << _timeslot_length << "\n";
+    spdlog::info("{} Created.", log_label);
+    spdlog::info("{} Tempo: {}", log_label, _click_info.tempo);
+    spdlog::info("{} Time signature: {}/{}", log_label, _click_info.signature_numerator, _click_info.signature_denominator);
+    spdlog::info("{} Beat length: {}", log_label, _click_info.get_beat_length());
+    spdlog::info("{} Timeslot length: {}", log_label, _timeslot_length);
 }
 
 int Timeline::get_current_timeslot() const

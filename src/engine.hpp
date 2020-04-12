@@ -33,7 +33,7 @@ namespace Beetchef
             bool is_alive();
 
         private:
-            static constexpr std::string_view log_label{"[engine]: "};
+            static constexpr std::string_view log_label{"[engine]"};
 
             Audio::Audio_interface_wrap _audio_interface;
 

@@ -5,12 +5,13 @@
 #include <jack_audio/jack_port.hpp>
 
 #include <memory>
-#include <iostream>
 #include <string>
 #include <vector>
 
 #include <jack/jack.h>
 #include <jack/types.h>
+
+#include <spdlog/spdlog.h>
 
 namespace Jack_audio
 {
@@ -38,7 +39,7 @@ namespace Jack_audio
                 }
                 else
                 {
-                    std::cout << log_label << "Process callback set..." << "\n";
+                    spdlog::info("{} Process callback set.", log_label);
                 }
             }
 
@@ -55,7 +56,7 @@ namespace Jack_audio
             jack_nframes_t get_sample_rate() const;
 
         private:
-            static constexpr std::string_view log_label{"[JACK client]: "};
+            static constexpr std::string_view log_label{"[JACK client]"};
             friend struct Client_handle_deleter;
 
             std::string _client_name;

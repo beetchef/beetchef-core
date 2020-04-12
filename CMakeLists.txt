@@ -26,6 +26,10 @@ set_target_properties(
 
 target_include_directories(beetchef PRIVATE src)
 
+if(NOT TARGET spdlog)
+    find_package(spdlog REQUIRED)
+endif()
+
 add_subdirectory(src/audio)
 add_subdirectory(src/jack_audio)
 add_subdirectory(src/processing)
@@ -33,3 +37,5 @@ add_subdirectory(src/processing)
 target_link_libraries(beetchef PRIVATE audio)
 target_link_libraries(beetchef PRIVATE jack_audio)
 target_link_libraries(beetchef PRIVATE processing)
+
+target_link_libraries(beetchef PRIVATE spdlog::spdlog)
