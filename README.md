@@ -14,17 +14,13 @@
 
 ### build
 
-1. navigate to beetchef-core root directory
-2. `$ cmake .` (including the dot)
-
-    (this step needs to be run just once to generate Makefile, after that it's sufficient to build the project with just `$ make`)
-3. `$ make`
+1. `$ git clone https://github.com/beetchef/beetchef-core.git`
+2. `$ cd beetchef-core`
+3. `$ cmake -S . -B build`
+4. `$ cmake --build build` (this step is sufficient for rebuilding after it's
 
     (this generates executable `beetchef` in `./build/bin/`)
 
 ### execution
 
-1. navigate to beetchef-core root directory
-2. `$ make run`
-
-    (alternatively: `$ ./build/bin/beetchef`)
+1. `$ <<beetchef-core-root-dir>>/build/bin/beetchef`
