@@ -2,11 +2,8 @@
 
 ### prerequisites
 
-1. `$ apt install g++`
-2. `$ apt install make`
-3. `$ apt install cmake`
-4. `$ apt install libjack-dev`
-5. install [spdlog](https://github.com/gabime/spdlog) library: 
+1. `$ apt install g++ cmake jackd2 libjack-jackd2-dev`
+2. install [spdlog](https://github.com/gabime/spdlog) library: 
     - `$ git clone https://github.com/gabime/spdlog.git`
     - `$ cd spdlog`
     - `$ cmake -S . -B build`
