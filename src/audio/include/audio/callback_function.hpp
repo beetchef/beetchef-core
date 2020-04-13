@@ -54,7 +54,11 @@ namespace Audio
             std::unique_ptr<Cb_concept> _callable;
     };
 
-    inline constexpr auto dummy_callback {[](nframes_t nframes)->int { return 0; }};
+    inline constexpr auto dummy_callback {[](nframes_t nframes)->int
+    {
+        (void) nframes; // suppress unused parameter warning
+        return 0;
+    }};
 
 }; // namespace Audio
 

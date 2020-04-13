@@ -168,5 +168,6 @@ jack_nframes_t Jack_client::get_sample_rate() const
  */
 void Jack_client::shutdown_callback(void* arg)
 {
+    (void) arg; // suppress unused parameter warning
 	throw Jack_error{"Client was shut down by JACK."};
 }

@@ -36,11 +36,10 @@ namespace Beetchef
             static constexpr std::string_view log_label{"[engine]"};
 
             Audio::Audio_interface_wrap _audio_interface;
-
-            Click _click;
-            bool _is_alive;
             Processing::Timeline _timeline;
             Console_ui _console_ui;
+            Click _click;
+            bool _is_alive;
 
             std::vector<Processing::Track> _tracks;
 

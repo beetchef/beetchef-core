@@ -16,7 +16,7 @@ void Engine::init()
 {
     spdlog::info("{} Created.", log_label);
 
-    _tracks.emplace_back(&_audio_interface, std::vector<int>{0, 1}, "track-1");
+    _tracks.emplace_back("track-1", std::vector<int>{0, 1}, &_audio_interface);
 
     _audio_interface.register_process_callback([&](Audio::nframes_t nframes)->int{
         _timeline.update(nframes);

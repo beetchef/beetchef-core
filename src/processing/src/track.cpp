@@ -10,10 +10,10 @@
 
 using Processing::Track;
 
-Track::Track(Audio::Audio_interface_wrap* const audio_interface, const std::vector<int> in_chans, const std::string name)
-    : _audio_interface{audio_interface}
+Track::Track(const std::string name, const std::vector<int> in_chans, Audio::Audio_interface_wrap* const audio_interface)
+    : _name{name}
     , _in_chans{in_chans}
-    , _name{name}
+    , _audio_interface{audio_interface}
 {
 }
 

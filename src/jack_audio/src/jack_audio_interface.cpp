@@ -68,11 +68,11 @@ jack_default_audio_sample_t* Jack_audio_interface::get_out_buf(int chan_idx, jac
 
 void Jack_audio_interface::connect_io_ports() const
 {
-    for (int i = 0; i < _in_ports.size(); i++) {
+    for (std::size_t i = 0; i < _in_ports.size(); i++) {
         std::string suffix = "_" + std::to_string(i + 1);
         _jack_client->connect_ports("system", "capture" + suffix, "beetchef", "main_in" + suffix);
     }
-    for (int i = 0; i < _out_ports.size(); i++) {
+    for (std::size_t i = 0; i < _out_ports.size(); i++) {
         std::string suffix = "_" + std::to_string(i + 1);
         _jack_client->connect_ports("beetchef", "main_out" + suffix, "system", "playback" + suffix);
     }
