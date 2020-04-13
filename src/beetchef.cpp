@@ -51,7 +51,7 @@ namespace Beetchef {
     {
         spdlog::error("{} {}", log_label, msg);
         print_current_exception_with_nested();
-        spdlog::error("{} Exiting.", log_label);
+        spdlog::error("{} Exiting...", log_label);
         exit(1);
     }
 }
