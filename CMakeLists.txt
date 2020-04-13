@@ -26,9 +26,7 @@ set_target_properties(
 
 target_include_directories(beetchef PRIVATE src)
 
-if(NOT TARGET spdlog)
-    find_package(spdlog REQUIRED)
-endif()
+find_package(spdlog REQUIRED)
 
 add_subdirectory(src/audio)
 add_subdirectory(src/jack_audio)
