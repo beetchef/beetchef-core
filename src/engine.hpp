@@ -24,7 +24,7 @@ namespace Beetchef
                 , _timeline{120, 4, 4, _audio_interface.get_sample_rate(), 1}
                 , _console_ui{120}
                 , _click{} // TODO: _click will be removed from here
-                , _is_alive{true}
+                , _alive{true}
             {
                 init();
             }
@@ -39,7 +39,7 @@ namespace Beetchef
             Processing::Timeline _timeline;
             Console_ui _console_ui;
             Click _click;
-            bool _is_alive;
+            bool _alive;
 
             std::vector<Processing::Track> _tracks;
 

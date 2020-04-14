@@ -42,7 +42,7 @@ void Engine::init()
 
 bool Engine::is_alive()
 {
-    return _is_alive;
+    return _alive;
 }
 
 int Engine::start()
@@ -51,7 +51,7 @@ int Engine::start()
 
     _click.start();
 
-    while(is_alive()) {
+    while(_alive) {
 
         // do main loop stuff here
 
