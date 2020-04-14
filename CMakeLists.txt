@@ -10,6 +10,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/archive")
 
 find_package(spdlog REQUIRED)
 
+enable_testing()
+
 add_subdirectory(modules/audio)
 add_subdirectory(modules/jack_audio)
 add_subdirectory(modules/processing)

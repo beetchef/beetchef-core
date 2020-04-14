@@ -5,7 +5,7 @@
 
 #include <string>
 
-namespace Beetchef
+namespace Console_ui
 {
     class Click {
         public:
@@ -24,6 +24,6 @@ namespace Beetchef
             //Messaging_handler _messaging_handler;
     };
 
-}; // namespace Beetchef
+}; // namespace Console_ui
 
 #endif // BEETCHEF_CLICK_HPP
