@@ -1,3 +1,7 @@
+cmake_minimum_required(VERSION 3.17)
+
+project(messaging)
+
 add_library(
     messaging STATIC
 

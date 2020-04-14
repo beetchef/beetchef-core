@@ -1,8 +1,7 @@
 #ifndef BEETCHEF_ENGINE_HPP
 #define BEETCHEF_ENGINE_HPP
 
-#include "click.hpp"
-#include "console_ui.hpp"
+#include <console_ui/console_ui.hpp>
 
 #include <audio/audio_interface_wrap.hpp>
 
@@ -23,7 +22,6 @@ namespace Beetchef
                 : _audio_interface{std::move(audio_interface)}
                 , _timeline{120, 4, 4, _audio_interface.get_sample_rate(), 1}
                 , _console_ui{120}
-                , _click{} // TODO: _click will be removed from here
                 , _alive{true}
             {
                 init();
@@ -38,7 +36,6 @@ namespace Beetchef
             Audio::Audio_interface_wrap _audio_interface;
             Processing::Timeline _timeline;
             Console_ui _console_ui;
-            Click _click;
             bool _alive;
 
             std::vector<Processing::Track> _tracks;

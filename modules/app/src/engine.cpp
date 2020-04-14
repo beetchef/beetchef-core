@@ -1,5 +1,4 @@
-#include "click.hpp"
-#include "engine.hpp"
+#include <app/engine.hpp>
 
 #include <processing/track.hpp>
 
@@ -48,9 +47,7 @@ bool Engine::is_alive()
 int Engine::start()
 {
     spdlog::info("{} Started.", log_label);
-
-    _click.start();
-
+    
     while(_alive) {
 
         // do main loop stuff here

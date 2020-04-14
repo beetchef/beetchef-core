@@ -1,3 +1,7 @@
+cmake_minimum_required(VERSION 3.17)
+
+project(processing)
+
 add_library(
     processing STATIC
 
@@ -14,6 +18,7 @@ set_target_properties(
 
 target_include_directories(processing PUBLIC include)
 
-target_link_libraries(processing PRIVATE audio)
-
-target_link_libraries(processing PRIVATE spdlog::spdlog)
+target_link_libraries(processing
+    PUBLIC audio
+    PRIVATE spdlog::spdlog
+)
