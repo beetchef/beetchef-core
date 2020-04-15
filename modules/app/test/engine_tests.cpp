@@ -3,8 +3,8 @@
 #include <app/engine.hpp>
 #include <audio/types.hpp>
 
+#include <memory>
 #include <thread>
-#include <utility>
 
 struct Audio_interface_stub {
     Audio::nframes_t get_sample_rate() const { return 666; }
