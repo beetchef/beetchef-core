@@ -21,7 +21,7 @@ Timeline::Timeline(
     _process_queue.reserve(2);
 
     // TMP
-    _loops.emplace_back(Loop{4, 7, 4});
+    //_loops.emplace_back(Loop{4, 7, 4});
 
     spdlog::info("{} Created.", log_label);
     spdlog::info("{} Tempo: {}", log_label, _click_config.tempo);
@@ -65,9 +65,22 @@ Audio::nframes_t Timeline::get_timeslot_length() const
     return _timeslot_length;
 }
 
+void Timeline::add_loop(Loop loop)
+{
+    _loops.emplace_back(loop);
+}
+
 void Timeline::update(const Audio::nframes_t nframes)
 {
-    _process_queue.clear();
+    update(nframes, true);
+}
+
+void Timeline::update(const Audio::nframes_t nframes, bool clear_queue)
+{
+    if (clear_queue)
+    {
+        _process_queue.clear();
+    }
 
     int target_position = _current_offset + nframes;
     int exceeding_timeslots = target_position / _timeslot_length;
@@ -99,7 +112,7 @@ void Timeline::update(const Audio::nframes_t nframes)
         else if (_loops.back().repeats != -1)
             _loops.back().repeats--;
 
-        update(nframes - loop_frames_left);
+        update(nframes - loop_frames_left, false);
     }
 }
 

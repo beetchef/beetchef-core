@@ -38,6 +38,8 @@ namespace Processing
             int get_timeslots_per_beat() const;
             Audio::nframes_t get_timeslot_length() const;
 
+            void add_loop(Loop);
+
             void update(Audio::nframes_t);
 
         private:
@@ -54,6 +56,8 @@ namespace Processing
             Audio::nframes_t _current_offset{0};
 
             std::vector<Process_frame> _process_queue;
+
+            void update(Audio::nframes_t, bool clear_queue);
     };
     
 }; // namespace Processing
