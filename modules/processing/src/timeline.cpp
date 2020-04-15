@@ -13,10 +13,10 @@ Timeline::Timeline(
     int signature_denominator,
     Audio::nframes_t sample_rate,
     int timeslots_per_beat)
-        : _click_info{tempo, signature_numerator, signature_denominator, sample_rate}
+        : _click_config{tempo, signature_numerator, signature_denominator, sample_rate}
         , _timeslots_per_beat{timeslots_per_beat}
 {
-    _timeslot_length = _click_info.get_beat_length() / _timeslots_per_beat;
+    _timeslot_length = _click_config.get_beat_length() / _timeslots_per_beat;
 
     _process_queue.reserve(2);
 
@@ -24,15 +24,20 @@ Timeline::Timeline(
     _loops.emplace_back(Loop{4, 7, 4});
 
     spdlog::info("{} Created.", log_label);
-    spdlog::info("{} Tempo: {}", log_label, _click_info.tempo);
-    spdlog::info("{} Time signature: {}/{}", log_label, _click_info.signature_numerator, _click_info.signature_denominator);
-    spdlog::info("{} Beat length: {}", log_label, _click_info.get_beat_length());
+    spdlog::info("{} Tempo: {}", log_label, _click_config.tempo);
+    spdlog::info("{} Time signature: {}/{}", log_label, _click_config.signature_numerator, _click_config.signature_denominator);
+    spdlog::info("{} Beat length: {}", log_label, _click_config.get_beat_length());
     spdlog::info("{} Timeslot length: {}", log_label, _timeslot_length);
 }
 
 int Timeline::get_current_timeslot() const
 {
     return _current_timeslot;
+}
+
+Audio::nframes_t Timeline::get_current_offset() const
+{
+    return _current_offset;
 }
 
 const std::vector<Processing::Loop>& Timeline::get_loops() const
@@ -43,6 +48,21 @@ const std::vector<Processing::Loop>& Timeline::get_loops() const
 const std::vector<Processing::Process_frame>& Timeline::get_process_queue() const
 {
     return _process_queue;
+}
+
+Timeline::Click_config Timeline::get_click_config() const
+{
+    return _click_config;
+}
+
+int Timeline::get_timeslots_per_beat() const
+{
+    return _timeslots_per_beat;
+}
+
+Audio::nframes_t Timeline::get_timeslot_length() const
+{
+    return _timeslot_length;
 }
 
 void Timeline::update(const Audio::nframes_t nframes)
@@ -88,7 +108,7 @@ void Timeline::update(const Audio::nframes_t nframes)
 
     beat length (in nframes_t) is calculated as:
 
-        beat_duration = 1 minute / tempo * quarter note length / signature_denominator * sample rate
+        beat_length = 60 seconds / tempo * quarter note length / signature_denominator * sample rate
 
     EXAMPLE:
     (1 beat each second)
@@ -99,9 +119,9 @@ void Timeline::update(const Audio::nframes_t nframes)
     tempo = 120 bpm (quarter note beats per minute)
     sample_rate = 44100 Hz
 
-    beat_duration = 60(1min in seconds) / 120(tempo) * 4(quarter note length) / 4(signature_denominator) * sample_rate = 60 / 120 * 44100 = 22050 frames
+    beat_length = 60(1min in seconds) / 120(tempo) * 4(quarter note length) / 4(signature_denominator) * sample_rate = 60 / 120 * 44100 = 22050 frames
 */
-Audio::nframes_t Timeline::Click_info::get_beat_length() const
+Audio::nframes_t Timeline::Click_config::get_beat_length() const
 {
     return 60.0f /* 1 minute in seconds */ / tempo * 4.0f /* quarter note length */ / signature_denominator * sample_rate;
 }
