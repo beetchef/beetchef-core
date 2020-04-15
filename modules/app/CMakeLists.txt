@@ -35,7 +35,14 @@ target_link_libraries(app PRIVATE engine jack_audio spdlog::spdlog)
 
 find_package(Catch2 REQUIRED)
 
-add_executable(app_tests test/app_tests.cpp)
+enable_testing()
+
+add_executable(
+    app_tests
+
+    test/app_tests.cpp
+    test/engine_tests.cpp
+)
 
 set_target_properties(
     app_tests PROPERTIES
