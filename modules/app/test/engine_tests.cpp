@@ -57,7 +57,7 @@ SCENARIO( "Application engine can be started and stopped", "[app]" )
             {
                 REQUIRE( engine.is_running() == true );
 
-                AND_WHEN( "engine is stopped" )
+                AND_WHEN( "the engine is stopped" )
                 {
                     engine.stop();
 
