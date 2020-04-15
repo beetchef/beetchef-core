@@ -123,26 +123,9 @@ SCENARIO( "Timeline configuration keeps consistent", "[processing]" )
     }
 }
 
-SCENARIO( "Timeline correctly updates and calculates process queue", "[processing]" )
+SCENARIO( "Timeline correctly updates its counters", "[processing]" )
 {
-    GIVEN( "a Timeline without loops" )
-    {
-        Processing::Timeline timeline;
-
-        REQUIRE( timeline.get_loops().empty() );
-
-        WHEN( "the timeline is updated for any nframes" )
-        {
-            timeline.update(std::numeric_limits<Audio::nframes_t>::max());
-
-            THEN( "always only 1 process frame is calculated in the process queue" )
-            {
-                REQUIRE( timeline.get_process_queue().size() == 1 );
-            }
-        }
-    }
-
-    GIVEN( "a Timeline in initial state with specific configuration without loops" )
+    GIVEN( "a Timeline in an initial state with specific configuration without loops" )
     {
         Processing::Timeline timeline {60, 4, 4, 48000, 1};
 
@@ -260,6 +243,78 @@ SCENARIO( "Timeline correctly updates and calculates process queue", "[processin
             THEN( "the current offset is again 0" )
             {
                 REQUIRE( timeline.get_current_offset() == 0 );
+            }
+        }
+    }
+}
+
+SCENARIO( "Timeline correctly calculates process queue", "[processing]" )
+{
+    GIVEN( "a Timeline without loops" )
+    {
+        Processing::Timeline timeline;
+
+        REQUIRE( timeline.get_loops().empty() );
+
+        WHEN( "the timeline is updated for any nframes" )
+        {
+            timeline.update(std::numeric_limits<Audio::nframes_t>::max());
+
+            THEN( "always only 1 process frame is calculated in the process queue" )
+            {
+                REQUIRE( timeline.get_process_queue().size() == 1 );
+            }
+        }
+    }
+
+    GIVEN( "a Timeline with a loop around 2 timeslots" )
+    {
+        Processing::Timeline timeline;
+        timeline.add_loop({0, 1, -1});
+
+        WHEN( "the timeline is updated to exceed current timeslot but not to exceed the loop" )
+        {
+            Audio::nframes_t nframes_for_update = timeline.get_timeslot_length() + 42;
+
+            timeline.update(nframes_for_update);
+
+            THEN( "only 1 process frame is calculated in the process queue" )
+            {
+                REQUIRE( timeline.get_process_queue().size() == 1 );
+
+                AND_THEN( "the process frame contains correct values" )
+                {
+                    auto process_frame = timeline.get_process_queue()[0];
+
+                    REQUIRE( process_frame.begin_timeslot == 0 );
+                    REQUIRE( process_frame.nframes == nframes_for_update );
+                    REQUIRE( process_frame.offset == 0 );
+                }
+            }
+        }
+
+        WHEN( "the timeline is update to exceed the loop" )
+        {
+            Audio::nframes_t timeslot_length = timeline.get_timeslot_length();
+            Audio::nframes_t nframes_for_update = timeslot_length * 3 + 42;
+            timeline.update(nframes_for_update);
+
+            THEN( "2 process frames are calculated in the process queue" )
+            {
+                auto process_queue = timeline.get_process_queue();
+
+                REQUIRE( process_queue.size() == 2 );
+
+                AND_THEN( "the process frames contain correct values" )
+                {
+                    REQUIRE( process_queue[0].begin_timeslot == 0 );
+                    REQUIRE( process_queue[0].nframes == timeslot_length * 2 );
+                    REQUIRE( process_queue[0].offset == 0 );
+
+                    REQUIRE( process_queue[1].begin_timeslot == 0 );
+                    REQUIRE( process_queue[1].nframes == nframes_for_update - timeslot_length * 2 );
+                    REQUIRE( process_queue[1].offset == 0 );
+                }
             }
         }
     }
