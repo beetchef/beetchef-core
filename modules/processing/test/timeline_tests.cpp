@@ -81,7 +81,7 @@ SCENARIO( "Timeline configuration keeps consistent", "[processing]" )
             }           
         }
 
-        AND_WHEN( "timeslot length is queried" )
+        WHEN( "timeslot length is queried" )
         {
             auto timeslot_length_1 = timeline_1.get_timeslot_length();
             auto timeslot_length_2 = timeline_2.get_timeslot_length();
@@ -116,6 +116,207 @@ SCENARIO( "Timeline configuration keeps consistent", "[processing]" )
                 REQUIRE( timeslot_length_10 == 24000 );
                 REQUIRE( timeslot_length_11 == 12000 );
                 REQUIRE( timeslot_length_12 == 8000 );
+            }
+        }
+    }
+}
+
+SCENARIO( "Timeline correctly updates and calculates process queue", "[processing]" )
+{
+    GIVEN( "a Timeline with a specific configuration and initial processing state" )
+    {
+        Processing::Timeline timeline {60, 4, 4, 48000, 1};
+
+        REQUIRE( timeline.get_current_offset() == 0 );
+        REQUIRE( timeline.get_current_timeslot() == 0 );
+        REQUIRE( timeline.get_timeslot_length() == 48000 );
+
+        WHEN( "the timeline is updated for a number of frames less than timeslot length - staying within current timeslot" )
+        {
+            Audio::nframes_t nframes_for_update = 40000;
+            timeline.update(nframes_for_update);
+
+            THEN( "the current timeslot remains the same" )
+            {
+                REQUIRE( timeline.get_current_timeslot() == 0 );
+            }
+
+            THEN( "the current offset is equal to the number of frames for update" )
+            {
+                REQUIRE( timeline.get_current_offset() == nframes_for_update );
+            }
+
+            THEN( "calculated process queue contains 1 correct process frame" )
+            {
+                REQUIRE( timeline.get_process_queue().size() == 1 );
+
+                auto process_frame = timeline.get_process_queue()[0];
+
+                REQUIRE( process_frame.begin_timeslot == 0 );
+                REQUIRE( process_frame.offset == 0 );
+                REQUIRE( process_frame.nframes == nframes_for_update );
+            }
+        }
+
+        WHEN( "the timeline is updated for a number of frames less just by 1 frame than timeslot length - staying within current timeslot" )
+        {
+            Audio::nframes_t nframes_for_update = 47999;
+            timeline.update(nframes_for_update);
+
+            THEN( "the current timeslot remains the same" )
+            {
+                REQUIRE( timeline.get_current_timeslot() == 0 );
+            }
+
+            THEN( "the current offset is equal to the number of frames for update" )
+            {
+                REQUIRE( timeline.get_current_offset() == nframes_for_update );
+            }
+
+            THEN( "calculated process queue contains 1 correct process frame" )
+            {
+                REQUIRE( timeline.get_process_queue().size() == 1 );
+
+                auto process_frame = timeline.get_process_queue()[0];
+
+                REQUIRE( process_frame.begin_timeslot == 0 );
+                REQUIRE( process_frame.offset == 0 );
+                REQUIRE( process_frame.nframes == nframes_for_update );
+            }
+        }
+
+        WHEN( "the timeline is updated for a number of frames equal to timeslot length - exceeding current timeslot" )
+        {
+            Audio::nframes_t nframes_for_update = 48000;
+            timeline.update(nframes_for_update);
+
+            THEN( "the current timeslot is incremented by 1" )
+            {
+                REQUIRE( timeline.get_current_timeslot() == 1 );
+            }
+
+            THEN( "the current offset is again 0" )
+            {
+                REQUIRE( timeline.get_current_offset() == 0 );
+            }
+
+            THEN( "calculated process queue contains 1 correct process frame" )
+            {
+                REQUIRE( timeline.get_process_queue().size() == 1 );
+
+                auto process_frame = timeline.get_process_queue()[0];
+
+                REQUIRE( process_frame.begin_timeslot == 0 );
+                REQUIRE( process_frame.offset == 0 );
+                REQUIRE( process_frame.nframes == nframes_for_update );
+            }
+        }
+
+        WHEN( "the timeline is updated for a number of frames exceeding the timeslot length and less than 2 timeslot lengths - exceeding current timeslot" )
+        {
+            Audio::nframes_t nframes_for_update = 48500;
+            timeline.update(nframes_for_update);
+
+            THEN( "the current timeslot is incremented by 1" )
+            {
+                REQUIRE( timeline.get_current_timeslot() == 1 );
+            }
+
+            THEN( "the current offset is equal to the exceeding part" )
+            {
+                REQUIRE( timeline.get_current_offset() == 500 );
+            }
+
+            THEN( "calculated process queue contains 1 correct process frame" )
+            {
+                REQUIRE( timeline.get_process_queue().size() == 1 );
+
+                auto process_frame = timeline.get_process_queue()[0];
+
+                REQUIRE( process_frame.begin_timeslot == 0 );
+                REQUIRE( process_frame.offset == 0 );
+                REQUIRE( process_frame.nframes == nframes_for_update );
+            }
+        }
+
+        WHEN( "the timeline is updated for a number of frames exceeding the timeslot length and less just by 1 frame than 2 timeslot lengths - exceeding current timeslot" )
+        {
+            Audio::nframes_t nframes_for_update = 95999;
+            timeline.update(nframes_for_update);
+
+            THEN( "the current timeslot is still incremented just by 1" )
+            {
+                REQUIRE( timeline.get_current_timeslot() == 1 );
+            }
+
+            THEN( "the current offset is equal to the exceeding part" )
+            {
+                REQUIRE( timeline.get_current_offset() == 47999 );
+            }
+
+            THEN( "calculated process queue contains 1 correct process frame" )
+            {
+                REQUIRE( timeline.get_process_queue().size() == 1 );
+
+                auto process_frame = timeline.get_process_queue()[0];
+
+                REQUIRE( process_frame.begin_timeslot == 0 );
+                REQUIRE( process_frame.offset == 0 );
+                REQUIRE( process_frame.nframes == nframes_for_update );
+            }
+        }
+
+        WHEN( "the timeline is updated for a number of frames exceeding 2 timeslot lengths and less than 3 timeslot lengths - exceeding current and next timeslot" )
+        {
+            Audio::nframes_t nframes_for_update = 96500;
+            timeline.update(nframes_for_update);
+
+            THEN( "the current timeslot is incremented by 2" )
+            {
+                REQUIRE( timeline.get_current_timeslot() == 2 );
+            }
+
+            THEN( "the current offset is equal to the exceeding part" )
+            {
+                REQUIRE( timeline.get_current_offset() == 500 );
+            }
+
+            THEN( "calculated process queue contains 1 correct process frame" )
+            {
+                REQUIRE( timeline.get_process_queue().size() == 1 );
+
+                auto process_frame = timeline.get_process_queue()[0];
+
+                REQUIRE( process_frame.begin_timeslot == 0 );
+                REQUIRE( process_frame.offset == 0 );
+                REQUIRE( process_frame.nframes == nframes_for_update );
+            }
+        }
+
+        WHEN( "the timeline is updated for a number of frames equal to a multiple of timeslot length - exceeding current and next 6 timeslots" )
+        {
+            Audio::nframes_t nframes_for_update = 48000 * 7;
+            timeline.update(nframes_for_update);
+
+            THEN( "the current timeslot is incremented by the value of multiplier used" )
+            {
+                REQUIRE( timeline.get_current_timeslot() == 7 );
+            }
+
+            THEN( "the current offset is again 0" )
+            {
+                REQUIRE( timeline.get_current_offset() == 0 );
+            }
+
+            THEN( "calculated process queue contains 1 correct process frame" )
+            {
+                REQUIRE( timeline.get_process_queue().size() == 1 );
+
+                auto process_frame = timeline.get_process_queue()[0];
+
+                REQUIRE( process_frame.begin_timeslot == 0 );
+                REQUIRE( process_frame.offset == 0 );
+                REQUIRE( process_frame.nframes == nframes_for_update );
             }
         }
     }
