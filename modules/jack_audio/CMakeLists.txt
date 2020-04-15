@@ -1,3 +1,7 @@
+cmake_minimum_required(VERSION 3.17)
+
+project(jack_audio)
+
 add_library(
     jack_audio STATIC
 

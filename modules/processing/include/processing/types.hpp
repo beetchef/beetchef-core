@@ -17,6 +17,6 @@ namespace Processing
         Audio::nframes_t nframes{0};
     };
 
-}; //namespace Processing
+}; // namespace Processing
 
-#endif //BEETCHEF_PROCESSING_TYPES_HPP
+#endif // BEETCHEF_PROCESSING_TYPES_HPP

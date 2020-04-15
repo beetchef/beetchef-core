@@ -7,7 +7,7 @@
 
 #include <spdlog/spdlog.h>
 
-using Beetchef::Click;
+using Console_ui::Click;
 
 /*
     NOTE:

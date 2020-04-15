@@ -1,5 +1,4 @@
-#include "click.hpp"
-#include "engine.hpp"
+#include <app/engine.hpp>
 
 #include <processing/track.hpp>
 
@@ -40,18 +39,13 @@ void Engine::init()
     spdlog::info("{} Processing started.", log_label);
 }
 
-bool Engine::is_alive()
+void Engine::start()
 {
-    return _alive;
-}
+    _running = true;
 
-int Engine::start()
-{
     spdlog::info("{} Started.", log_label);
-
-    _click.start();
-
-    while(_alive) {
+    
+    while(_running) {
 
         // do main loop stuff here
 
@@ -60,9 +54,19 @@ int Engine::start()
         //usleep(500000);
 
         //std::cout << log_label << "Main loop - doing nothing." << "\n";
-        // sleep for 5 seconds
-        usleep(5000000);
+        // sleep for 1 second
+        sleep(1);
     }
+}
 
-    return 0;
+void Engine::stop()
+{
+    _running = false;
+
+    spdlog::info("{} Stopped.", log_label);
+}
+
+bool Engine::is_running()
+{
+    return _running;
 }

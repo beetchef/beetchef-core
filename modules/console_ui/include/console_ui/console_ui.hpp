@@ -5,7 +5,7 @@
 
 #include <vector>
 
-namespace Beetchef
+namespace Console_ui
 {
     class Console_ui {
         public:
@@ -19,6 +19,6 @@ namespace Beetchef
             void print_timeline(const int current_timeslot, const std::vector<Processing::Loop>&);
     };
 
-}; // namespace Beetchef
+}; // namespace Console_ui
 
 #endif // BEETCHEF_CONSOLE_UI_HPP

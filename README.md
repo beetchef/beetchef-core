@@ -18,6 +18,10 @@
 
     (this generates executable `beetchef` in `./build/bin/`)
 
+### test
+
+1. `$ cmake --build build --target test`
+
 ### execution
 
 1. `$ <<beetchef-core-root-dir>>/build/bin/beetchef`
