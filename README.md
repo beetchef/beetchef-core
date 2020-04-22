@@ -14,9 +14,9 @@
 1. `$ git clone https://github.com/beetchef/beetchef-core.git`
 2. `$ cd beetchef-core`
 3. `$ cmake -S . -B build`
-4. `$ cmake --build build` (this step is sufficient for rebuilding after it's
+4. `$ cmake --build build`
 
-    (this generates executable `beetchef` in `./build/bin/`)
+    (this builds executable `beetchef` in `./build/bin/`)
 
 ### test
 
@@ -24,4 +24,4 @@
 
 ### execution
 
-1. `$ <<beetchef-core-root-dir>>/build/bin/beetchef`
+1. `$ ./build/bin/beetchef`
