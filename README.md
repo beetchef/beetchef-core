@@ -22,6 +22,6 @@
 
 1. `$ cmake --build build --target test`
 
-### execution
+### execute
 
 1. `$ ./build/bin/beetchef`
